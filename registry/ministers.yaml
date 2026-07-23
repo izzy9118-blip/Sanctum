@@ -1,0 +1,77 @@
+registry_id: "REG-MINISTERS-000000001"
+registry_version: "1.0.0"
+contract_version: "1.0.0"
+entry_schema: "urn:sanctum:federation:minister-manifest:1.0.0"
+canonical_repository: "izzy9118-blip/Sanctum"
+canonical_path: "registry/ministers.yaml"
+updated_at: "2026-07-23T07:57:18-05:00"
+routing_policy:
+  selectable_statuses:
+    - "AVAILABLE"
+  on_unknown_status: "REJECT"
+ministers:
+  - contract_version: "1.0.0"
+    manifest_id: "MNF-000000001"
+    manifest_version: "1.0.0"
+    minister:
+      minister_id: "MIN-000000001"
+      name: "Leo Strauss"
+      office: "Minister of Political Philosophy"
+    jurisdiction:
+      primary_domain: "Political Philosophy"
+      statement: >-
+        Questions concerning the ends, foundations, history, and textual
+        presentation of political philosophy, approached through the
+        documentary method and governing procedures of the Strauss Repository.
+      selection_guidance:
+        - "The inquiry materially concerns political philosophy or its history."
+        - "The inquiry requires close examination of a political-philosophical text."
+        - "The inquiry concerns the relation between philosophical teaching, political order, law, rhetoric, persecution, or literary presentation."
+        - "The inquiry materially concerns Leo Strauss or an author examined within the Strauss Repository."
+      exclusions:
+        - "Do not select this minister merely because a question is political; political-philosophical jurisdiction must be material to the inquiry."
+    repository:
+      full_name: "izzy9118-blip/custos"
+      canonical_url: "https://github.com/izzy9118-blip/custos"
+      default_branch: "main"
+      pinned_commit: "37fd2ef966184d43a25de2d841211be7ccb471e1"
+      canonical_authority: "GIT"
+    governing_manifest:
+      id: "MAN-000000001"
+      version: "1.0"
+      path: "manifests/cognitive-memory/MAN-000000001.json"
+      media_type: "application/json"
+      sha256: "6daec2451add23fff1574cadffc747c39cefbfbbb6d52732d51ddaaa31b85ce9"
+      git_blob_sha: "34569ae9da7cd07ed329a0fcacbbc46663e22dde"
+      declared_repository_commit: "55a9a75a7857a91f6db19a323668d20da3c83af3"
+      release_status: "RELEASED"
+    authority_records:
+      - record_id: "SPEC-000000004"
+        version: "1.1"
+        path: "records/specifications/SPEC-000000004.yaml"
+        sha256: "029d5830740648b113e40be936e8f37ab6b442220da1d61565893bfba2aa4e10"
+        git_blob_sha: "b77c89a1991897c9221331e50844ebf26cc2e0c2"
+        relationship: "ACTIVE_GOVERNANCE_SPECIFICATION"
+      - record_id: "CER-000000003"
+        path: "records/certifications/CER-000000003.yaml"
+        sha256: "06757355f3a9b9bf2973416ca6e3dc725a042fb236011f79abd35293be3c0a92"
+        git_blob_sha: "72aa8377751cfdfd132ac9e53091f767def1b1b1"
+        relationship: "CERTIFICATION_RECORD"
+    registration:
+      membership_status: "ESTABLISHED"
+      registered_at: "2026-07-23T07:57:18-05:00"
+      authority:
+        repository_full_name: "izzy9118-blip/Sanctum"
+        git_commit: "aef9f808ee11570fdfde4b780042d142a54591bd"
+        path: "README.md"
+        git_blob_sha: "50a757c86e5c32d7cc05d5594b1faf8973d16923"
+    federation:
+      routing_status: "PENDING_ADAPTER"
+      accepts_schema: "urn:sanctum:federation:inquiry-envelope:1.0.0"
+      produces_schema: "urn:sanctum:federation:ministerial-report:1.0.0"
+      adapter:
+        status: "NOT_IMPLEMENTED"
+        note: >-
+          The registry establishes identity, jurisdiction, and pinned authority
+          only. Routing remains disabled until a Custos adapter validates an
+          Inquiry Envelope and emits a conforming Ministerial Report.

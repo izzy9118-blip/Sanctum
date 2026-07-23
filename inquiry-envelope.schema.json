@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sanctum:federation:inquiry-envelope:1.0.0",
+  "title": "Sanctum Inquiry Envelope",
+  "description": "The immutable, ministry-neutral question and routing record issued by the President. The same validated envelope is delivered unchanged to every selected minister.",
+  "$comment": "Schema validation establishes structure only. The issuer must recompute envelope_sha256 and registry SHA-256, verify the pinned Git commits, and confirm that every selected minister was AVAILABLE in the pinned registry snapshot.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "envelope_id",
+    "envelope_version",
+    "status",
+    "created_at",
+    "created_by",
+    "question",
+    "scope",
+    "routing",
+    "dispatch_policy",
+    "report_contract",
+    "integrity"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "1.0.0"
+    },
+    "envelope_id": {
+      "type": "string",
+      "pattern": "^INQ-[0-9]{9}$"
+    },
+    "envelope_version": {
+      "$ref": "#/$defs/semanticVersion"
+    },
+    "status": {
+      "const": "ISSUED",
+      "description": "An issued envelope is immutable. Cancellation or correction must be recorded separately."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "office",
+        "actor_id"
+      ],
+      "properties": {
+        "office": {
+          "const": "PRESIDENT"
+        },
+        "actor_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "purpose"
+      ],
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 30000
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "context": {
+          "type": "string",
+          "maxLength": 30000
+        },
+        "as_of": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "requested_deliverable": {
+          "type": "string",
+          "maxLength": 10000
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "documentary_boundary",
+        "preserve_uncertainty"
+      ],
+      "properties": {
+        "documentary_boundary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 20000
+        },
+        "included_topics": {
+          "$ref": "#/$defs/stringList"
+        },
+        "excluded_topics": {
+          "$ref": "#/$defs/stringList"
+        },
+        "constraints": {
+          "$ref": "#/$defs/stringList"
+        },
+        "preserve_uncertainty": {
+          "const": true
+        }
+      }
+    },
+    "routing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registry_snapshot",
+        "selected_ministers"
+      ],
+      "properties": {
+        "registry_snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repository_full_name",
+            "git_commit",
+            "path",
+            "sha256",
+            "registry_version"
+          ],
+          "properties": {
+            "repository_full_name": {
+              "$ref": "#/$defs/repositoryFullName"
+            },
+            "git_commit": {
+              "$ref": "#/$defs/gitCommit"
+            },
+            "path": {
+              "$ref": "#/$defs/repositoryPath"
+            },
+            "sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "registry_version": {
+              "$ref": "#/$defs/semanticVersion"
+            }
+          }
+        },
+        "selected_ministers": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "minister_id",
+              "manifest_id",
+              "manifest_version",
+              "repository_full_name",
+              "repository_commit",
+              "selection_reason"
+            ],
+            "properties": {
+              "minister_id": {
+                "$ref": "#/$defs/ministerId"
+              },
+              "manifest_id": {
+                "$ref": "#/$defs/manifestId"
+              },
+              "manifest_version": {
+                "$ref": "#/$defs/semanticVersion"
+              },
+              "repository_full_name": {
+                "$ref": "#/$defs/repositoryFullName"
+              },
+              "repository_commit": {
+                "$ref": "#/$defs/gitCommit"
+              },
+              "selection_reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 5000
+              }
+            }
+          }
+        }
+      }
+    },
+    "dispatch_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "same_envelope_for_all",
+        "isolated_context_required",
+        "parallel_execution"
+      ],
+      "properties": {
+        "same_envelope_for_all": {
+          "const": true
+        },
+        "isolated_context_required": {
+          "const": true
+        },
+        "parallel_execution": {
+          "const": "PREFERRED_WHERE_AVAILABLE"
+        }
+      }
+    },
+    "report_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_id",
+        "contract_version"
+      ],
+      "properties": {
+        "schema_id": {
+          "const": "urn:sanctum:federation:ministerial-report:1.0.0"
+        },
+        "contract_version": {
+          "const": "1.0.0"
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hash_algorithm",
+        "canonicalization",
+        "envelope_sha256"
+      ],
+      "properties": {
+        "hash_algorithm": {
+          "const": "SHA-256"
+        },
+        "canonicalization": {
+          "const": "RFC8785"
+        },
+        "envelope_sha256": {
+          "$ref": "#/$defs/sha256",
+          "description": "SHA-256 of the RFC 8785 canonical form of the complete envelope with the integrity object omitted."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "ministerId": {
+      "type": "string",
+      "pattern": "^MIN-[0-9]{9}$"
+    },
+    "manifestId": {
+      "type": "string",
+      "pattern": "^MNF-[0-9]{9}$"
+    },
+    "repositoryFullName": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "repositoryPath": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*//)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+    },
+    "gitCommit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "stringList": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 100,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 5000
+      }
+    }
+  }
+}

@@ -1,0 +1,743 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sanctum:federation:ministerial-report:1.0.0",
+  "title": "Sanctum Ministerial Report",
+  "description": "The bounded, provenance-bearing output returned by one independently operating minister. It contains findings and evidence references rather than an undifferentiated copy of the ministerial corpus.",
+  "$comment": "Schema validation establishes structure only. The Secretary must independently verify the envelope and question hashes, repository and manifest pins, evidence bytes and hashes, reference integrity and uniqueness, timestamp order, and termination consistency before recording validation or certification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "report_id",
+    "report_status",
+    "secretary_validation_status",
+    "created_at",
+    "inquiry",
+    "minister",
+    "repository",
+    "governing_manifest",
+    "execution",
+    "evidence",
+    "findings",
+    "uncertainties",
+    "dissent",
+    "termination",
+    "integrity"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "1.0.0"
+    },
+    "report_id": {
+      "type": "string",
+      "pattern": "^MREP-[A-Z0-9][A-Z0-9._-]{2,127}$"
+    },
+    "report_status": {
+      "const": "SUBMITTED"
+    },
+    "secretary_validation_status": {
+      "const": "NOT_YET_VALIDATED",
+      "description": "A minister cannot certify its own Assembly report. Secretary validation is recorded separately."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "inquiry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "envelope_id",
+        "envelope_version",
+        "envelope_sha256",
+        "question_sha256"
+      ],
+      "properties": {
+        "envelope_id": {
+          "type": "string",
+          "pattern": "^INQ-[0-9]{9}$"
+        },
+        "envelope_version": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "envelope_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "question_sha256": {
+          "$ref": "#/$defs/sha256",
+          "description": "SHA-256 of the exact UTF-8 bytes of question.text in the received Inquiry Envelope."
+        }
+      }
+    },
+    "minister": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minister_id",
+        "manifest_id",
+        "manifest_version",
+        "name",
+        "office"
+      ],
+      "properties": {
+        "minister_id": {
+          "$ref": "#/$defs/ministerId"
+        },
+        "manifest_id": {
+          "$ref": "#/$defs/manifestId"
+        },
+        "manifest_version": {
+          "$ref": "#/$defs/semanticVersion"
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "office": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "full_name",
+        "git_commit",
+        "canonical_authority"
+      ],
+      "properties": {
+        "full_name": {
+          "$ref": "#/$defs/repositoryFullName"
+        },
+        "git_commit": {
+          "$ref": "#/$defs/gitCommit"
+        },
+        "canonical_authority": {
+          "const": "GIT"
+        }
+      }
+    },
+    "governing_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "path",
+        "sha256",
+        "git_blob_sha"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/repositoryIdentifier"
+        },
+        "version": {
+          "$ref": "#/$defs/versionLabel"
+        },
+        "path": {
+          "$ref": "#/$defs/repositoryPath"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "git_blob_sha": {
+          "$ref": "#/$defs/gitObjectId"
+        },
+        "declared_repository_commit": {
+          "$ref": "#/$defs/gitCommit"
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "started_at",
+        "completed_at",
+        "isolated_context",
+        "engine",
+        "procedure_ids",
+        "cache"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "isolated_context": {
+          "const": true
+        },
+        "engine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "version"
+          ],
+          "properties": {
+            "name": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "version": {
+              "$ref": "#/$defs/versionLabel"
+            }
+          }
+        },
+        "procedure_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "reasoner": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider",
+            "model",
+            "prompt_id",
+            "prompt_version"
+          ],
+          "properties": {
+            "provider": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "model": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "model_revision": {
+              "type": "string",
+              "maxLength": 500
+            },
+            "prompt_id": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "prompt_version": {
+              "$ref": "#/$defs/versionLabel"
+            }
+          }
+        },
+        "cache": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "HIT",
+                "MISS",
+                "BYPASSED"
+              ]
+            },
+            "key_sha256": {
+              "$ref": "#/$defs/sha256"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "HIT",
+                      "MISS"
+                    ]
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "key_sha256": {
+                    "$ref": "#/$defs/sha256"
+                  }
+                },
+                "required": [
+                  "key_sha256"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "canonical_id",
+          "repository_full_name",
+          "git_commit",
+          "path",
+          "sha256",
+          "locator",
+          "direct_or_derived",
+          "support_summary",
+          "verified"
+        ],
+        "properties": {
+          "evidence_id": {
+            "$ref": "#/$defs/localReference"
+          },
+          "canonical_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "repository_full_name": {
+            "$ref": "#/$defs/repositoryFullName"
+          },
+          "git_commit": {
+            "$ref": "#/$defs/gitCommit"
+          },
+          "path": {
+            "$ref": "#/$defs/repositoryPath"
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "locator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "direct_or_derived": {
+            "enum": [
+              "DIRECT",
+              "DERIVED"
+            ]
+          },
+          "source_classification": {
+            "enum": [
+              "PRIMARY",
+              "SECONDARY",
+              "REPOSITORY_GOVERNANCE",
+              "DERIVED_RETRIEVAL",
+              "OTHER"
+            ]
+          },
+          "support_summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "excerpt": {
+            "type": "string",
+            "maxLength": 2000,
+            "description": "Optional bounded excerpt. Raw corpora must not be embedded in the report."
+          },
+          "verified": {
+            "const": true
+          }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "finding_id",
+          "classification",
+          "statement",
+          "rationale",
+          "confidence",
+          "evidence_refs",
+          "uncertainty_refs",
+          "dissent_refs"
+        ],
+        "properties": {
+          "finding_id": {
+            "$ref": "#/$defs/localReference"
+          },
+          "classification": {
+            "enum": [
+              "DOCUMENTED_FINDING",
+              "SUPPORTED_INFERENCE",
+              "WORKING_HYPOTHESIS",
+              "MINISTERIAL_JUDGMENT"
+            ]
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "confidence": {
+            "enum": [
+              "HIGH",
+              "MODERATE",
+              "LOW",
+              "UNDETERMINED"
+            ]
+          },
+          "evidence_refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/localReference"
+            }
+          },
+          "uncertainty_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/localReference"
+            }
+          },
+          "dissent_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/localReference"
+            }
+          }
+        }
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "uncertainty_id",
+          "statement",
+          "effect",
+          "resolvability",
+          "evidence_refs"
+        ],
+        "properties": {
+          "uncertainty_id": {
+            "$ref": "#/$defs/localReference"
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "effect": {
+            "enum": [
+              "LIMITS_SCOPE",
+              "LOWERS_CONFIDENCE",
+              "PREVENTS_CONCLUSION",
+              "REQUIRES_FURTHER_INQUIRY"
+            ]
+          },
+          "resolvability": {
+            "enum": [
+              "RESOLVABLE_WITH_AVAILABLE_SOURCES",
+              "REQUIRES_NEW_EVIDENCE",
+              "INHERENTLY_UNRESOLVED",
+              "UNKNOWN"
+            ]
+          },
+          "evidence_needed": {
+            "type": "string",
+            "maxLength": 5000
+          },
+          "evidence_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/localReference"
+            }
+          }
+        }
+      }
+    },
+    "dissent": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "dissent_id",
+          "status",
+          "position",
+          "basis",
+          "evidence_refs",
+          "related_finding_refs"
+        ],
+        "properties": {
+          "dissent_id": {
+            "$ref": "#/$defs/localReference"
+          },
+          "status": {
+            "enum": [
+              "PRESERVED_ALTERNATIVE",
+              "MINORITY_FINDING",
+              "UNRESOLVED_CONFLICT"
+            ]
+          },
+          "position": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "basis": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "evidence_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/localReference"
+            }
+          },
+          "related_finding_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "#/$defs/localReference"
+            }
+          }
+        }
+      }
+    },
+    "termination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "code",
+        "reason",
+        "retryable",
+        "unresolved_items"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "COMPLETED",
+            "COMPLETED_WITH_LIMITATIONS",
+            "INSUFFICIENT_EVIDENCE",
+            "OUT_OF_JURISDICTION",
+            "FAILED"
+          ]
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,127}$"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 10000
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "unresolved_items": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          }
+        },
+        "error_code": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,127}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "FAILED"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "error_code": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]{2,127}$"
+              }
+            },
+            "required": [
+              "error_code"
+            ]
+          }
+        }
+      ]
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hash_algorithm",
+        "canonicalization",
+        "report_sha256"
+      ],
+      "properties": {
+        "hash_algorithm": {
+          "const": "SHA-256"
+        },
+        "canonicalization": {
+          "const": "RFC8785"
+        },
+        "report_sha256": {
+          "$ref": "#/$defs/sha256",
+          "description": "SHA-256 of the RFC 8785 canonical form of the complete report with the integrity object omitted."
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "enum": [
+                  "COMPLETED",
+                  "COMPLETED_WITH_LIMITATIONS"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          }
+        },
+        "required": [
+          "termination"
+        ]
+      },
+      "then": {
+        "properties": {
+          "evidence": {
+            "type": "array",
+            "minItems": 1
+          },
+          "findings": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "const": "COMPLETED_WITH_LIMITATIONS"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          }
+        },
+        "required": [
+          "termination"
+        ]
+      },
+      "then": {
+        "properties": {
+          "uncertainties": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "semanticVersion": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "versionLabel": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)(?:\\.(0|[1-9][0-9]*)){1,2}$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "ministerId": {
+      "type": "string",
+      "pattern": "^MIN-[0-9]{9}$"
+    },
+    "manifestId": {
+      "type": "string",
+      "pattern": "^MNF-[0-9]{9}$"
+    },
+    "repositoryIdentifier": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]*-[0-9]{9}$"
+    },
+    "repositoryFullName": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "repositoryPath": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*//)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+    },
+    "gitCommit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "gitObjectId": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "localReference": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]*(?:-[A-Z0-9._]+)+$",
+      "maxLength": 200
+    }
+  }
+}
