@@ -1,10 +1,10 @@
 registry_id: "REG-MINISTERS-000000001"
-registry_version: "1.0.0"
+registry_version: "1.1.0"
 contract_version: "1.0.0"
 entry_schema: "urn:sanctum:federation:minister-manifest:1.0.0"
 canonical_repository: "izzy9118-blip/Sanctum"
 canonical_path: "registry/ministers.yaml"
-updated_at: "2026-07-23T07:57:18-05:00"
+updated_at: "2026-07-23T08:44:32-05:00"
 routing_policy:
   selectable_statuses:
     - "AVAILABLE"
@@ -12,7 +12,7 @@ routing_policy:
 ministers:
   - contract_version: "1.0.0"
     manifest_id: "MNF-000000001"
-    manifest_version: "1.0.0"
+    manifest_version: "1.1.0"
     minister:
       minister_id: "MIN-000000001"
       name: "Leo Strauss"
@@ -34,7 +34,7 @@ ministers:
       full_name: "izzy9118-blip/custos"
       canonical_url: "https://github.com/izzy9118-blip/custos"
       default_branch: "main"
-      pinned_commit: "37fd2ef966184d43a25de2d841211be7ccb471e1"
+      pinned_commit: "26a3f1a122c96ccf63d1b1744d43a9ecec3833dc"
       canonical_authority: "GIT"
     governing_manifest:
       id: "MAN-000000001"
@@ -66,12 +66,16 @@ ministers:
         path: "README.md"
         git_blob_sha: "50a757c86e5c32d7cc05d5594b1faf8973d16923"
     federation:
-      routing_status: "PENDING_ADAPTER"
+      routing_status: "AVAILABLE"
       accepts_schema: "urn:sanctum:federation:inquiry-envelope:1.0.0"
       produces_schema: "urn:sanctum:federation:ministerial-report:1.0.0"
       adapter:
-        status: "NOT_IMPLEMENTED"
+        status: "AVAILABLE"
+        interface_version: "1.0.0"
+        path: "inquiry_engine/src/custos_engine/federation/adapter-manifest.json"
+        sha256: "1af8dce8ac728641a040f77041ee2b3a86c44f4cb2a8d5beb83260e1c30c70dd"
         note: >-
-          The registry establishes identity, jurisdiction, and pinned authority
-          only. Routing remains disabled until a Custos adapter validates an
-          Inquiry Envelope and emits a conforming Ministerial Report.
+          Custos release 26a3f1a122c96ccf63d1b1744d43a9ecec3833dc
+          accepts the Sanctum Inquiry Envelope v1.0 contract and emits a
+          candidate Ministerial Report v1.0 for independent Secretary
+          validation.
