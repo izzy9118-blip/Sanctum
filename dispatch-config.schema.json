@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sanctum:federation:dispatch-config:1.0.0",
+  "title": "Sanctum Local Dispatch Config",
+  "description": "A non-canonical, operator-supplied map from selected ministers to local release checkouts and direct subprocess commands. Commands are never read from the constitutional registry and are executed without a shell.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "config_version",
+    "adapters"
+  ],
+  "properties": {
+    "config_version": {
+      "const": "1.0.0"
+    },
+    "adapters": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "minister_id",
+          "repository_full_name",
+          "repository_root",
+          "command",
+          "report_relative_path",
+          "timeout_seconds"
+        ],
+        "properties": {
+          "minister_id": {
+            "type": "string",
+            "pattern": "^MIN-[0-9]{9}$"
+          },
+          "repository_full_name": {
+            "$ref": "#/$defs/repositoryFullName"
+          },
+          "repository_root": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "command": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 200,
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 30000
+            }
+          },
+          "report_relative_path": {
+            "$ref": "#/$defs/repositoryPath"
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 86400
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "repositoryFullName": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "repositoryPath": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*//)(?!.*(?:^|/)(?:\\.|\\.\\.)(?:/|$))[A-Za-z0-9._-]+(?:/[A-Za-z0-9._-]+)*$"
+    }
+  }
+}
