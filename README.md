@@ -50,17 +50,21 @@ The Secretary does not determine the substantive judgment. The Secretary preserv
 9. Infrastructure exists to serve inquiry.
 10. Constitutional architecture should change only when experience demonstrates a genuine need.
 
-## Deliberative Order
+## How an Assembly Inquiry Should Operate
 
-A complete inquiry proceeds through a visible chain:
-
-1. The President frames the question.
-2. The relevant evidence is recovered.
-3. Each participating ministry conducts its inquiry according to its own method.
-4. The Secretary preserves the evidence, reports, disagreements, and unresolved questions.
-5. The President issues a synthesis and final Opinion.
-6. The completed record is reviewed for certification.
-7. Only a certified record enters the permanent archive.
+1. Sanctum creates an immutable Inquiry Envelope.
+2. Its ministry registry selects only relevant ministers.
+3. Every selected minister receives the same question in a clean, isolated context.
+4. Ministerial repositories run independently and, where possible, concurrently.
+5. Each returns a strictly validated Ministerial Report containing:
+   - Repository and commit
+   - Governing manifest
+   - Evidence identifiers and hashes
+   - Findings and classifications
+   - Uncertainties and dissent
+   - Termination status
+6. The President receives the completed reports—not an undifferentiated mixture of all ministerial corpora.
+7. The Secretary validates provenance and preserves the reports, synthesis, disagreements, and certification in Sanctum.
 
 The Assembly’s final voice belongs to the President. The reasoning that preceded that judgment belongs permanently to the record.
 
