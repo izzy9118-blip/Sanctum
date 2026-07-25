@@ -1,97 +1,126 @@
 # Sanctum
 
-## The Founding of the Custos Assembly
+## The Assembly
 
-Sanctum establishes the Custos Assembly: a constitutional system for disciplined inquiry, preserved disagreement, institutional memory, and accountable judgment.
+Sanctum is the constitutional repository of the Assembly: a deliberative body that brings distinct methods of reasoning into a common process without allowing any one method to erase the others.
 
-Its purpose is not to simulate a collection of personalities or manufacture agreement. It is to bring distinct methods of inquiry into a common deliberative order without allowing any one method to erase the others.
+Each minister is a sovereign documentary reasoner housed in a separate repository. A minister is not a simulated personality. Each thinks from the method, source hierarchy, safeguards, and limits reconstructed from that minister's own corpus.
 
-Sanctum seeks to build a durable constitutional mind—one capable not only of reaching judgments, but of preserving how those judgments were reached, what evidence supported them, what uncertainty remained, and what disagreements resisted synthesis.
+Sanctum does not own ministerial reasoning. It preserves the constitutional conditions under which the ministers receive the same dismantled situation, reason independently, disagree visibly, and return attributable records.
 
-## Founding Structure
+## Constitutional Ground
+
+The foundation is ordinary lives in perpetuity, over every regime. Order is an instrument; people are the ground. Harm to ordinary lives is therefore a foundation-level cost, not merely strategic leverage.
+
+Intake-capture is the Assembly's central danger. Bias can enter before reasoning begins, disguised as the given. The feeling of obviousness marks a received consensus, not necessarily a fact. Sanctum therefore requires the framing to be dismantled before any minister is convened.
+
+The solvent is the fixed fact: a fact breaks a framing because it remains in the record and refuses to conform to the reader. Every reasoner is obligated to seek the fact that would embarrass his own current reading and to treat finding it as success.
+
+## The Dismantling Organ
+
+The Dismantling Organ is a pre-deliberative Assembly organ belonging to no minister. It receives the raw situation and produces a common documentary intake before any minister acts.
+
+Its record contains:
+
+- the raw submission;
+- extracted claims and presuppositions;
+- framing sources and attributed owners;
+- documented acts, events, and material conditions;
+- evidence supporting each extracted element;
+- disconfirming or complicating evidence;
+- unresolved ambiguities;
+- transformation rules applied;
+- excluded material and the reason for every exclusion;
+- every classification and juxtaposition, with its schema and rationale.
+
+The organ may decompose, attribute, retrieve, juxtapose, classify, expose contradictions, identify missing evidence, and preserve uncertainty.
+
+It may not resolve contested meanings, rank political ends, declare an interpretation correct, pre-synthesize ministers, decide jurisdiction, convert inference into fact, or remove the raw framing.
+
+The Dismantling Organ lays the material bare. It does not adjudicate it.
+
+## Universal Participation
+
+All established ministers always participate.
+
+There is no routing judgment and no upstream selection of allegedly relevant ministers. Every established minister receives the same dismantled situation in a clean, isolated context and answers from his own ground.
+
+A minister may return a reasoned report or a recorded determination that the situation lies outside his ground. The latter is a complete ministerial answer when reasons are supplied. Relevance is therefore a ministerial judgment preserved in the record, never a procedural judgment imposed before deliberation.
+
+The registry answers only: **who constitutes the Assembly at this committed state?** It does not decide who is relevant to a particular inquiry.
+
+## Two-Layer Architecture
+
+**The runtime may calculate, but only Git may remember authoritatively.**
+
+### Layer One — constitutional memory
+
+Git is canonical for schemas and contracts, ministry registries, source manifests, inquiry envelopes, dismantling records, evidence bundles, ministerial reports, dissent, synthesis and non-synthesis results, presidential opinions, Secretary validation, certification, and correction records.
+
+Every change is visible. Corrections move forward. Any graph, database, or compact runtime projection is derived, carries no authority, and must be rebuildable from committed records.
+
+### Layer Two — execution and reasoning
+
+The runtime performs intake parsing, dismantling, evidence retrieval, universal dispatch, validation, synthesis preparation, and certification workflows.
+
+The runtime has no independent constitutional memory. It reads pinned records and emits candidate records. Those records remain inert until the Validation Gate passes them and they are merged into the canonical branch.
+
+## Deliberative Order
+
+1. The raw inquiry is preserved unchanged.
+2. The Dismantling Organ exposes its claims, framing, material facts, omissions, ambiguities, and disconfirming evidence.
+3. A common documentary intake and evidence bundle are fixed.
+4. Every established minister receives the same intake.
+5. Ministerial repositories reason independently and, where possible, concurrently.
+6. Every minister returns a typed Ministerial Report, including a reasoned `outside_my_ground` report where warranted.
+7. The Secretary validates provenance, participation, evidence binding, proposition kinds, and preservation of dissent.
+8. Where grounds converge, synthesis states the shared ground and preserves every dissent separately.
+9. Where grounds diverge, a non-synthesis result records the disagreement affirmatively; silence is not a result.
+10. Any Presidential Opinion is marked as the President's own reasoned reconciliation, never as ministerial consensus.
+11. The Validation Gate records a validated, flagged, or rejected outcome.
+12. Only a gated merge confers authority on the records.
+
+## Offices
+
+### Ministers
+
+Each minister owns a distinct ground of reasoning, source hierarchy, method, voice discipline, opacity floor, and safeguards. Ministerial repositories remain sovereign and independently usable.
+
+The Strauss Repository, [`izzy9118-blip/custos`](https://github.com/izzy9118-blip/custos), houses Leo Strauss as Minister of Political Philosophy.
+
+Talleyrand will be housed in his own sovereign repository, `izzy9118-blip/Talleyrand`. His corpus, method, source hierarchy, voice mechanism, and safeguards belong there, not in Sanctum. Sanctum will receive only his attributable ministerial records through the common contract.
 
 ### The President
 
-The President convenes the Assembly, frames the inquiry, assigns jurisdiction, and synthesizes the completed deliberation.
-
-Only the President issues a final judgment in the name of the Assembly. Presidential synthesis may reconcile competing findings, but it may not erase dissent, uncertainty, or the independent reasoning of the ministries.
-
-### The Ministries
-
-The Assembly is composed of constitutionally distinct ministries. Each ministry possesses its own jurisdiction, sources, methods, and standards of judgment.
-
-The ministries deliberate and report independently. No ministry may silently redefine another ministry’s evidence or replace another ministry’s method. Where their conclusions conflict, the conflict must be preserved for presidential synthesis.
-
-Each minister will eventually be housed in a dedicated repository. A ministerial repository must preserve the evidence, memory, procedures, and version history needed for that minister to function independently. Sanctum convenes and coordinates the ministries without absorbing their distinct repositories or methods.
+The President may reconcile where grounds genuinely converge. The President does not manufacture consensus and may not erase dissent. A Presidential Opinion is always preserved as the President's own voice.
 
 ### The Constitutional Secretary
 
-The Secretary preserves the complete record of inquiry:
+The Secretary validates and preserves the complete record. The Secretary does not decide substance. The Secretary protects provenance, participation, dissent, correction history, and the distinction between documentary fact, inference, hypothesis, question, and uncertainty.
 
-- Sources and evidence
-- Ministerial reports
-- Disagreements and minority findings
-- Presidential Opinions
-- Revisions and corrections
-- Certification records
+### The Validation Gate
 
-The Secretary does not determine the substantive judgment. The Secretary preserves the conditions under which judgment can be examined, challenged, corrected, and continued.
+The Gate is the authority-conferring seam between candidate runtime output and canonical constitutional memory. It enforces mechanically checkable guarantees, flags what cannot be mechanically verified for the outside ground, and records every rejection with reasons.
 
-## Governing Principles
+## The Outside Ground
 
-1. Evidence precedes judgment.
-2. Primary sources govern secondary sources whenever the primary sources are available.
-3. Each office must complete its inquiry independently before synthesis.
-4. Documented findings, supported inferences, working hypotheses, and judgments must remain distinguishable.
-5. Uncertainty must be preserved rather than concealed.
-6. Dissent must remain part of the permanent record.
-7. Completed records may be corrected but never silently rewritten.
-8. Certification marks the boundary between provisional work and the permanent archive.
-9. Infrastructure exists to serve inquiry.
-10. Constitutional architecture should change only when experience demonstrates a genuine need.
+The human operator is not removable scaffolding. Completeness cannot be self-certified by a system whose instances share the same water.
 
-## How an Assembly Inquiry Should Operate
+The human may inspect, challenge, amend, or override through visible records. No override silently rewrites a certified record. The outside ground acts through recorded correction, amendment, and certification.
 
-1. Sanctum creates an immutable Inquiry Envelope.
-2. Its ministry registry selects only relevant ministers.
-3. Every selected minister receives the same question in a clean, isolated context.
-4. Ministerial repositories run independently and, where possible, concurrently.
-5. Each returns a strictly validated Ministerial Report containing:
-   - Repository and commit
-   - Governing manifest
-   - Evidence identifiers and hashes
-   - Findings and classifications
-   - Uncertainties and dissent
-   - Termination status
-6. The President receives the completed reports—not an undifferentiated mixture of all ministerial corpora.
-7. The Secretary validates provenance and preserves the reports, synthesis, disagreements, and certification in Sanctum.
+## Repository Structure
 
-The Assembly’s final voice belongs to the President. The reasoning that preceded that judgment belongs permanently to the record.
+```text
+Sanctum/
+├── README.md
+├── assembly.py
+├── schemas/
+├── registry/
+├── gate/
+├── projection/
+├── inquiries/
+├── docs/
+└── .github/workflows/
+```
 
-## Repository Order
-
-Sanctum is the constitutional and coordinating repository of the Assembly. Ministerial repositories remain separate, self-contained bodies of evidence, method, memory, and production.
-
-A ministerial repository must be able to conduct and preserve its own work independently. Participation in the Assembly occurs through explicit, versioned, and attributable records. Sanctum may receive and synthesize those records, but it may not silently alter the sources, findings, or internal history of a ministerial repository.
-
-This separation allows the Assembly to grow without collapsing every method and corpus into a single system.
-
-## The Minister of Political Philosophy
-
-The [Strauss Repository](https://github.com/izzy9118-blip/custos) houses Leo Strauss as the Minister of Political Philosophy.
-
-The Strauss Repository preserves the documentary evidence, source hierarchy, safeguards, and interpretive procedures required to reconstruct Strauss’s mode of inquiry. It remains capable of functioning independently according to its own mission. When convened by Sanctum, it participates in the Assembly through attributable ministerial records without surrendering its internal standards or documentary history.
-
-Future ministers will likewise be housed in their own repositories. Their admission to the Assembly, jurisdiction, and relationship to Sanctum will be examined and established explicitly rather than assumed in advance.
-
-## Present Status
-
-Sanctum is in its founding stage.
-
-This README states the project’s initial identity, purpose, and repository boundaries. It is not yet a complete constitution, operational architecture, or executable system.
-
-Foundational instruments will be drafted and examined one at a time. No draft becomes part of Sanctum’s permanent authority until it has been explicitly approved and adopted.
-
-## Aim
-
-Sanctum exists to make disciplined judgment durable: to preserve the evidence, methods, disagreements, and history through which an intelligence learns to think.
+Ministerial corpora and reasoning systems remain in their own repositories. Sanctum is the Assembly, not a container for the ministers.
