@@ -1,0 +1,48 @@
+name: Sanctum Validation Gate
+
+# The gate is the authority-conferring act. A candidate inquiry may only be
+# merged to canonical if the gate does not REJECT it. Runtime writes are inert
+# until this passes. "The runtime may calculate, but only Git may remember
+# authoritatively" — this workflow enforces the seam.
+
+on:
+  pull_request:
+    paths:
+      - 'inquiries/**'
+      - 'schemas/**'
+      - 'registry/**'
+      - 'gate/**'
+      - 'projection/**'
+      - 'assembly.py'
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml
+      - name: Compile the constitutional runtime
+        run: python -m py_compile assembly.py gate/gate.py projection/projection.py
+      - name: Run the Assembly articulation harness
+        run: python assembly.py
+      - name: Validate committed inquiry candidates
+        run: |
+          set -e
+          status=0
+          for d in inquiries/*/ ; do
+            [ -d "$d" ] || continue
+            python3 gate/gate.py "$d" schemas registry || status=1
+          done
+          # A rejection anywhere fails the check and blocks the merge.
+          # FLAGGED inquiries pass CI but retain their flags for the outside
+          # ground to resolve before certification.
+          exit $status
