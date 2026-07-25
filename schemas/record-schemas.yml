@@ -1,0 +1,219 @@
+# Sanctum — Core Record Schemas
+#
+# Status: CURRENT. JSON-Schema semantics serialized as YAML for legibility
+# (validator parses YAML or JSON alike; legibility to the outside ground is
+# non-negotiable — see gate E1). Each field traces to a settled guarantee.
+#
+# SIZE BOUND (gate A2): every record must fit the size bound set in
+# constitution/config (not hard-coded here), because a record the LLM runtime
+# cannot hold in context is unusable to the thing that must read it.
+
+# =====================================================================
+# $defs — shared vocabulary used by every record
+# =====================================================================
+$defs:
+
+  id:
+    type: string
+    description: Stable identifier. Authority/time come from the git commit, not
+      from a field inside the record.
+
+  provenance:
+    type: object
+    required: [produced_by, consumed_records]
+    properties:
+      produced_by:
+        type: object
+        required: [actor, commit]
+        properties:
+          actor: { type: string, description: "minister/organ id, e.g. talleyrand, dismantling-organ, president, secretary" }
+          repo: { type: string, description: "sovereign source repo, if federated" }
+          commit: { type: string, description: "exact commit SHA of the actor that produced this — which Talleyrand spoke" }
+      consumed_records:
+        type: array
+        description: The pinned records this one reasoned from (id + commit each).
+        items:
+          type: object
+          required: [ref, commit]
+          properties: { ref: { type: string }, commit: { type: string } }
+      projection_version:
+        type: string
+        description: For runtime outputs — the projection the LLM actually read,
+          so a reader can confirm it reasoned against a faithful rendering of the
+          real record and not a stale/lossy one.
+
+  proposition:
+    type: object
+    required: [kind, claim]
+    properties:
+      kind:
+        enum: [documented_finding, supported_inference, working_hypothesis,
+               comparative_question, unresolved_uncertainty]
+      claim: { type: string, description: "the reasoned prose — free to be legible" }
+      grounds:
+        type: array
+        description: For documented_finding, must cite fixed witnesses (id+commit).
+          A finding without fixed witnesses fails C2.
+        items: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    description: No proposition may rise above its kind. Rhetoric is not a field.
+
+# =====================================================================
+# inquiry-envelope — the entry; immutable once created
+# =====================================================================
+inquiry_envelope:
+  type: object
+  required: [id, raw_situation, provenance]
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    raw_situation:
+      type: string
+      description: The submission as received, before any dismantling. Immutable.
+    source: { type: string, description: "who submitted it (attributed, not judged)" }
+    provenance: { $ref: "#/$defs/provenance" }
+  description: The envelope is immutable. Everything downstream cites it by commit.
+
+# =====================================================================
+# dismantling-record — the pre-deliberative organ's output
+# Expose, never decide. Nine elements, none empty. (gate B1–B5)
+# =====================================================================
+dismantling_record:
+  type: object
+  required:
+    - id
+    - inquiry_ref
+    - raw_submission
+    - extracted_claims_and_presuppositions
+    - framing_sources
+    - documented_acts_events_material_conditions
+    - supporting_evidence
+    - disconfirming_evidence
+    - unresolved_ambiguities
+    - transformation_rules_applied
+    - excluded_material
+    - provenance
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    inquiry_ref: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    raw_submission:
+      type: string
+      description: Present and unaltered (gate B4). Removal is forbidden — the
+        dismantling can always be checked against what it started from.
+    extracted_claims_and_presuppositions: { type: array, items: { type: string } }
+    framing_sources:
+      type: array
+      description: Attributed owners — whose account is this.
+      items: { type: string }
+    documented_acts_events_material_conditions: { type: array, items: { type: string } }
+    supporting_evidence:
+      type: array
+      items: { type: object, properties: { for: {type: string}, evidence: {type: string} } }
+    disconfirming_evidence:
+      type: array
+      description: The complicating facts each obvious reading would least like to
+        confront. The organ is obligated to surface these.
+      items: { type: object, properties: { complicates: {type: string}, evidence: {type: string} } }
+    unresolved_ambiguities: { type: array, items: { type: string } }
+    transformation_rules_applied: { type: array, items: { type: string } }
+    excluded_material:
+      type: array
+      description: Every exclusion carries its reason. An exclusion without a
+        reason fails the gate.
+      items:
+        type: object
+        required: [item, reason]
+        properties: { item: { type: string }, reason: { type: string } }
+    classifications:
+      type: array
+      items:
+        type: object
+        required: [item, category, schema, rationale]
+        properties:
+          item: { type: string }
+          category: { type: string }
+          schema: { type: string, description: "the classification scheme used" }
+          rationale: { type: string }
+    juxtapositions:
+      type: array
+      items:
+        type: object
+        required: [placed, beside, rationale]
+        properties: { placed: {type: string}, beside: {type: string}, rationale: {type: string} }
+    provenance: { $ref: "#/$defs/provenance" }
+  description: >
+    Permitted: decompose, attribute, retrieve, juxtapose, classify, expose
+    contradictions, identify missing evidence, preserve uncertainty. Forbidden:
+    resolve contested meanings, rank ends, declare an interpretation correct,
+    pre-synthesize ministers, convert inference to fact, remove the raw framing.
+    Forbidden outputs that are mechanically detectable are rejected (B5); the rest
+    are flagged to the outside ground, never passed as verified.
+
+# =====================================================================
+# ministerial-report — one per registered minister, always (gate C1)
+# =====================================================================
+ministerial_report:
+  type: object
+  required: [id, inquiry_ref, minister, mode, provenance]
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    inquiry_ref: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    minister:
+      type: object
+      required: [actor, manifest_commit]
+      properties:
+        actor: { type: string }
+        manifest_commit: { type: string, description: "which version of the minister reasoned" }
+    mode:
+      enum: [reasoned, outside_my_ground]
+      description: >
+        outside_my_ground is a COMPLETE answer (gate C1) — a minister may decline
+        a situation as outside his jurisdiction, but the declination is his own
+        recorded output, with reasons, never a router's upstream decision.
+    outside_my_ground_reasons:
+      type: array
+      description: Required when mode = outside_my_ground.
+      items: { type: string }
+    propositions:
+      type: array
+      items: { $ref: "#/$defs/proposition" }
+    surface:
+      type: object
+      description: >
+        The report spoken in the minister's register. Governed by the mapping
+        rule: every surface claim must map to a proposition of adequate kind.
+        Manner runs free; matter is never voice's to grant.
+      properties:
+        rendered: { type: string }
+        mapping:
+          type: array
+          description: Each surface claim traced to the proposition it expresses.
+          items:
+            type: object
+            required: [surface_claim, proposition_ref]
+            properties: { surface_claim: {type: string}, proposition_ref: {type: string} }
+    provenance: { $ref: "#/$defs/provenance" }
+
+# =====================================================================
+# dissent — a FIRST-CLASS, separately-committed object (gate D1)
+# =====================================================================
+dissent:
+  type: object
+  required: [id, inquiry_ref, dissenting_actor, from, ground, provenance]
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    inquiry_ref: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    dissenting_actor: { type: string }
+    from:
+      type: string
+      description: What it dissents from — a synthesis, a majority reading, a
+        presidential opinion. The dissent survives regardless.
+    ground: { type: string, description: "the reasoning of the disagreement" }
+    propositions: { type: array, items: { $ref: "#/$defs/proposition" } }
+    provenance: { $ref: "#/$defs/provenance" }
+
+# Batch 2 continues with evidence bundles, synthesis and non-synthesis results,
+# Presidential Opinions, Secretary validation, certification/correction, and
+# minister manifests.
