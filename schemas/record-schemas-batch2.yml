@@ -1,0 +1,199 @@
+# Sanctum — Record Schemas, Batch 2
+#
+# Status: CURRENT. Extends the shared $defs in record-schemas (Batch 1):
+# id, provenance, proposition. JSON-Schema semantics in YAML for legibility.
+
+$defs:
+
+  tier:
+    enum: [primary_external, primary_contemporaneous,
+           secondary_about_own_primary_acts, secondary_interpretive]
+    description: >
+      Tier is target-relative where a speech mechanism declares it (a memoir may
+      be secondary_about_own_primary_acts for deeds and primary for voice).
+      Primary governs secondary throughout, including a later self-account over
+      the earlier acting self.
+
+  witness:
+    type: object
+    required: [ref, tier, hash]
+    properties:
+      ref: { type: string }
+      tier: { $ref: "#/$defs/tier" }
+      edition: { type: string, description: "pinned edition/translation — public-domain source where quoted" }
+      hash: { type: string, description: "content hash — fixity: it refuses to conform no matter who reads it" }
+      limits: { type: string, description: "OCR limits, gaps, known source problems, recorded as documentary facts" }
+
+  convergence_assessment:
+    type: array
+    description: >
+      Each minister's conclusion AND ground. This makes a coincidence of
+      conclusions over divergent grounds visible instead of laundering it into
+      unanimity. Both synthesis and non-synthesis carry it.
+    items:
+      type: object
+      required: [minister, conclusion, ground]
+      properties:
+        minister: { type: string }
+        conclusion: { type: string }
+        ground: { type: string, description: "the reasoning that produced the conclusion — not just the verdict" }
+
+evidence_bundle:
+  type: object
+  required: [id, inquiry_ref, witnesses, provenance]
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    inquiry_ref: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    witnesses: { type: array, items: { $ref: "#/$defs/witness" } }
+    provenance: { $ref: "#/$defs/provenance" }
+  description: Fixity is per-witness; completeness of the set is not guaranteed
+    by fixity and remains the open seam guarded by the outside ground.
+
+synthesis:
+  type: object
+  required: [id, inquiry_ref, convergence_assessment, grounds_converge,
+             shared_ground, converging_ministers, provenance]
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    inquiry_ref: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    convergence_assessment: { $ref: "#/$defs/convergence_assessment" }
+    grounds_converge:
+      const: true
+      description: >
+        This record may exist only when grounds genuinely converge. Coinciding
+        conclusions over divergent grounds produce a non_synthesis_result.
+    shared_ground:
+      type: string
+      description: >
+        The actual convergent reasoning, stated. Its presence distinguishes
+        reached agreement from a mere verdict match.
+    converging_ministers:
+      type: array
+      items: { type: string }
+      description: The ministers whose grounds converge. Need not be all of them.
+    preserved_dissent_refs:
+      type: array
+      description: Dissent objects stand apart from synthesis and are referenced,
+        never absorbed or deleted.
+      items: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    presidential_opinion_ref:
+      type: object
+      description: Optional link to the President's own reconciling opinion.
+      properties: { ref: {type: string}, commit: {type: string} }
+    provenance: { $ref: "#/$defs/provenance" }
+
+non_synthesis_result:
+  type: object
+  required: [id, inquiry_ref, convergence_assessment, grounds_converge,
+             divergence_characterization, provenance]
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    inquiry_ref: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    convergence_assessment: { $ref: "#/$defs/convergence_assessment" }
+    grounds_converge:
+      const: false
+    divergence_characterization:
+      type: string
+      description: >
+        How and where the grounds diverged, stated affirmatively. No presidential
+        verdict is rendered; the last word is the disagreement itself.
+    provenance: { $ref: "#/$defs/provenance" }
+
+presidential_opinion:
+  type: object
+  required: [id, inquiry_ref, president, opinion, provenance]
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    inquiry_ref: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    president: { type: string }
+    opinion: { type: string, description: "the President's reasoned reconciliation, marked as his own" }
+    marked_as_own:
+      const: true
+      description: Recorded as the President's own voice, distinct from the
+        ministerial reports and never as ministerial consensus.
+    constraint:
+      type: string
+      default: "emitted only alongside a synthesis; forbidden as a verdict in the divergence case; may not erase or override dissent"
+    provenance: { $ref: "#/$defs/provenance" }
+
+secretary_validation:
+  type: object
+  required: [id, inquiry_ref, record_set, dissent_preserved, provenance_valid, outcome, provenance]
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    inquiry_ref: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    record_set:
+      type: array
+      description: Every record composing the inquiry, identified and pinned.
+      items: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    dissent_preserved:
+      type: boolean
+    provenance_valid:
+      type: boolean
+    outcome:
+      enum: [validated, flagged, rejected]
+      description: >
+        Mirrors the Gate's three states. Flagged records go to the outside ground;
+        the Secretary never validates substance it could not verify.
+    flags_and_reasons:
+      type: array
+      items: { type: object, properties: { item: {type: string}, reason: {type: string} } }
+    provenance: { $ref: "#/$defs/provenance" }
+
+certification_and_correction:
+  type: object
+  required: [id, inquiry_ref, mode, provenance]
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    inquiry_ref: { type: object, properties: { ref: {type: string}, commit: {type: string} } }
+    mode:
+      enum: [certification, correction]
+    scope:
+      type: string
+      description: Certification is limited to its expressly stated scope.
+    corrects:
+      type: object
+      description: The prior record corrected, identified and pinned.
+      properties: { ref: {type: string}, commit: {type: string} }
+    cause:
+      type: string
+      description: The reason for a forward correction; the prior record is never deleted.
+    statement: { type: string }
+    provenance: { $ref: "#/$defs/provenance" }
+
+minister_manifest:
+  type: object
+  required: [id, title, jurisdiction, gate_posture, proposition_kinds, provenance]
+  additionalProperties: false
+  properties:
+    id: { $ref: "#/$defs/id" }
+    title: { type: string }
+    jurisdiction: { type: string, description: "the ground this minister reasons from; his alone" }
+    source_hierarchy:
+      type: array
+      items: { $ref: "#/$defs/tier" }
+      description: Primary governs secondary; declared per minister.
+    gate_posture:
+      enum: [outer_default, dual_gate_foundational]
+      description: >
+        Whether concealment is the earned exception or co-present from the first
+        framing. Governs every object the minister's adapter produces.
+    proposition_kinds:
+      type: array
+      items: { enum: [documented_finding, supported_inference, working_hypothesis,
+                      comparative_question, unresolved_uncertainty] }
+    method_ref: { type: string, description: "pointer to the reasoning structure" }
+    voice:
+      type: object
+      properties:
+        status: { enum: [subordinate_to_reasoning, expressive_standing] }
+        mechanism_ref: { type: string }
+    opacity_floor: { type: string, description: "the standing unrecoverable, represented rather than filled" }
+    safeguards: { type: array, items: { type: string } }
+    provenance: { $ref: "#/$defs/provenance" }
