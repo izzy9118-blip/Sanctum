@@ -1,0 +1,16 @@
+name = "sanctum"
+version = "0.1.0"
+description = "Indexes verified Sanctum Portable Inquiry Capsules."
+
+[adapter]
+entrypoint = "scripts/spacedrive_sync.py"
+format = "jsonl"
+
+[capabilities]
+read = true
+write = false
+network = false
+
+[trust]
+tier = "authored"
+quarantine_on_parse_error = true
