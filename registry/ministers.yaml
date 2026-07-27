@@ -1,7 +1,13 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 2.0.0
+version: 2.1.0
 canonical_repository: izzy9118-blip/Sanctum
+revision:
+  predecessor_version: 2.0.0
+  reason: >-
+    Replace stale custos references with the sovereign Strauss repository and pin the
+    validated lean operational manifest, adapter, and speech mechanism without moving
+    ministerial reasoning into Sanctum.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -14,7 +20,7 @@ ministers:
     jurisdiction: >-
       Political philosophy and its history, approached through the documentary
       method, source hierarchy, safeguards, and interpretive procedures of the
-      Strauss Repository.
+      sovereign Strauss Repository.
     gate_posture: outer_default
     proposition_kinds:
       - documented_finding
@@ -22,24 +28,41 @@ ministers:
       - working_hypothesis
       - comparative_question
       - unresolved_uncertainty
-    method_ref: manifests/cognitive-memory/MAN-000000001.json
+    repository: izzy9118-blip/Strauss
+    pinned_commit: 711ddf2c47483f319742574dfba843af2248a202
+    manifest_ref: manifest.yaml
+    method_ref: manifest.yaml
+    adapter_ref: adapter.py
+    corpus_ref: corpus/index.yaml
+    findings_ref: findings/index.yaml
     voice:
       status: subordinate_to_reasoning
-      mechanism_ref: manifests/cognitive-memory/MAN-000000001.json
+      mechanism_ref: speech/speech-mechanism.yaml
+    interface_status: VALIDATED_OPERATIONAL_INTERFACE_NOT_DOCTRINAL_CERTIFICATION
     opacity_floor: >-
       The minister may preserve an unresolved uncertainty where the documentary
       record does not warrant a stronger claim.
     safeguards:
       - Primary sources govern secondary sources where primary sources are available.
       - Documentary findings, inferences, hypotheses, questions, and uncertainties remain distinct.
+      - Independent witnesses are reconstructed before comparative ranking.
+      - Poetry is not revelation, and irony is not mechanical inversion.
+      - The repository, adapter, and artificial intelligence system may not certify themselves as wise.
       - The minister receives every inquiry and owns any outside-my-ground determination.
+      - Sanctum consumes pinned interfaces and attributable reports; it does not own ministerial reasoning.
     membership_status: established
     provenance:
       produced_by:
         actor: leo-strauss
-        repo: izzy9118-blip/custos
-        commit: 26a3f1a122c96ccf63d1b1744d43a9ecec3833dc
-      consumed_records: []
+        repo: izzy9118-blip/Strauss
+        commit: 711ddf2c47483f319742574dfba843af2248a202
+      consumed_records:
+        - ref: manifest.yaml
+          commit: 711ddf2c47483f319742574dfba843af2248a202
+        - ref: adapter.py
+          commit: 711ddf2c47483f319742574dfba843af2248a202
+        - ref: speech/speech-mechanism.yaml
+          commit: 711ddf2c47483f319742574dfba843af2248a202
 future_repositories:
   - id: talleyrand
     title: Talleyrand
