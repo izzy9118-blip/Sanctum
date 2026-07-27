@@ -1,13 +1,14 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 2.4.0
+version: 2.5.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 2.3.0
+  predecessor_version: 2.4.0
   reason: >-
-    Repin the sovereign Strauss repository after substantive reconstruction and
-    behavioral validation of all four inquiry method contracts. Preserve source-specific
-    application, problem implementation, corpus, findings, semantic completion, and doctrine as incomplete.
+    Repin the sovereign Strauss repository after read-only registration and behavioral
+    validation of complete bundles for all seven foundational problems. Preserve
+    source-specific application, witness reconstruction, migration, corpus, findings,
+    semantic completion, doctrine, and activation as incomplete.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -29,11 +30,13 @@ ministers:
       - comparative_question
       - unresolved_uncertainty
     repository: izzy9118-blip/Strauss
-    pinned_commit: a50d9924722a4eeb99e5cd249444f3319dc4117e
+    pinned_commit: 58fb3c53885188780bb22193b8371609f77dda16
     manifest_ref: manifest.yaml
     audit_ref: audits/operational-completeness.yaml
+    mapping_ref: migrations/lean-operational-interface.yaml
     method_ref: manifest.yaml
     adapter_ref: adapter.py
+    problem_bundle_loader_ref: problem_bundles.py
     corpus_ref: corpus/index.yaml
     findings_ref: findings/index.yaml
     hermeneutics:
@@ -62,6 +65,27 @@ ministers:
           version: STRAUSS-METHOD-TO-1
         - ref: method/preserve-problem.yaml
           version: STRAUSS-METHOD-PP-1
+    foundational_problems:
+      completion: SUBSTANTIVE_BUNDLES_RUNTIME_LOADED_SOURCE_APPLICATION_AND_MIGRATION_INCOMPLETE
+      loader: problem_bundles.py
+      canonical_order:
+        - nomos-vs-physis
+        - philosophy-vs-poetry
+        - theory-vs-practice
+        - theologico-political
+        - athens-vs-jerusalem
+        - wise-vs-vulgar
+        - ancients-vs-moderns
+      bundle_members:
+        - constitution
+        - inquiry_profile
+        - witness_registry
+        - relation_record
+        - synthesis_records
+      limit: >-
+        Bundle validity makes governing records available together. It does not finish
+        source studies, complete independent witnesses, certify migrations or doctrine,
+        displace predecessors, activate successors, or confer Assembly authority.
     voice:
       status: subordinate_to_reasoning
       mechanism_ref: speech/speech-mechanism.yaml
@@ -72,18 +96,21 @@ ministers:
     runtime_readiness: LIMITED_READ_ONLY_CONTEXT_AND_CANDIDATE_REPORT_SUPPORT
     validation:
       workflow: Validate Lean Strauss Interface
-      run_id: 30258342808
+      run_id: 30259672637
       conclusion: success
       scope:
         - manifest, audit, mapping, and declared-path validation
         - speech-contract semantic validation
         - six hermeneutic contract shape and safeguard tests
         - four inquiry method contract shape and safeguard tests
-        - structural and behavioral adapter tests
+        - seven complete foundational problem bundle validations
+        - controlled relation, brother-problem, predecessor, and migration-source tests
+        - structural and behavioral interface tests
       limit: >-
-        Passing validation establishes the declared speech, hermeneutic, and method
-        contracts. It does not complete source-specific applications, problem
-        implementation, corpus, findings, independent witnesses, doctrine, or unrestricted reasoning.
+        Passing validation establishes the declared speech, hermeneutic, method, and
+        read-only problem-bundle contracts. It does not complete source-specific
+        applications, witness reconstruction, proposition-level migration, corpus,
+        findings, doctrine, activation, or unrestricted reasoning.
     opacity_floor: >-
       The minister may preserve an unresolved uncertainty where the documentary
       record does not warrant a stronger claim.
@@ -94,13 +121,15 @@ ministers:
       - Independent witnesses and rival alternatives are reconstructed before comparative ranking.
       - Textual sequence, transitions, corrections, and endings may not be erased by thematic summary.
       - Practical settlement, legal authority, and historical victory do not certify philosophical or theological truth.
+      - Complete bundle loading does not certify the enclosed problem, witness, synthesis, or migration.
       - Poetry is not revelation, and irony is not mechanical inversion.
       - Laughter, comic victory, title, office, suffering, obscurity, and persecution do not certify truth or wisdom.
       - Concealment requires positive textual, dramatic, structural, comparative, or historical evidence.
       - Character, narrator, chorus, editor, translator, and author remain distinct until evidence establishes a relation.
       - Historical context does not function as silent philosophical refutation.
       - Contradiction and affirmative nonresolution may remain complete positive findings.
-      - The repository, adapter, and artificial intelligence system may not certify themselves as wise.
+      - Active predecessors and accepted migration sources remain authoritative until an authorized certified transition.
+      - The repository, adapter, problem-bundle loader, and artificial intelligence system may not certify themselves as wise.
       - The minister receives every inquiry and owns any outside-my-ground determination.
       - Sanctum consumes pinned interfaces and attributable reports; it does not own ministerial reasoning.
       - Structural validation must not be described as semantic completion.
@@ -109,22 +138,26 @@ ministers:
       produced_by:
         actor: leo-strauss
         repo: izzy9118-blip/Strauss
-        commit: a50d9924722a4eeb99e5cd249444f3319dc4117e
+        commit: 58fb3c53885188780bb22193b8371609f77dda16
       consumed_records:
         - ref: manifest.yaml
-          commit: a50d9924722a4eeb99e5cd249444f3319dc4117e
+          commit: 58fb3c53885188780bb22193b8371609f77dda16
         - ref: audits/operational-completeness.yaml
-          commit: a50d9924722a4eeb99e5cd249444f3319dc4117e
+          commit: 58fb3c53885188780bb22193b8371609f77dda16
         - ref: migrations/lean-operational-interface.yaml
-          commit: a50d9924722a4eeb99e5cd249444f3319dc4117e
+          commit: 58fb3c53885188780bb22193b8371609f77dda16
         - ref: adapter.py
-          commit: a50d9924722a4eeb99e5cd249444f3319dc4117e
+          commit: 58fb3c53885188780bb22193b8371609f77dda16
+        - ref: problem_bundles.py
+          commit: 58fb3c53885188780bb22193b8371609f77dda16
         - ref: speech/speech-mechanism.yaml
-          commit: a50d9924722a4eeb99e5cd249444f3319dc4117e
+          commit: 58fb3c53885188780bb22193b8371609f77dda16
         - ref: hermeneutics/
-          commit: a50d9924722a4eeb99e5cd249444f3319dc4117e
+          commit: 58fb3c53885188780bb22193b8371609f77dda16
         - ref: method/
-          commit: a50d9924722a4eeb99e5cd249444f3319dc4117e
+          commit: 58fb3c53885188780bb22193b8371609f77dda16
+        - ref: problems/
+          commit: 58fb3c53885188780bb22193b8371609f77dda16
 future_repositories:
   - id: talleyrand
     title: Talleyrand
