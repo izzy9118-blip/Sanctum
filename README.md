@@ -86,7 +86,9 @@ The runtime has no independent constitutional memory. It reads pinned records an
 
 Each minister owns a distinct ground of reasoning, source hierarchy, method, voice discipline, opacity floor, and safeguards. Ministerial repositories remain sovereign and independently usable.
 
-The Strauss Repository, [`izzy9118-blip/Strauss`](https://github.com/izzy9118-blip/Strauss), houses Leo Strauss as Minister of Political Philosophy. Sanctum consumes only the repository's pinned operational manifest, adapter contract, and attributable ministerial reports; Strauss's problems, hermeneutics, method, speech mechanism, corpus, findings, migrations, and historical records remain in the sovereign Strauss repository.
+The Strauss Repository, [`izzy9118-blip/Strauss`](https://github.com/izzy9118-blip/Strauss), houses Leo Strauss as Minister of Political Philosophy. Sanctum consumes only the repository's pinned operational manifest, adapter contract, completeness audit, and attributable ministerial reports; Strauss's problems, hermeneutics, method, speech mechanism, corpus, findings, migrations, and historical records remain in the sovereign Strauss repository.
+
+The current Strauss pin has passed manifest, contract, path, and behavioral validation, but the Strauss manifest expressly records semantic completion as incomplete and runtime readiness as limited. Sanctum must not convert structural validation into a claim that the ministerial repository, its hermeneutics, method, corpus, findings, or doctrines are complete or certified.
 
 Talleyrand will be housed in his own sovereign repository, `izzy9118-blip/Talleyrand`. His corpus, method, source hierarchy, voice mechanism, and safeguards belong there, not in Sanctum. Sanctum will receive only his attributable ministerial records through the common contract.
 
