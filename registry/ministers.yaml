@@ -1,14 +1,14 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 2.7.0
+version: 2.8.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 2.6.0
+  predecessor_version: 2.7.0
   reason: >-
-    Repin the sovereign Strauss repository after replacement of its reference-only
-    findings index with a typed registry exhaustive for the current committed
-    findings-record state. Preserve proposition-level evidence in governing records,
-    findings as open and incomplete, and doctrine, migration, activation, and predecessor displacement as unauthorized.
+    Repin the sovereign Strauss repository after bibliographic, file-level, OCR,
+    page-image, and source-status validation of the reviewed Socrates and Aristophanes
+    witness. Preserve source-text admission as separate, independent ancient witnesses
+    as incomplete, findings as open, and doctrine, migration, activation, and predecessor displacement as unauthorized.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -30,7 +30,7 @@ ministers:
       - comparative_question
       - unresolved_uncertainty
     repository: izzy9118-blip/Strauss
-    pinned_commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+    pinned_commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
     manifest_ref: manifest.yaml
     audit_ref: audits/operational-completeness.yaml
     mapping_ref: migrations/lean-operational-interface.yaml
@@ -91,17 +91,32 @@ ministers:
     corpus:
       completion: SUBSTANTIVELY_RECONSTRUCTED_CURRENT_STATE_EXHAUSTIVE_OPEN_CORPUS
       registry: corpus/index.yaml
+      registry_version: 1.1.0
       loader: corpus_registry.py
       scope: EXHAUSTIVE_FOR_CURRENT_COMMITTED_SOURCE_AND_STUDY_STATE
       registered_counts:
         source_entities: 22
-        reviewed_witnesses: 2
-        source_status_records: 2
+        reviewed_witnesses: 3
+        source_status_records: 3
         study_records: 7
         problem_witness_registries: 7
         theologico_political_predecessor_sources: 19
-        studies_tree_yaml_records: 9
+        studies_tree_yaml_records: 10
         explicit_corpus_gaps: 7
+      reviewed_socrates_and_aristophanes_witness:
+        source_id: CORPUS-SRC-001
+        witness_id: CORPUS-WIT-003
+        source_status_id: CORPUS-STATUS-003
+        source_status_ref: studies/socrates-and-aristophanes/source-status.yaml
+        original_publication: Basic Books 1966
+        reviewed_edition: University of Chicago Press paperback 1980
+        local_filename: Leo Strauss = ''Socrates & Aristophanes'' [1970].pdf
+        filename_year_status: NONAUTHORITATIVE_AND_CONTRADICTED_BY_TITLE_AND_COPYRIGHT_PAGES
+        page_count: 321
+        file_size_bytes: 25818895
+        sha256: 1b74826f62bbc70d887e0f224b553c3bb521c55688ae9ba28c455ee080df9fa6
+        source_condition: SEARCHABLE_OCR_WITH_AUTHORITATIVE_PAGE_IMAGES
+        text_rule: PAGE_IMAGES_GOVERN_WORDING_WHERE_OCR_IS_UNCERTAIN
       limit: >-
         Current-state exhaustive registration does not create a closed or complete
         corpus. It does not admit source texts, supply absent editions, complete
@@ -140,7 +155,7 @@ ministers:
     runtime_readiness: LIMITED_READ_ONLY_CONTEXT_AND_CANDIDATE_REPORT_SUPPORT
     validation:
       workflow: Validate Lean Strauss Interface
-      run_id: 30262080358
+      run_id: 30263948553
       conclusion: success
       scope:
         - manifest, audit, mapping, and declared-path validation
@@ -151,20 +166,23 @@ ministers:
         - typed corpus identity, path, coverage, predecessor, witness, and gap validation
         - exact current studies-tree accounting
         - typed findings study, synthesis, transaction, preserved-basis, binding, index, and gap validation
-        - exact current findings-record tree accounting
+        - Socrates and Aristophanes edition, fingerprint, OCR, page-image, filename, source-status, and nonabsorption tests
         - structural and behavioral interface tests
       limit: >-
         Passing validation establishes the declared speech, hermeneutic, method,
-        problem-bundle, current-state corpus, and current-state findings contracts.
-        It does not complete source-specific applications, item-level source statuses,
-        independent witnesses, proposition normalization, actual ministerial reports,
-        doctrine, migration certification, activation, or unrestricted reasoning.
+        problem-bundle, current-state corpus, current-state findings, and reviewed-witness
+        contracts. It does not complete source-specific applications, edition comparison,
+        independent ancient witnesses, item-level source statuses, proposition normalization,
+        actual ministerial reports, doctrine, migration certification, activation, or unrestricted reasoning.
     opacity_floor: >-
       The minister may preserve an unresolved uncertainty where the documentary
       record does not warrant a stronger claim.
     safeguards:
       - Primary sources govern secondary sources where primary sources are available.
-      - Source entities, reviewed witnesses, translations, source-status records, analytical studies, syntheses, and migration ledgers remain distinct.
+      - Source entities, original publications, reviewed editions, local files, OCR layers, page images, source-status records, analytical studies, syntheses, and migration ledgers remain distinct.
+      - Title-page and copyright-page evidence govern a conflicting local filename.
+      - Page images govern wording where OCR is uncertain or conflicts.
+      - The reviewed Socrates and Aristophanes witness does not replace independent Aristophanes, Plato, Xenophon, or historical-Socrates witnesses.
       - Current-state exhaustive corpus registration does not mean a closed or complete corpus.
       - Current-state exhaustive findings registration does not mean complete propositions or doctrine.
       - Registry inclusion does not admit source text or promote a proposition beyond its record-local evidence status.
@@ -191,34 +209,36 @@ ministers:
       produced_by:
         actor: leo-strauss
         repo: izzy9118-blip/Strauss
-        commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+        commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
       consumed_records:
         - ref: manifest.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: audits/operational-completeness.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: migrations/lean-operational-interface.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: adapter.py
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: problem_bundles.py
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: corpus/index.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: corpus_registry.py
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: findings/index.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: findings_registry.py
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
+        - ref: studies/socrates-and-aristophanes/source-status.yaml
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: speech/speech-mechanism.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: hermeneutics/
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: method/
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
         - ref: problems/
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 314f6b3f8831a5f39e42cb3bb6025bd97768d8f5
 future_repositories:
   - id: talleyrand
     title: Talleyrand
