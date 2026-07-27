@@ -1,14 +1,14 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 2.6.0
+version: 2.7.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 2.5.0
+  predecessor_version: 2.6.0
   reason: >-
     Repin the sovereign Strauss repository after replacement of its reference-only
-    corpus index with a typed registry exhaustive for the current committed source and
-    study state. Preserve the corpus as open, source-text admission as separate, witness
-    reconstruction and findings as incomplete, and doctrine, migration, and activation as unauthorized.
+    findings index with a typed registry exhaustive for the current committed
+    findings-record state. Preserve proposition-level evidence in governing records,
+    findings as open and incomplete, and doctrine, migration, activation, and predecessor displacement as unauthorized.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -30,7 +30,7 @@ ministers:
       - comparative_question
       - unresolved_uncertainty
     repository: izzy9118-blip/Strauss
-    pinned_commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+    pinned_commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
     manifest_ref: manifest.yaml
     audit_ref: audits/operational-completeness.yaml
     mapping_ref: migrations/lean-operational-interface.yaml
@@ -40,6 +40,7 @@ ministers:
     corpus_ref: corpus/index.yaml
     corpus_loader_ref: corpus_registry.py
     findings_ref: findings/index.yaml
+    findings_loader_ref: findings_registry.py
     hermeneutics:
       completion: SUBSTANTIVELY_RECONSTRUCTED_SOURCE_APPLICATION_INCOMPLETE
       contracts:
@@ -106,6 +107,29 @@ ministers:
         corpus. It does not admit source texts, supply absent editions, complete
         item-level source status or independent witnesses, promote studies, certify
         claims, or authorize migrations and successor activation.
+    findings:
+      completion: SUBSTANTIVELY_RECONSTRUCTED_CURRENT_STATE_EXHAUSTIVE_OPEN_FINDINGS_STORE
+      registry: findings/index.yaml
+      loader: findings_registry.py
+      scope: EXHAUSTIVE_FOR_CURRENT_COMMITTED_FINDINGS_RECORD_STATE
+      registered_counts:
+        finding_sets: 22
+        source_specific_and_integration_records: 7
+        problem_local_syntheses: 10
+        foundational_migration_transactions: 3
+        preserved_finding_bases: 2
+        canonical_problem_indexes: 7
+        explicit_findings_gaps: 6
+      indexes:
+        - by_problem
+        - by_source
+        - by_record_class
+      limit: >-
+        Current-state exhaustive findings registration does not normalize every
+        proposition or establish independent corroboration. Record-local evidence,
+        sequence, qualification, uncertainty, contradiction, dissent, and migration
+        status remain governing. The registry does not promote propositions, certify
+        doctrine or migration, activate successors, displace predecessors, or confer Assembly authority.
     voice:
       status: subordinate_to_reasoning
       mechanism_ref: speech/speech-mechanism.yaml
@@ -116,7 +140,7 @@ ministers:
     runtime_readiness: LIMITED_READ_ONLY_CONTEXT_AND_CANDIDATE_REPORT_SUPPORT
     validation:
       workflow: Validate Lean Strauss Interface
-      run_id: 30260644327
+      run_id: 30262080358
       conclusion: success
       scope:
         - manifest, audit, mapping, and declared-path validation
@@ -126,25 +150,30 @@ ministers:
         - seven complete foundational problem bundle validations
         - typed corpus identity, path, coverage, predecessor, witness, and gap validation
         - exact current studies-tree accounting
+        - typed findings study, synthesis, transaction, preserved-basis, binding, index, and gap validation
+        - exact current findings-record tree accounting
         - structural and behavioral interface tests
       limit: >-
         Passing validation establishes the declared speech, hermeneutic, method,
-        problem-bundle, and current-state corpus contracts. It does not complete
-        source-specific applications, item-level source statuses, independent witnesses,
-        findings, proposition-level migration, doctrine, activation, or unrestricted reasoning.
+        problem-bundle, current-state corpus, and current-state findings contracts.
+        It does not complete source-specific applications, item-level source statuses,
+        independent witnesses, proposition normalization, actual ministerial reports,
+        doctrine, migration certification, activation, or unrestricted reasoning.
     opacity_floor: >-
       The minister may preserve an unresolved uncertainty where the documentary
       record does not warrant a stronger claim.
     safeguards:
       - Primary sources govern secondary sources where primary sources are available.
-      - Source entities, reviewed witnesses, translations, source-status records, and analytical studies remain distinct.
+      - Source entities, reviewed witnesses, translations, source-status records, analytical studies, syntheses, and migration ledgers remain distinct.
       - Current-state exhaustive corpus registration does not mean a closed or complete corpus.
-      - Registry inclusion does not admit or distribute source text.
-      - Documentary findings, inferences, hypotheses, questions, and uncertainties remain distinct.
+      - Current-state exhaustive findings registration does not mean complete propositions or doctrine.
+      - Registry inclusion does not admit source text or promote a proposition beyond its record-local evidence status.
+      - Documentary findings, inferences, hypotheses, questions, contradictions, dissent, and uncertainties remain distinct.
+      - Multiple records derived from one source do not constitute independent corroboration.
       - The user's question, source question, governing question, topic, doctrine, and problem route remain distinct records.
       - Independent witnesses and rival alternatives are reconstructed before comparative ranking.
       - Textual sequence, transitions, corrections, and endings may not be erased by thematic summary.
-      - Practical settlement, legal authority, and historical victory do not certify philosophical or theological truth.
+      - Practical settlement, legal authority, historical victory, and migration classification do not certify philosophical or theological truth.
       - Complete bundle loading does not certify the enclosed problem, witness, synthesis, or migration.
       - Poetry is not revelation, and irony is not mechanical inversion.
       - Laughter, comic victory, title, office, suffering, obscurity, and persecution do not certify truth or wisdom.
@@ -153,7 +182,7 @@ ministers:
       - Historical context does not function as silent philosophical refutation.
       - Contradiction and affirmative nonresolution may remain complete positive findings.
       - Active predecessors and accepted migration sources remain authoritative until an authorized certified transition.
-      - The repository, adapter, problem-bundle loader, corpus loader, and artificial intelligence system may not certify themselves as wise.
+      - The repository, adapter, problem-bundle loader, corpus loader, findings loader, and artificial intelligence system may not certify themselves as wise.
       - The minister receives every inquiry and owns any outside-my-ground determination.
       - Sanctum consumes pinned interfaces and attributable reports; it does not own ministerial reasoning.
       - Structural validation must not be described as semantic completion.
@@ -162,30 +191,34 @@ ministers:
       produced_by:
         actor: leo-strauss
         repo: izzy9118-blip/Strauss
-        commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+        commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
       consumed_records:
         - ref: manifest.yaml
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
         - ref: audits/operational-completeness.yaml
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
         - ref: migrations/lean-operational-interface.yaml
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
         - ref: adapter.py
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
         - ref: problem_bundles.py
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
         - ref: corpus/index.yaml
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
         - ref: corpus_registry.py
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+        - ref: findings/index.yaml
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+        - ref: findings_registry.py
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
         - ref: speech/speech-mechanism.yaml
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
         - ref: hermeneutics/
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
         - ref: method/
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
         - ref: problems/
-          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
 future_repositories:
   - id: talleyrand
     title: Talleyrand
