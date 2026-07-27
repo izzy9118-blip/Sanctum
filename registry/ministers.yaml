@@ -1,14 +1,14 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 2.5.0
+version: 2.6.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 2.4.0
+  predecessor_version: 2.5.0
   reason: >-
-    Repin the sovereign Strauss repository after read-only registration and behavioral
-    validation of complete bundles for all seven foundational problems. Preserve
-    source-specific application, witness reconstruction, migration, corpus, findings,
-    semantic completion, doctrine, and activation as incomplete.
+    Repin the sovereign Strauss repository after replacement of its reference-only
+    corpus index with a typed registry exhaustive for the current committed source and
+    study state. Preserve the corpus as open, source-text admission as separate, witness
+    reconstruction and findings as incomplete, and doctrine, migration, and activation as unauthorized.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -30,7 +30,7 @@ ministers:
       - comparative_question
       - unresolved_uncertainty
     repository: izzy9118-blip/Strauss
-    pinned_commit: 58fb3c53885188780bb22193b8371609f77dda16
+    pinned_commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
     manifest_ref: manifest.yaml
     audit_ref: audits/operational-completeness.yaml
     mapping_ref: migrations/lean-operational-interface.yaml
@@ -38,6 +38,7 @@ ministers:
     adapter_ref: adapter.py
     problem_bundle_loader_ref: problem_bundles.py
     corpus_ref: corpus/index.yaml
+    corpus_loader_ref: corpus_registry.py
     findings_ref: findings/index.yaml
     hermeneutics:
       completion: SUBSTANTIVELY_RECONSTRUCTED_SOURCE_APPLICATION_INCOMPLETE
@@ -86,6 +87,25 @@ ministers:
         Bundle validity makes governing records available together. It does not finish
         source studies, complete independent witnesses, certify migrations or doctrine,
         displace predecessors, activate successors, or confer Assembly authority.
+    corpus:
+      completion: SUBSTANTIVELY_RECONSTRUCTED_CURRENT_STATE_EXHAUSTIVE_OPEN_CORPUS
+      registry: corpus/index.yaml
+      loader: corpus_registry.py
+      scope: EXHAUSTIVE_FOR_CURRENT_COMMITTED_SOURCE_AND_STUDY_STATE
+      registered_counts:
+        source_entities: 22
+        reviewed_witnesses: 2
+        source_status_records: 2
+        study_records: 7
+        problem_witness_registries: 7
+        theologico_political_predecessor_sources: 19
+        studies_tree_yaml_records: 9
+        explicit_corpus_gaps: 7
+      limit: >-
+        Current-state exhaustive registration does not create a closed or complete
+        corpus. It does not admit source texts, supply absent editions, complete
+        item-level source status or independent witnesses, promote studies, certify
+        claims, or authorize migrations and successor activation.
     voice:
       status: subordinate_to_reasoning
       mechanism_ref: speech/speech-mechanism.yaml
@@ -96,7 +116,7 @@ ministers:
     runtime_readiness: LIMITED_READ_ONLY_CONTEXT_AND_CANDIDATE_REPORT_SUPPORT
     validation:
       workflow: Validate Lean Strauss Interface
-      run_id: 30259672637
+      run_id: 30260644327
       conclusion: success
       scope:
         - manifest, audit, mapping, and declared-path validation
@@ -104,18 +124,22 @@ ministers:
         - six hermeneutic contract shape and safeguard tests
         - four inquiry method contract shape and safeguard tests
         - seven complete foundational problem bundle validations
-        - controlled relation, brother-problem, predecessor, and migration-source tests
+        - typed corpus identity, path, coverage, predecessor, witness, and gap validation
+        - exact current studies-tree accounting
         - structural and behavioral interface tests
       limit: >-
-        Passing validation establishes the declared speech, hermeneutic, method, and
-        read-only problem-bundle contracts. It does not complete source-specific
-        applications, witness reconstruction, proposition-level migration, corpus,
-        findings, doctrine, activation, or unrestricted reasoning.
+        Passing validation establishes the declared speech, hermeneutic, method,
+        problem-bundle, and current-state corpus contracts. It does not complete
+        source-specific applications, item-level source statuses, independent witnesses,
+        findings, proposition-level migration, doctrine, activation, or unrestricted reasoning.
     opacity_floor: >-
       The minister may preserve an unresolved uncertainty where the documentary
       record does not warrant a stronger claim.
     safeguards:
       - Primary sources govern secondary sources where primary sources are available.
+      - Source entities, reviewed witnesses, translations, source-status records, and analytical studies remain distinct.
+      - Current-state exhaustive corpus registration does not mean a closed or complete corpus.
+      - Registry inclusion does not admit or distribute source text.
       - Documentary findings, inferences, hypotheses, questions, and uncertainties remain distinct.
       - The user's question, source question, governing question, topic, doctrine, and problem route remain distinct records.
       - Independent witnesses and rival alternatives are reconstructed before comparative ranking.
@@ -129,7 +153,7 @@ ministers:
       - Historical context does not function as silent philosophical refutation.
       - Contradiction and affirmative nonresolution may remain complete positive findings.
       - Active predecessors and accepted migration sources remain authoritative until an authorized certified transition.
-      - The repository, adapter, problem-bundle loader, and artificial intelligence system may not certify themselves as wise.
+      - The repository, adapter, problem-bundle loader, corpus loader, and artificial intelligence system may not certify themselves as wise.
       - The minister receives every inquiry and owns any outside-my-ground determination.
       - Sanctum consumes pinned interfaces and attributable reports; it does not own ministerial reasoning.
       - Structural validation must not be described as semantic completion.
@@ -138,26 +162,30 @@ ministers:
       produced_by:
         actor: leo-strauss
         repo: izzy9118-blip/Strauss
-        commit: 58fb3c53885188780bb22193b8371609f77dda16
+        commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
       consumed_records:
         - ref: manifest.yaml
-          commit: 58fb3c53885188780bb22193b8371609f77dda16
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
         - ref: audits/operational-completeness.yaml
-          commit: 58fb3c53885188780bb22193b8371609f77dda16
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
         - ref: migrations/lean-operational-interface.yaml
-          commit: 58fb3c53885188780bb22193b8371609f77dda16
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
         - ref: adapter.py
-          commit: 58fb3c53885188780bb22193b8371609f77dda16
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
         - ref: problem_bundles.py
-          commit: 58fb3c53885188780bb22193b8371609f77dda16
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+        - ref: corpus/index.yaml
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
+        - ref: corpus_registry.py
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
         - ref: speech/speech-mechanism.yaml
-          commit: 58fb3c53885188780bb22193b8371609f77dda16
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
         - ref: hermeneutics/
-          commit: 58fb3c53885188780bb22193b8371609f77dda16
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
         - ref: method/
-          commit: 58fb3c53885188780bb22193b8371609f77dda16
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
         - ref: problems/
-          commit: 58fb3c53885188780bb22193b8371609f77dda16
+          commit: d1bcbed5a01ab6fa8615c30a3d3d2fa5cb26aee9
 future_repositories:
   - id: talleyrand
     title: Talleyrand
