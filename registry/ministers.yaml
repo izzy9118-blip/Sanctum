@@ -1,13 +1,13 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 2.2.0
+version: 2.3.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 2.1.0
+  predecessor_version: 2.2.0
   reason: >-
-    Repin the sovereign Strauss repository after its first operational completeness
-    audit and substantive speech-mechanism reconstruction. Preserve the manifest's
-    explicit semantic incompleteness and limited runtime readiness.
+    Repin the sovereign Strauss repository after substantive reconstruction and
+    behavioral validation of all six hermeneutic contracts. Preserve source-specific
+    application, method, corpus, findings, semantic completion, and doctrine as incomplete.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -29,13 +29,28 @@ ministers:
       - comparative_question
       - unresolved_uncertainty
     repository: izzy9118-blip/Strauss
-    pinned_commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
+    pinned_commit: 242b3c8ea1d4335353abb5ffa1c2f3878de56c49
     manifest_ref: manifest.yaml
     audit_ref: audits/operational-completeness.yaml
     method_ref: manifest.yaml
     adapter_ref: adapter.py
     corpus_ref: corpus/index.yaml
     findings_ref: findings/index.yaml
+    hermeneutics:
+      completion: SUBSTANTIVELY_RECONSTRUCTED_SOURCE_APPLICATION_INCOMPLETE
+      contracts:
+        - ref: hermeneutics/literary-concealment.yaml
+          version: STRAUSS-HERMENEUTIC-LC-1
+        - ref: hermeneutics/whole-and-part.yaml
+          version: STRAUSS-HERMENEUTIC-WP-1
+        - ref: hermeneutics/speaker-and-author.yaml
+          version: STRAUSS-HERMENEUTIC-SA-1
+        - ref: hermeneutics/audience.yaml
+          version: STRAUSS-HERMENEUTIC-AUD-1
+        - ref: hermeneutics/contradiction.yaml
+          version: STRAUSS-HERMENEUTIC-CON-1
+        - ref: hermeneutics/historical-and-philosophical-understanding.yaml
+          version: STRAUSS-HERMENEUTIC-HPU-1
     voice:
       status: subordinate_to_reasoning
       mechanism_ref: speech/speech-mechanism.yaml
@@ -46,16 +61,17 @@ ministers:
     runtime_readiness: LIMITED_READ_ONLY_CONTEXT_AND_CANDIDATE_REPORT_SUPPORT
     validation:
       workflow: Validate Lean Strauss Interface
-      run_id: 30229538467
+      run_id: 30230306287
       conclusion: success
       scope:
         - manifest, audit, and declared-path validation
         - speech-contract semantic validation
+        - six hermeneutic contract shape and safeguard tests
         - structural and behavioral adapter tests
       limit: >-
-        Passing validation establishes contract and behavior checks for the declared
-        interface. It does not certify doctrinal truth, complete the remaining
-        hermeneutics or method objects, or authorize unrestricted ministerial reasoning.
+        Passing validation establishes the declared speech and hermeneutic contracts.
+        It does not complete source-specific applications, the four method contracts,
+        problem implementation, corpus, findings, doctrine, or unrestricted reasoning.
     opacity_floor: >-
       The minister may preserve an unresolved uncertainty where the documentary
       record does not warrant a stronger claim.
@@ -66,6 +82,9 @@ ministers:
       - Poetry is not revelation, and irony is not mechanical inversion.
       - Laughter, comic victory, title, office, suffering, obscurity, and persecution do not certify truth or wisdom.
       - Concealment requires positive textual, dramatic, structural, comparative, or historical evidence.
+      - Character, narrator, chorus, editor, translator, and author remain distinct until evidence establishes a relation.
+      - Historical context does not function as silent philosophical refutation.
+      - Contradiction may remain a positive unresolved finding and may not be silently harmonized.
       - The repository, adapter, and artificial intelligence system may not certify themselves as wise.
       - The minister receives every inquiry and owns any outside-my-ground determination.
       - Sanctum consumes pinned interfaces and attributable reports; it does not own ministerial reasoning.
@@ -75,16 +94,18 @@ ministers:
       produced_by:
         actor: leo-strauss
         repo: izzy9118-blip/Strauss
-        commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
+        commit: 242b3c8ea1d4335353abb5ffa1c2f3878de56c49
       consumed_records:
         - ref: manifest.yaml
-          commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
+          commit: 242b3c8ea1d4335353abb5ffa1c2f3878de56c49
         - ref: audits/operational-completeness.yaml
-          commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
+          commit: 242b3c8ea1d4335353abb5ffa1c2f3878de56c49
         - ref: adapter.py
-          commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
+          commit: 242b3c8ea1d4335353abb5ffa1c2f3878de56c49
         - ref: speech/speech-mechanism.yaml
-          commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
+          commit: 242b3c8ea1d4335353abb5ffa1c2f3878de56c49
+        - ref: hermeneutics/
+          commit: 242b3c8ea1d4335353abb5ffa1c2f3878de56c49
 future_repositories:
   - id: talleyrand
     title: Talleyrand
