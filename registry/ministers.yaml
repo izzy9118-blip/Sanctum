@@ -1,13 +1,13 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 2.1.0
+version: 2.2.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 2.0.0
+  predecessor_version: 2.1.0
   reason: >-
-    Replace stale custos references with the sovereign Strauss repository and pin the
-    validated lean operational manifest, adapter, and speech mechanism without moving
-    ministerial reasoning into Sanctum.
+    Repin the sovereign Strauss repository after its first operational completeness
+    audit and substantive speech-mechanism reconstruction. Preserve the manifest's
+    explicit semantic incompleteness and limited runtime readiness.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -29,8 +29,9 @@ ministers:
       - comparative_question
       - unresolved_uncertainty
     repository: izzy9118-blip/Strauss
-    pinned_commit: 711ddf2c47483f319742574dfba843af2248a202
+    pinned_commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
     manifest_ref: manifest.yaml
+    audit_ref: audits/operational-completeness.yaml
     method_ref: manifest.yaml
     adapter_ref: adapter.py
     corpus_ref: corpus/index.yaml
@@ -38,7 +39,23 @@ ministers:
     voice:
       status: subordinate_to_reasoning
       mechanism_ref: speech/speech-mechanism.yaml
-    interface_status: VALIDATED_OPERATIONAL_INTERFACE_NOT_DOCTRINAL_CERTIFICATION
+      contract_version: STRAUSS-SPEECH-CONTRACT-1
+    interface_status: VALIDATED_LIMITED_OPERATIONAL_INTERFACE
+    semantic_completion: INCOMPLETE
+    doctrinal_certification: NOT_CERTIFIED
+    runtime_readiness: LIMITED_READ_ONLY_CONTEXT_AND_CANDIDATE_REPORT_SUPPORT
+    validation:
+      workflow: Validate Lean Strauss Interface
+      run_id: 30229538467
+      conclusion: success
+      scope:
+        - manifest, audit, and declared-path validation
+        - speech-contract semantic validation
+        - structural and behavioral adapter tests
+      limit: >-
+        Passing validation establishes contract and behavior checks for the declared
+        interface. It does not certify doctrinal truth, complete the remaining
+        hermeneutics or method objects, or authorize unrestricted ministerial reasoning.
     opacity_floor: >-
       The minister may preserve an unresolved uncertainty where the documentary
       record does not warrant a stronger claim.
@@ -47,22 +64,27 @@ ministers:
       - Documentary findings, inferences, hypotheses, questions, and uncertainties remain distinct.
       - Independent witnesses are reconstructed before comparative ranking.
       - Poetry is not revelation, and irony is not mechanical inversion.
+      - Laughter, comic victory, title, office, suffering, obscurity, and persecution do not certify truth or wisdom.
+      - Concealment requires positive textual, dramatic, structural, comparative, or historical evidence.
       - The repository, adapter, and artificial intelligence system may not certify themselves as wise.
       - The minister receives every inquiry and owns any outside-my-ground determination.
       - Sanctum consumes pinned interfaces and attributable reports; it does not own ministerial reasoning.
+      - Structural validation must not be described as semantic completion.
     membership_status: established
     provenance:
       produced_by:
         actor: leo-strauss
         repo: izzy9118-blip/Strauss
-        commit: 711ddf2c47483f319742574dfba843af2248a202
+        commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
       consumed_records:
         - ref: manifest.yaml
-          commit: 711ddf2c47483f319742574dfba843af2248a202
+          commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
+        - ref: audits/operational-completeness.yaml
+          commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
         - ref: adapter.py
-          commit: 711ddf2c47483f319742574dfba843af2248a202
+          commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
         - ref: speech/speech-mechanism.yaml
-          commit: 711ddf2c47483f319742574dfba843af2248a202
+          commit: 70028fa054eb1e6b93e5fb255358045bb3ffde3f
 future_repositories:
   - id: talleyrand
     title: Talleyrand
