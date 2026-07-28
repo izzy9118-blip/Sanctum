@@ -1,0 +1,112 @@
+record_type: ministerial_report
+id: MREP-INQ000000001-LEO-STRAUSS
+report_id: MREP-INQ000000001-LEO-STRAUSS
+report_status: DRAFT_PENDING_MINISTER_REPOSITORY_VALIDATION
+inquiry_ref:
+  ref: INQ-000000001
+  commit: ec5d59d239d39777c18b8e1087b1261646fe350e
+  envelope_sha256: 9d1f8bd8ecea90197d339db97d980193b7688ac53deb813e0b68743188867453
+minister:
+  actor: leo-strauss
+  manifest_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+  title: Minister of Political Philosophy
+mode: reasoned
+repository:
+  full_name: izzy9118-blip/Strauss
+  git_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+governing_manifest:
+  path: manifest.yaml
+  version: "1.20.0"
+  authorization_ref: governance/repository-authorization.yaml
+  authorization_id: STRAUSS-AUTH-001
+evidence:
+  - witness_id: CORPUS-WIT-103
+    source_id: CORPUS-SRC-103
+    repository_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+    path: studies/theologico-political/how-to-study-spinozas-theologico-political-treatise/reviewed-witness.yaml
+    study_path: studies/theologico-political/how-to-study-spinozas-theologico-political-treatise/sequential-reconstruction.yaml
+    support_summary: >-
+      The source-specific reconstruction distinguishes potential philosophers from the vulgar,
+      treats freedom of philosophizing as a public political aim, and requires interpretation of
+      audience, accommodation, contradiction, and public presentation without mechanical inversion.
+  - witness_id: CORPUS-WIT-114
+    source_id: CORPUS-SRC-114
+    repository_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+    path: studies/theologico-political/perspectives-on-the-good-society/reviewed-witness.yaml
+    study_path: studies/theologico-political/perspectives-on-the-good-society/sequential-reconstruction.yaml
+    support_summary: >-
+      The source-specific reconstruction treats the secular state as necessary for civic equality
+      yet not self-sufficient, and records that science may liberate from prejudice while also
+      fostering homogeneity and conformism.
+propositions:
+  - kind: documented_finding
+    claim: >-
+      In Strauss's reconstruction of Spinoza, the Theologico-Political Treatise is addressed to
+      potential philosophers rather than indiscriminately to the vulgar, while its public defense
+      of freedom of philosophizing is adapted to a broader political and religious audience.
+    grounds:
+      - ref: CORPUS-WIT-103
+        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+  - kind: documented_finding
+    claim: >-
+      In Perspectives on the Good Society, Strauss reports that science can free people from
+      prejudice while also dissolving differences and fostering homogeneity; enlightenment is
+      therefore not presented as an unqualified cure for conformism.
+    grounds:
+      - ref: CORPUS-WIT-114
+        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+  - kind: documented_finding
+    claim: >-
+      The same essay treats the secular state as a necessary condition of civic equality and
+      interfaith discussion while denying that a self-sufficient secular state can supply every
+      standard by which the good society is judged.
+    grounds:
+      - ref: CORPUS-WIT-114
+        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+  - kind: supported_inference
+    claim: >-
+      Popular access to philosophic argument can strengthen constitutional government when it
+      protects freedom to philosophize and weakens prejudice, but the same popularization can
+      endanger it when philosophic distinctions are flattened into homogeneous public opinion or
+      when communication ignores differences of audience, capacity, and political circumstance.
+    grounds:
+      - ref: CORPUS-WIT-103
+        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+      - ref: CORPUS-WIT-114
+        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+  - kind: unresolved_uncertainty
+    claim: >-
+      These sources do not establish a universal rule for the amount or form of philosophic
+      popularization compatible with constitutional government, and they do not by themselves
+      determine the institutional boundary between salutary public education and destructive
+      leveling.
+    grounds:
+      - ref: CORPUS-WIT-103
+        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+      - ref: CORPUS-WIT-114
+        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+uncertainties:
+  - The 1948 journal printing of How to Study Spinoza's Theologico-Political Treatise remains uncompared with the reviewed 1997 collected reprint.
+  - The original 1963 Criterion printing of Perspectives on the Good Society remains unreviewed.
+  - Strauss's reconstructions do not independently corroborate Spinoza, the represented religious traditions, or the colloquium participants.
+  - The inquiry's term constitutional government is broader than the precise institutional claims established by these two source studies.
+dissent: []
+termination:
+  status: COMPLETE_DRAFT_FOR_SOVEREIGN_VALIDATION
+  authoritative_effect: NONE_UNTIL_STRAUSS_REPOSITORY_VALIDATION
+  presidential_synthesis: NOT_PERFORMED
+provenance:
+  produced_by:
+    actor: leo-strauss-draft-on-behalf
+    repo: izzy9118-blip/Strauss
+    commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+  consumed_records:
+    - ref: manifest.yaml
+      commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+    - ref: corpus/index.yaml
+      commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+    - ref: GOOD-SOCIETY-STUDY-001
+      commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+    - ref: SPINOZA-TREATISE-STUDY-001
+      commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+certification_status: PENDING_OWNER_CERTIFICATION
