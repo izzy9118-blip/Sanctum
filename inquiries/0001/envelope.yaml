@@ -1,0 +1,24 @@
+record_type: inquiry_envelope
+id: INQ-000000001
+envelope_id: INQ-000000001
+status: ISSUED
+question: "Does the popularization of philosophic knowledge strengthen or endanger constitutional government?"
+raw_situation: "Does the popularization of philosophic knowledge strengthen or endanger constitutional government?"
+source: repository_owner_default_question
+routing:
+  policy: UNIVERSAL
+  dispatched_ministers:
+    - leo-strauss
+integrity:
+  hash_algorithm: SHA-256
+  hash_scope: question_utf8_for_proving_dispatch
+  envelope_sha256: 9d1f8bd8ecea90197d339db97d980193b7688ac53deb813e0b68743188867453
+provenance:
+  produced_by:
+    actor: president
+    repo: izzy9118-blip/Sanctum
+    commit: ec23427e174933fe5bfb5266c0f1603b137f6c48
+  consumed_records:
+    - ref: registry/ministers.yaml
+      commit: 84f0b2d73e0fef153da004b2ff1e8136f57988a8
+certification_status: PENDING_OWNER_CERTIFICATION
