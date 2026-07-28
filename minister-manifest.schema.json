@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sanctum:federation:minister-manifest:1.0.0",
+  "title": "Sanctum Registered Minister Contract",
+  "type": "object",
+  "required": ["minister_id", "title", "repository", "manifest_path", "manifest_version", "pinned_commit", "participation", "authorization_ref", "pin_status"],
+  "properties": {
+    "minister_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"},
+    "manifest_path": {"type": "string", "minLength": 1},
+    "manifest_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "pinned_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "participation": {"const": "universal"},
+    "authorization_ref": {"type": "string", "minLength": 1},
+    "pin_status": {"const": "PENDING_OWNER_CERTIFICATION"}
+  }
+}
