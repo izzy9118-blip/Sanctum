@@ -1,0 +1,26 @@
+record_type: dispatch_receipt
+id: DISPATCH-000000001
+envelope_id: INQ-000000001
+envelope_sha256: 9d1f8bd8ecea90197d339db97d980193b7688ac53deb813e0b68743188867453
+registry_state:
+  path: registry/ministers.yaml
+  commit: 84f0b2d73e0fef153da004b2ff1e8136f57988a8
+  version: 2.8.0
+  participation_policy: universal
+dispatched_ministers:
+  - minister_id: leo-strauss
+    repository: izzy9118-blip/Strauss
+    pinned_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+    manifest_version: "1.20.0"
+dispatched_at: "2026-07-28T22:57:20Z"
+provenance:
+  produced_by:
+    actor: sanctum-dispatch
+    repo: izzy9118-blip/Sanctum
+    commit: ec5d59d239d39777c18b8e1087b1261646fe350e
+  consumed_records:
+    - ref: INQ-000000001
+      commit: ec5d59d239d39777c18b8e1087b1261646fe350e
+    - ref: registry/ministers.yaml
+      commit: 84f0b2d73e0fef153da004b2ff1e8136f57988a8
+certification_status: PENDING_OWNER_CERTIFICATION
