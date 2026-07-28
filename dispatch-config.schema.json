@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sanctum:federation:dispatch-config:1.0.0",
+  "title": "Sanctum Dispatch Config",
+  "description": "Retained for schema stability. Universal dispatch is constitutional; adapter or selection-shaped fields must not be used to exclude any established minister.",
+  "type": "object",
+  "required": ["config_version", "adapters"],
+  "properties": {
+    "config_version": {"const": "1.0.0"},
+    "adapters": {
+      "type": "array",
+      "description": "Retained for schema stability; this list must cover every established minister and is not a relevance-selection mechanism.",
+      "items": {"type": "object", "required": ["minister_id", "repository_full_name"], "properties": {"minister_id": {"type": "string"}, "repository_full_name": {"type": "string"}}}
+    }
+  }
+}

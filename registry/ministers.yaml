@@ -1,14 +1,13 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 2.7.0
+version: 2.8.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 2.6.0
+  predecessor_version: 2.7.0
   reason: >-
-    Repin the sovereign Strauss repository after replacement of its reference-only
-    findings index with a typed registry exhaustive for the current committed
-    findings-record state. Preserve proposition-level evidence in governing records,
-    findings as open and incomplete, and doctrine, migration, activation, and predecessor displacement as unauthorized.
+    Correct the Strauss registry entry to the exact commit certified by STRAUSS-AUTH-001,
+    add the federation-facing manifest and authorization fields required for dispatch,
+    and preserve universal participation. Prior registry history remains in Git.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -17,6 +16,7 @@ participation_policy:
   outside_my_ground_is_complete_response: true
 ministers:
   - id: leo-strauss
+    minister_id: leo-strauss
     title: Minister of Political Philosophy
     jurisdiction: >-
       Political philosophy and its history, approached through the documentary
@@ -30,8 +30,13 @@ ministers:
       - comparative_question
       - unresolved_uncertainty
     repository: izzy9118-blip/Strauss
-    pinned_commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+    pinned_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
     manifest_ref: manifest.yaml
+    manifest_path: manifest.yaml
+    manifest_version: "1.20.0"
+    participation: universal
+    authorization_ref: governance/repository-authorization.yaml
+    pin_status: PENDING_OWNER_CERTIFICATION
     audit_ref: audits/operational-completeness.yaml
     mapping_ref: migrations/lean-operational-interface.yaml
     method_ref: manifest.yaml
@@ -191,34 +196,34 @@ ministers:
       produced_by:
         actor: leo-strauss
         repo: izzy9118-blip/Strauss
-        commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
       consumed_records:
         - ref: manifest.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: audits/operational-completeness.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: migrations/lean-operational-interface.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: adapter.py
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: problem_bundles.py
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: corpus/index.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: corpus_registry.py
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: findings/index.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: findings_registry.py
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: speech/speech-mechanism.yaml
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: hermeneutics/
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: method/
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
         - ref: problems/
-          commit: cc978f6afc0de8d31a2b7c27697d08b7f1914182
+          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
 future_repositories:
   - id: talleyrand
     title: Talleyrand

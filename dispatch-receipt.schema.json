@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sanctum:federation:dispatch-receipt:1.0.0",
+  "title": "Sanctum Dispatch Receipt",
+  "type": "object",
+  "required": ["record_type", "id", "envelope_id", "envelope_sha256", "registry_state", "dispatched_ministers", "dispatched_at", "provenance", "certification_status"],
+  "properties": {
+    "record_type": {"const": "dispatch_receipt"},
+    "id": {"type": "string"},
+    "envelope_id": {"type": "string"},
+    "envelope_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "registry_state": {"type": "object", "required": ["path", "commit", "version"], "properties": {"path": {"type": "string"}, "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "version": {"type": "string"}}},
+    "dispatched_ministers": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["minister_id", "repository", "pinned_commit"], "properties": {"minister_id": {"type": "string"}, "repository": {"type": "string"}, "pinned_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}}}},
+    "dispatched_at": {"type": "string"},
+    "provenance": {"type": "object"},
+    "certification_status": {"const": "PENDING_OWNER_CERTIFICATION"}
+  }
+}

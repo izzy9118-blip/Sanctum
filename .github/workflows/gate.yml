@@ -1,10 +1,5 @@
 name: Sanctum Validation Gate
 
-# The gate is the authority-conferring act. A candidate inquiry may only be
-# merged to canonical if the gate does not REJECT it. Runtime writes are inert
-# until this passes. "The runtime may calculate, but only Git may remember
-# authoritatively" — this workflow enforces the seam.
-
 on:
   pull_request:
     paths:
@@ -13,7 +8,10 @@ on:
       - 'registry/**'
       - 'gate/**'
       - 'projection/**'
+      - 'tests/**'
+      - '*.schema.json'
       - 'assembly.py'
+      - '.github/workflows/gate.yml'
   push:
     branches:
       - main
@@ -29,12 +27,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install pyyaml
+      - name: Install validation dependencies
+        run: python -m pip install pyyaml jsonschema pytest
       - name: Compile the constitutional runtime
         run: python -m py_compile assembly.py gate/gate.py projection/projection.py
       - name: Run the Assembly articulation harness
         run: python assembly.py
-      - name: Validate committed inquiry candidates
+      - name: Run registry and federation artifact tests
+        run: python -m pytest -q
+      - name: Validate committed inquiry candidates through the constitutional gate
         run: |
           set -e
           status=0
