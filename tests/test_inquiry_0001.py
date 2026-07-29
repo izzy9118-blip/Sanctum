@@ -41,12 +41,17 @@ def test_envelope_hash_and_universal_dispatch_match():
     assert dispatched == established
 
 
-def test_report_is_minister_validated_but_owner_pending_and_unsynthesized():
+def test_report_and_dispatch_are_owner_certified_without_presidential_synthesis():
     report = load_yaml(INQ / "ministerial-report-leo-strauss.yaml")
     secretary = load_yaml(INQ / "secretary-validation-record.yaml")
-    assert report["report_status"] == "MINISTER_REPOSITORY_VALIDATED_PENDING_OWNER_CERTIFICATION"
+    certification = load_yaml(INQ / "owner-certification.yaml")
+    assert report["report_status"] == "OWNER_CERTIFIED_MINISTERIAL_REPORT"
     assert report["sovereign_validation"]["result"] == "SOVEREIGN_MINISTERIAL_VALIDATION_PASSED"
-    assert report["certification_status"] == "PENDING_OWNER_CERTIFICATION"
-    assert secretary["outcome"] == "flagged"
+    assert report["certification_status"] == "OWNER_CERTIFIED"
+    assert report["termination"]["presidential_synthesis"] == "NOT_PERFORMED"
+    assert secretary["outcome"] == "validated"
     assert secretary["presidential_synthesis"] == "NOT_OCCURRED"
-    assert secretary["certification_status"] == "PENDING_OWNER_CERTIFICATION"
+    assert secretary["certification_status"] == "OWNER_CERTIFIED"
+    assert certification["decision"] == "OWNER_CERTIFIED"
+    assert certification["preservation"]["artificial_intelligence_self_certification"] is False
+    assert certification["preservation"]["presidential_synthesis_performed"] is False
