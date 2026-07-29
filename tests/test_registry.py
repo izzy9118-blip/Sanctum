@@ -18,10 +18,11 @@ def test_strauss_registry_entry_matches_federation_contract():
     assert strauss["repository"] == "izzy9118-blip/Strauss"
     assert strauss["manifest_path"] == "manifest.yaml"
     assert strauss["manifest_version"] == "1.20.0"
-    assert strauss["pinned_commit"] == "887e9ae8ec5c5d329bc315e45be4c5220adac9f0"
+    assert strauss["pinned_commit"] == "32c96337cc29413a9f97cc843eaabf56a5ed38d6"
     assert strauss["participation"] == "universal"
     assert strauss["authorization_ref"] == "governance/repository-authorization.yaml"
-    assert strauss["pin_status"] == "PENDING_OWNER_CERTIFICATION"
+    assert strauss["pin_status"] == "OWNER_CERTIFIED"
+    assert strauss["pin_certification"]["authority"] == "REPOSITORY_OWNER_DIRECTIVE"
 
 
 def test_registry_policy_forbids_upstream_selection():
