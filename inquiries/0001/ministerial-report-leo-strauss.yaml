@@ -1,28 +1,38 @@
 record_type: ministerial_report
 id: MREP-INQ000000001-LEO-STRAUSS
 report_id: MREP-INQ000000001-LEO-STRAUSS
-report_status: DRAFT_PENDING_MINISTER_REPOSITORY_VALIDATION
+report_status: MINISTER_REPOSITORY_VALIDATED_PENDING_OWNER_CERTIFICATION
 inquiry_ref:
   ref: INQ-000000001
   commit: ec5d59d239d39777c18b8e1087b1261646fe350e
   envelope_sha256: 9d1f8bd8ecea90197d339db97d980193b7688ac53deb813e0b68743188867453
 minister:
   actor: leo-strauss
-  manifest_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+  manifest_commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
   title: Minister of Political Philosophy
 mode: reasoned
 repository:
   full_name: izzy9118-blip/Strauss
-  git_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+  git_commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
 governing_manifest:
   path: manifest.yaml
   version: "1.20.0"
   authorization_ref: governance/repository-authorization.yaml
   authorization_id: STRAUSS-AUTH-001
+sovereign_validation:
+  repository: izzy9118-blip/Strauss
+  issue: 48
+  pull_request: 49
+  validation_commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
+  validation_record: inquiries/INQ-000000001/validation-record.yaml
+  workflow: Validate Lean Strauss Interface
+  final_run_id: 30418796355
+  result: SOVEREIGN_MINISTERIAL_VALIDATION_PASSED
+  assembly_effect: NONE_UNTIL_SANCTUM_OWNER_CERTIFICATION
 evidence:
   - witness_id: CORPUS-WIT-103
     source_id: CORPUS-SRC-103
-    repository_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+    repository_commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
     path: studies/theologico-political/how-to-study-spinozas-theologico-political-treatise/reviewed-witness.yaml
     study_path: studies/theologico-political/how-to-study-spinozas-theologico-political-treatise/sequential-reconstruction.yaml
     support_summary: >-
@@ -31,7 +41,7 @@ evidence:
       audience, accommodation, contradiction, and public presentation without mechanical inversion.
   - witness_id: CORPUS-WIT-114
     source_id: CORPUS-SRC-114
-    repository_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+    repository_commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
     path: studies/theologico-political/perspectives-on-the-good-society/reviewed-witness.yaml
     study_path: studies/theologico-political/perspectives-on-the-good-society/sequential-reconstruction.yaml
     support_summary: >-
@@ -46,7 +56,7 @@ propositions:
       of freedom of philosophizing is adapted to a broader political and religious audience.
     grounds:
       - ref: CORPUS-WIT-103
-        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+        commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
   - kind: documented_finding
     claim: >-
       In Perspectives on the Good Society, Strauss reports that science can free people from
@@ -54,7 +64,7 @@ propositions:
       therefore not presented as an unqualified cure for conformism.
     grounds:
       - ref: CORPUS-WIT-114
-        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+        commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
   - kind: documented_finding
     claim: >-
       The same essay treats the secular state as a necessary condition of civic equality and
@@ -62,7 +72,7 @@ propositions:
       standard by which the good society is judged.
     grounds:
       - ref: CORPUS-WIT-114
-        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+        commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
   - kind: supported_inference
     claim: >-
       Popular access to philosophic argument can strengthen constitutional government when it
@@ -71,9 +81,9 @@ propositions:
       when communication ignores differences of audience, capacity, and political circumstance.
     grounds:
       - ref: CORPUS-WIT-103
-        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+        commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
       - ref: CORPUS-WIT-114
-        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+        commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
   - kind: unresolved_uncertainty
     claim: >-
       These sources do not establish a universal rule for the amount or form of philosophic
@@ -82,9 +92,9 @@ propositions:
       leveling.
     grounds:
       - ref: CORPUS-WIT-103
-        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+        commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
       - ref: CORPUS-WIT-114
-        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+        commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
 uncertainties:
   - The 1948 journal printing of How to Study Spinoza's Theologico-Political Treatise remains uncompared with the reviewed 1997 collected reprint.
   - The original 1963 Criterion printing of Perspectives on the Good Society remains unreviewed.
@@ -92,21 +102,23 @@ uncertainties:
   - The inquiry's term constitutional government is broader than the precise institutional claims established by these two source studies.
 dissent: []
 termination:
-  status: COMPLETE_DRAFT_FOR_SOVEREIGN_VALIDATION
-  authoritative_effect: NONE_UNTIL_STRAUSS_REPOSITORY_VALIDATION
+  status: COMPLETE_MINISTER_VALIDATED_PENDING_OWNER_CERTIFICATION
+  authoritative_effect: MINISTER_VALIDATION_COMPLETE_ASSEMBLY_CERTIFICATION_PENDING
   presidential_synthesis: NOT_PERFORMED
 provenance:
   produced_by:
-    actor: leo-strauss-draft-on-behalf
+    actor: leo-strauss
     repo: izzy9118-blip/Strauss
-    commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+    commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
   consumed_records:
     - ref: manifest.yaml
-      commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+      commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
     - ref: corpus/index.yaml
-      commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+      commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
     - ref: GOOD-SOCIETY-STUDY-001
-      commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+      commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
     - ref: SPINOZA-TREATISE-STUDY-001
-      commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+      commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+    - ref: STRAUSS-INQ-000000001-VALIDATION-001
+      commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
 certification_status: PENDING_OWNER_CERTIFICATION

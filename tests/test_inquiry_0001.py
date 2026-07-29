@@ -41,10 +41,12 @@ def test_envelope_hash_and_universal_dispatch_match():
     assert dispatched == established
 
 
-def test_report_is_draft_and_secretary_did_not_synthesize():
+def test_report_is_minister_validated_but_owner_pending_and_unsynthesized():
     report = load_yaml(INQ / "ministerial-report-leo-strauss.yaml")
     secretary = load_yaml(INQ / "secretary-validation-record.yaml")
-    assert report["report_status"] == "DRAFT_PENDING_MINISTER_REPOSITORY_VALIDATION"
+    assert report["report_status"] == "MINISTER_REPOSITORY_VALIDATED_PENDING_OWNER_CERTIFICATION"
+    assert report["sovereign_validation"]["result"] == "SOVEREIGN_MINISTERIAL_VALIDATION_PASSED"
     assert report["certification_status"] == "PENDING_OWNER_CERTIFICATION"
+    assert secretary["outcome"] == "flagged"
     assert secretary["presidential_synthesis"] == "NOT_OCCURRED"
     assert secretary["certification_status"] == "PENDING_OWNER_CERTIFICATION"
