@@ -1,13 +1,14 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 2.8.0
+version: 2.9.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 2.7.0
+  predecessor_version: 2.8.0
+  predecessor_commit: c9e9c0bab5676950846e98435fad691ce03c8662
   reason: >-
-    Correct the Strauss registry entry to the exact commit certified by STRAUSS-AUTH-001,
-    add the federation-facing manifest and authorization fields required for dispatch,
-    and preserve universal participation. Prior registry history remains in Git.
+    By explicit repository-owner directive, replace the uncertified historical Strauss pin
+    with the verified current Strauss main state. The prior 2.8.0 registry remains preserved
+    in Git and is not silently rewritten.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -18,212 +19,79 @@ ministers:
   - id: leo-strauss
     minister_id: leo-strauss
     title: Minister of Political Philosophy
-    jurisdiction: >-
-      Political philosophy and its history, approached through the documentary
-      method, source hierarchy, safeguards, and interpretive procedures of the
-      sovereign Strauss Repository.
-    gate_posture: outer_default
-    proposition_kinds:
-      - documented_finding
-      - supported_inference
-      - working_hypothesis
-      - comparative_question
-      - unresolved_uncertainty
     repository: izzy9118-blip/Strauss
-    pinned_commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+    pinned_commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
     manifest_ref: manifest.yaml
     manifest_path: manifest.yaml
     manifest_version: "1.20.0"
     participation: universal
     authorization_ref: governance/repository-authorization.yaml
-    pin_status: PENDING_OWNER_CERTIFICATION
+    authorization_id: STRAUSS-AUTH-001
+    pin_status: OWNER_CERTIFIED
+    pin_certification:
+      authority: REPOSITORY_OWNER_DIRECTIVE
+      date: "2026-07-28"
+      decision_ref: docs/decisions/0003-repin-strauss-current-main.md
+    interface_status: ACTIVE_OWNER_AUTHORIZED_OPERATIONAL_INTERFACE
+    semantic_completion: INCOMPLETE
+    doctrinal_certification: OWNER_CERTIFIED_FOR_OPERATIONAL_USE
+    runtime_readiness: FULL_OPERATIONAL_USE_WITH_EVIDENTIARY_QUALIFICATIONS
     audit_ref: audits/operational-completeness.yaml
     mapping_ref: migrations/lean-operational-interface.yaml
-    method_ref: manifest.yaml
     adapter_ref: adapter.py
     problem_bundle_loader_ref: problem_bundles.py
     corpus_ref: corpus/index.yaml
     corpus_loader_ref: corpus_registry.py
     findings_ref: findings/index.yaml
     findings_loader_ref: findings_registry.py
-    hermeneutics:
-      completion: SUBSTANTIVELY_RECONSTRUCTED_SOURCE_APPLICATION_INCOMPLETE
-      contracts:
-        - ref: hermeneutics/literary-concealment.yaml
-          version: STRAUSS-HERMENEUTIC-LC-1
-        - ref: hermeneutics/whole-and-part.yaml
-          version: STRAUSS-HERMENEUTIC-WP-1
-        - ref: hermeneutics/speaker-and-author.yaml
-          version: STRAUSS-HERMENEUTIC-SA-1
-        - ref: hermeneutics/audience.yaml
-          version: STRAUSS-HERMENEUTIC-AUD-1
-        - ref: hermeneutics/contradiction.yaml
-          version: STRAUSS-HERMENEUTIC-CON-1
-        - ref: hermeneutics/historical-and-philosophical-understanding.yaml
-          version: STRAUSS-HERMENEUTIC-HPU-1
-    methods:
-      completion: SUBSTANTIVELY_RECONSTRUCTED_SOURCE_APPLICATION_INCOMPLETE
-      contracts:
-        - ref: method/recover-question.yaml
-          version: STRAUSS-METHOD-RQ-1
-        - ref: method/reconstruct-alternatives.yaml
-          version: STRAUSS-METHOD-RA-1
-        - ref: method/textual-order.yaml
-          version: STRAUSS-METHOD-TO-1
-        - ref: method/preserve-problem.yaml
-          version: STRAUSS-METHOD-PP-1
-    foundational_problems:
-      completion: SUBSTANTIVE_BUNDLES_RUNTIME_LOADED_SOURCE_APPLICATION_AND_MIGRATION_INCOMPLETE
-      loader: problem_bundles.py
-      canonical_order:
-        - nomos-vs-physis
-        - philosophy-vs-poetry
-        - theory-vs-practice
-        - theologico-political
-        - athens-vs-jerusalem
-        - wise-vs-vulgar
-        - ancients-vs-moderns
-      bundle_members:
-        - constitution
-        - inquiry_profile
-        - witness_registry
-        - relation_record
-        - synthesis_records
-      limit: >-
-        Bundle validity makes governing records available together. It does not finish
-        source studies, complete independent witnesses, certify migrations or doctrine,
-        displace predecessors, activate successors, or confer Assembly authority.
-    corpus:
-      completion: SUBSTANTIVELY_RECONSTRUCTED_CURRENT_STATE_EXHAUSTIVE_OPEN_CORPUS
-      registry: corpus/index.yaml
-      loader: corpus_registry.py
-      scope: EXHAUSTIVE_FOR_CURRENT_COMMITTED_SOURCE_AND_STUDY_STATE
-      registered_counts:
-        source_entities: 22
-        reviewed_witnesses: 2
-        source_status_records: 2
-        study_records: 7
-        problem_witness_registries: 7
-        theologico_political_predecessor_sources: 19
-        studies_tree_yaml_records: 9
-        explicit_corpus_gaps: 7
-      limit: >-
-        Current-state exhaustive registration does not create a closed or complete
-        corpus. It does not admit source texts, supply absent editions, complete
-        item-level source status or independent witnesses, promote studies, certify
-        claims, or authorize migrations and successor activation.
-    findings:
-      completion: SUBSTANTIVELY_RECONSTRUCTED_CURRENT_STATE_EXHAUSTIVE_OPEN_FINDINGS_STORE
-      registry: findings/index.yaml
-      loader: findings_registry.py
-      scope: EXHAUSTIVE_FOR_CURRENT_COMMITTED_FINDINGS_RECORD_STATE
-      registered_counts:
-        finding_sets: 22
-        source_specific_and_integration_records: 7
-        problem_local_syntheses: 10
-        foundational_migration_transactions: 3
-        preserved_finding_bases: 2
-        canonical_problem_indexes: 7
-        explicit_findings_gaps: 6
-      indexes:
-        - by_problem
-        - by_source
-        - by_record_class
-      limit: >-
-        Current-state exhaustive findings registration does not normalize every
-        proposition or establish independent corroboration. Record-local evidence,
-        sequence, qualification, uncertainty, contradiction, dissent, and migration
-        status remain governing. The registry does not promote propositions, certify
-        doctrine or migration, activate successors, displace predecessors, or confer Assembly authority.
-    voice:
-      status: subordinate_to_reasoning
-      mechanism_ref: speech/speech-mechanism.yaml
-      contract_version: STRAUSS-SPEECH-CONTRACT-1
-    interface_status: VALIDATED_LIMITED_OPERATIONAL_INTERFACE
-    semantic_completion: INCOMPLETE
-    doctrinal_certification: NOT_CERTIFIED
-    runtime_readiness: LIMITED_READ_ONLY_CONTEXT_AND_CANDIDATE_REPORT_SUPPORT
-    validation:
-      workflow: Validate Lean Strauss Interface
-      run_id: 30262080358
-      conclusion: success
-      scope:
-        - manifest, audit, mapping, and declared-path validation
-        - speech-contract semantic validation
-        - six hermeneutic contract shape and safeguard tests
-        - four inquiry method contract shape and safeguard tests
-        - seven complete foundational problem bundle validations
-        - typed corpus identity, path, coverage, predecessor, witness, and gap validation
-        - exact current studies-tree accounting
-        - typed findings study, synthesis, transaction, preserved-basis, binding, index, and gap validation
-        - exact current findings-record tree accounting
-        - structural and behavioral interface tests
-      limit: >-
-        Passing validation establishes the declared speech, hermeneutic, method,
-        problem-bundle, current-state corpus, and current-state findings contracts.
-        It does not complete source-specific applications, item-level source statuses,
-        independent witnesses, proposition normalization, actual ministerial reports,
-        doctrine, migration certification, activation, or unrestricted reasoning.
-    opacity_floor: >-
-      The minister may preserve an unresolved uncertainty where the documentary
-      record does not warrant a stronger claim.
-    safeguards:
-      - Primary sources govern secondary sources where primary sources are available.
-      - Source entities, reviewed witnesses, translations, source-status records, analytical studies, syntheses, and migration ledgers remain distinct.
-      - Current-state exhaustive corpus registration does not mean a closed or complete corpus.
-      - Current-state exhaustive findings registration does not mean complete propositions or doctrine.
-      - Registry inclusion does not admit source text or promote a proposition beyond its record-local evidence status.
-      - Documentary findings, inferences, hypotheses, questions, contradictions, dissent, and uncertainties remain distinct.
-      - Multiple records derived from one source do not constitute independent corroboration.
-      - The user's question, source question, governing question, topic, doctrine, and problem route remain distinct records.
-      - Independent witnesses and rival alternatives are reconstructed before comparative ranking.
-      - Textual sequence, transitions, corrections, and endings may not be erased by thematic summary.
-      - Practical settlement, legal authority, historical victory, and migration classification do not certify philosophical or theological truth.
-      - Complete bundle loading does not certify the enclosed problem, witness, synthesis, or migration.
-      - Poetry is not revelation, and irony is not mechanical inversion.
-      - Laughter, comic victory, title, office, suffering, obscurity, and persecution do not certify truth or wisdom.
-      - Concealment requires positive textual, dramatic, structural, comparative, or historical evidence.
-      - Character, narrator, chorus, editor, translator, and author remain distinct until evidence establishes a relation.
-      - Historical context does not function as silent philosophical refutation.
-      - Contradiction and affirmative nonresolution may remain complete positive findings.
-      - Active predecessors and accepted migration sources remain authoritative until an authorized certified transition.
-      - The repository, adapter, problem-bundle loader, corpus loader, findings loader, and artificial intelligence system may not certify themselves as wise.
-      - The minister receives every inquiry and owns any outside-my-ground determination.
-      - Sanctum consumes pinned interfaces and attributable reports; it does not own ministerial reasoning.
-      - Structural validation must not be described as semantic completion.
+    speech_ref: speech/speech-mechanism.yaml
+    current_manifest_summary:
+      manifest_blob_sha: fe4b53c32b0d70b4a95832a6109446381d2004e8
+      corpus_registry_version: "1.24.0"
+      component_state:
+        adapter: OPERATIONAL_OWNER_AUTHORIZED
+        problem_bundle_loader: OPERATIONAL_OWNER_AUTHORIZED
+        speech_mechanism: OPERATIONAL_OWNER_AUTHORIZED_OPEN_TO_REVISION
+        problem_objects: ACTIVE_OWNER_AUTHORIZED_OPEN_RESEARCH
+        migration_mapping: ACTIVE_OWNER_AUTHORIZED_NON_DESTRUCTIVE
+      evidentiary_limits_preserved:
+        - semantic research remains incomplete
+        - independent corroboration remains incomplete where recorded
+        - original and earlier textual-state comparisons remain pending where recorded
+        - operational authority does not convert open research questions into settled facts
     membership_status: established
     provenance:
       produced_by:
         actor: leo-strauss
         repo: izzy9118-blip/Strauss
-        commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+        commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
       consumed_records:
         - ref: manifest.yaml
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: audits/operational-completeness.yaml
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: migrations/lean-operational-interface.yaml
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: adapter.py
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: problem_bundles.py
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: corpus/index.yaml
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: corpus_registry.py
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: findings/index.yaml
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: findings_registry.py
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: speech/speech-mechanism.yaml
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: hermeneutics/
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: method/
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: problems/
-          commit: 887e9ae8ec5c5d329bc315e45be4c5220adac9f0
+          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
 future_repositories:
   - id: talleyrand
     title: Talleyrand

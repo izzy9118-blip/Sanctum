@@ -13,6 +13,9 @@
     "pinned_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
     "participation": {"const": "universal"},
     "authorization_ref": {"type": "string", "minLength": 1},
-    "pin_status": {"const": "PENDING_OWNER_CERTIFICATION"}
+    "pin_status": {
+      "enum": ["PENDING_OWNER_CERTIFICATION", "OWNER_CERTIFIED"],
+      "description": "Certification may be advanced only by an explicit repository-owner directive; an artificial intelligence system may prepare but may not self-certify a pin."
+    }
   }
 }
