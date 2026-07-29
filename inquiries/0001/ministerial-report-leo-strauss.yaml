@@ -1,7 +1,7 @@
 record_type: ministerial_report
 id: MREP-INQ000000001-LEO-STRAUSS
 report_id: MREP-INQ000000001-LEO-STRAUSS
-report_status: MINISTER_REPOSITORY_VALIDATED_PENDING_OWNER_CERTIFICATION
+report_status: OWNER_CERTIFIED_MINISTERIAL_REPORT
 inquiry_ref:
   ref: INQ-000000001
   commit: ec5d59d239d39777c18b8e1087b1261646fe350e
@@ -28,7 +28,12 @@ sovereign_validation:
   workflow: Validate Lean Strauss Interface
   final_run_id: 30418796355
   result: SOVEREIGN_MINISTERIAL_VALIDATION_PASSED
-  assembly_effect: NONE_UNTIL_SANCTUM_OWNER_CERTIFICATION
+  assembly_effect: ACCEPTED_BY_OWNER_CERTIFICATION
+owner_certification:
+  record: inquiries/0001/owner-certification.yaml
+  id: CERT-INQ-000000001
+  decision: OWNER_CERTIFIED
+  authorization_instruction: Do it
 evidence:
   - witness_id: CORPUS-WIT-103
     source_id: CORPUS-SRC-103
@@ -102,8 +107,8 @@ uncertainties:
   - The inquiry's term constitutional government is broader than the precise institutional claims established by these two source studies.
 dissent: []
 termination:
-  status: COMPLETE_MINISTER_VALIDATED_PENDING_OWNER_CERTIFICATION
-  authoritative_effect: MINISTER_VALIDATION_COMPLETE_ASSEMBLY_CERTIFICATION_PENDING
+  status: CERTIFIED_COMPLETE
+  authoritative_effect: OWNER_CERTIFIED_ASSEMBLY_RECORD
   presidential_synthesis: NOT_PERFORMED
 provenance:
   produced_by:
@@ -121,4 +126,6 @@ provenance:
       commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
     - ref: STRAUSS-INQ-000000001-VALIDATION-001
       commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
-certification_status: PENDING_OWNER_CERTIFICATION
+    - ref: CERT-INQ-000000001
+      commit: e7fb2107fd748e57fef8aaf3e37562f939bb9a41
+certification_status: OWNER_CERTIFIED
