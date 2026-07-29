@@ -1,0 +1,39 @@
+record_type: owner_certification
+id: CERT-INQ-000000001
+inquiry_ref:
+  ref: INQ-000000001
+  envelope_sha256: 9d1f8bd8ecea90197d339db97d980193b7688ac53deb813e0b68743188867453
+certifying_owner:
+  github_login: izzy9118-blip
+  authority: REPOSITORY_OWNER
+  authorization_event:
+    medium: authenticated_project_conversation
+    instruction: Do it
+    date: 2026-07-28
+scope:
+  certifies:
+    - immutable inquiry envelope
+    - universal dispatch receipt
+    - sovereign Strauss ministerial validation
+    - Secretary provenance and conformance validation
+  does_not_certify:
+    - philosophical truth beyond recorded evidence classifications
+    - independent corroboration not present in the record
+    - resolution of preserved textual-state uncertainties
+    - presidential synthesis
+records:
+  sanctum_acceptance_merge: 827cb36dc3ac8bd17fc376593765ee1452faf259
+  strauss_validation_merge: fb417d1d4ab7b5d349e801544c0c703d8998a93f
+  ministerial_report: inquiries/0001/ministerial-report-leo-strauss.yaml
+  secretary_validation: inquiries/0001/secretary-validation-record.yaml
+decision: OWNER_CERTIFIED
+status: ACTIVE_CERTIFICATION
+preservation:
+  uncertainties_preserved: true
+  dissent_preserved: true
+  proposition_classifications_preserved: true
+  artificial_intelligence_self_certification: false
+  presidential_synthesis_performed: false
+termination:
+  proving_dispatch_status: CERTIFIED_COMPLETE
+  next_action: PRESIDENTIAL_SYNTHESIS_REMAINS_SEPARATE_AND_UNPERFORMED
