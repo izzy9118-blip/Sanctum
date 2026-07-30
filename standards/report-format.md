@@ -1,6 +1,6 @@
 ---
-status: PROPOSED_PENDING_OWNER_RATIFICATION
-version: 0.1.0
+status: RATIFIED_BY_OWNER
+version: 1.0.0
 provenance: Settled in owner working session, 2026-07-29
 ratification_record: governance/ratifications/2026-stage-1.yaml
 ---
