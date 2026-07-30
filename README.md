@@ -126,3 +126,9 @@ Sanctum/
 ```
 
 Ministerial corpora and reasoning systems remain in their own repositories. Sanctum is the Assembly, not a container for the ministers.
+
+## Ratified constitutional standards
+
+- [Sanctum Briefing Standard](standards/briefing-standard.md)
+- [Sanctum Report Format (Constitutional)](standards/report-format.md)
+- [Stage 1 ratification record](governance/ratifications/2026-stage-1.yaml)
