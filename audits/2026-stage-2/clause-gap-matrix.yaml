@@ -1,0 +1,83 @@
+schema_version: 1.0
+record_type: stage_2_clause_gap_matrix
+status: FINDINGS_ONLY_OWNER_VERDICT_REQUIRED
+basis:
+  ratification_record: governance/ratifications/2026-stage-1.yaml
+  locator: governance/ratifications/2026-stage-1.yaml:7-63
+  use_ruled_text: true
+ministers:
+  leo-strauss:
+    repository: izzy9118-blip/Strauss
+    registry_locator: registry/ministers.yaml:21-96
+    C9:
+      type: documented_gap
+      locator: izzy9118-blip/Strauss:speech/speech-mechanism.yaml:377-448; izzy9118-blip/Strauss:adapter.py:45-62
+      observation: The inspected voice rules, output contract, prohibited-output set, and adapter-required sections do not state an explicit prohibition on citing the minister's own works, career, or past as authority.
+    C6:
+      type: probable_gap_needs_owner_reading
+      locator: izzy9118-blip/Strauss:speech/speech-mechanism.yaml:377-425
+      observation: The mechanism requires a direct answer and the narrowest supported conclusion, but it does not expressly require a committed judgment or expressly prohibit internal bothsidesism. Owner reading is needed to decide whether the existing direct-answer rule is equivalent.
+    C7:
+      type: conforming_as_written
+      locator: izzy9118-blip/Strauss:speech/speech-mechanism.yaml:392-425; izzy9118-blip/Strauss:speech/speech-mechanism.yaml:480-497
+      observation: The output contract requires unresolved uncertainties, the stopping rules preserve affirmative non-resolution, and a behavioral requirement treats unresolved uncertainty as a positive output.
+    C8:
+      type: probable_gap_needs_owner_reading
+      locator: izzy9118-blip/Strauss:speech/speech-mechanism.yaml:316-335; izzy9118-blip/Strauss:speech/speech-mechanism.yaml:377-389
+      observation: Direct conclusions and anti-coyness rules support candor, but the concealment contract still permits a protective function as a supported category. Owner reading is needed to determine whether this is only an interpretive evidence category or can shape runtime expression contrary to C8.
+    C10:
+      type: conforming_as_written
+      locator: izzy9118-blip/Strauss:manifest.yaml:69-74; izzy9118-blip/Strauss:speech/speech-mechanism.yaml:201-210; izzy9118-blip/Strauss:speech/speech-mechanism.yaml:392-448; izzy9118-blip/Strauss:adapter.py:35-43; izzy9118-blip/Strauss:adapter.py:185-198
+      observation: The manifest fixes proposition kinds; the speech pipeline requires kind, evidence, source location, confidence, and alternatives; the adapter checks those fields; the mechanism denies authority to its own output.
+    C12:
+      type: conforming_as_written
+      locator: standards/report-format.md:45-54; registry/ministers.yaml:21-96
+      observation: The hub places pedagogy under per-minister adapter duties rather than the all-minister requirements. No contrary constitutional-level pedagogy rule was located in the registered Strauss interface.
+  xenophon:
+    repository: null
+    registry_locator: registry/ministers.yaml:20-104
+    C9: &x_unavailable
+      type: unable_to_assess
+      locator: registry/ministers.yaml:20-104
+      reason: No registered Xenophon repository or adapter locator exists.
+    C6: *x_unavailable
+    C7: *x_unavailable
+    C8: *x_unavailable
+    C10: *x_unavailable
+    C12: *x_unavailable
+  austen:
+    repository: null
+    registry_locator: registry/ministers.yaml:20-104
+    C9: &a_unavailable
+      type: unable_to_assess
+      locator: registry/ministers.yaml:20-104
+      reason: No registered Austen repository or adapter locator exists.
+    C6: *a_unavailable
+    C7: *a_unavailable
+    C8: *a_unavailable
+    C10: *a_unavailable
+    C12: *a_unavailable
+  graham:
+    repository: null
+    registry_locator: registry/ministers.yaml:20-104
+    C9: &g_unavailable
+      type: unable_to_assess
+      locator: registry/ministers.yaml:20-104
+      reason: No registered Graham repository or adapter locator exists.
+    C6: *g_unavailable
+    C7: *g_unavailable
+    C8: *g_unavailable
+    C10: *g_unavailable
+    C12: *g_unavailable
+excluded_rebuild:
+  talleyrand:
+    registry_state: not_yet_established
+    locator: registry/ministers.yaml:97-104
+    audit_note:
+      type: unable_to_assess
+      locator: registry/ministers.yaml:97-104
+      reason: The registry marks Talleyrand as future-facing and supplies no manifest or adapter. The rebuild is outside Stage 2.
+hub_C12_check:
+  type: conforming_as_written
+  locator: standards/report-format.md:14-54
+  observation: Pedagogical duty appears under the explicit heading for per-minister duties, not among the constitutional requirements applying to all ministers.
