@@ -1,14 +1,14 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 2.9.0
+version: 3.0.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 2.8.0
-  predecessor_commit: c9e9c0bab5676950846e98435fad691ce03c8662
+  predecessor_version: 2.9.0
+  predecessor_commit: 4ad09dc75897dda2a4f68d32148a72a342c2917c
   reason: >-
-    By explicit repository-owner directive, replace the uncertified historical Strauss pin
-    with the verified current Strauss main state. The prior 2.8.0 registry remains preserved
-    in Git and is not silently rewritten.
+    Add Xenophon as the second established sovereign minister after completion of his
+    documentary foundation, owner-adopted adapter, operational authorization, exact-commit
+    validation, and merger to the Xenophon main branch. The 2.9.0 registry remains preserved.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -92,6 +92,77 @@ ministers:
           commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
         - ref: problems/
           commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+  - id: xenophon
+    minister_id: xenophon
+    title: Xenophon Minister
+    repository: izzy9118-blip/Xenophon
+    pinned_commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+    manifest_ref: manifest.yaml
+    manifest_path: manifest.yaml
+    manifest_version: "1.70.0"
+    participation: universal
+    authorization_ref: governance/repository-authorization.yaml
+    authorization_id: XENOPHON-AUTH-001
+    pin_status: OWNER_CERTIFIED
+    pin_certification:
+      authority: REPOSITORY_OWNER_DIRECTIVE
+      date: "2026-08-01"
+      decision_ref: docs/decisions/0005-register-xenophon-operational-minister.md
+    interface_status: ACTIVE_OWNER_AUTHORIZED_OPERATIONAL_INTERFACE
+    semantic_completion: INCOMPLETE
+    doctrinal_certification: OWNER_CERTIFIED_FOR_OPERATIONAL_USE_WITH_RECORDED_LIMITS
+    runtime_readiness: FULL_OPERATIONAL_USE_WITH_ENGLISH_WITNESS_AND_OPEN_RESEARCH_LIMITS
+    authorization_scope:
+      current_textual_jurisdiction: CONTROLLED_ENGLISH_WITNESS_PRIMARY_SECONDARY_SYNTHESIS
+      greek_language_review: DEFERRED_BY_OWNER
+      greek_dependent_claims: PROHIBITED
+      unresolved_question_count: 19
+      final_teaching_authorized: false
+    adapter_ref: adapter.py
+    speech_ref: speech/speech-mechanism.yaml
+    corpus_ref: corpus/index.yaml
+    synthesis_ref: studies/comparisons/anabasis-primary-strauss/syntheses/XEN-STRAUSS-GUIDED-CONTROLLED-SYNTHESIS-001-R1.yaml
+    adapter_review_ref: speech/reviews/XEN-MINISTER-ADAPTER-R1-IN-DEPTH-REVIEW-001.yaml
+    owner_review_ref: governance/owner-reviews/2026-08-01-xenophon-minister-adapter-r1-in-depth-review.yaml
+    federation_schema_ref: federation/contracts/ministerial-report.schema.v1.3.0.json
+    current_manifest_summary:
+      manifest_blob_sha: 0d0a9dae28637f95a163b628001f7b65f25daa06
+      component_state:
+        adapter: OWNER_AUTHORIZED_OPERATIONAL_INTERFACE
+        speech_mechanism: OWNER_AUTHORIZED_OPERATIONAL_OPEN_RESEARCH
+        primary_reconstruction: OWNER_ADOPTED_ENGLISH_WITNESS
+        controlled_comparison: OWNER_ADOPTED_R3
+        controlled_synthesis: OWNER_ADOPTED_R1
+      evidentiary_limits_preserved:
+        - semantic research remains incomplete
+        - Greek-language review is deferred by owner
+        - Greek-dependent claims remain prohibited
+        - all nineteen unresolved questions remain positive results
+        - operational authority does not certify a final teaching
+        - wider Xenophontic corpus reconstruction remains incomplete
+    membership_status: established
+    provenance:
+      produced_by:
+        actor: xenophon
+        repo: izzy9118-blip/Xenophon
+        commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+      consumed_records:
+        - ref: manifest.yaml
+          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+        - ref: governance/repository-authorization.yaml
+          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+        - ref: adapter.py
+          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+        - ref: speech/speech-mechanism.yaml
+          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+        - ref: corpus/index.yaml
+          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+        - ref: studies/comparisons/anabasis-primary-strauss/syntheses/XEN-STRAUSS-GUIDED-CONTROLLED-SYNTHESIS-001-R1.yaml
+          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+        - ref: speech/reviews/XEN-MINISTER-ADAPTER-R1-IN-DEPTH-REVIEW-001.yaml
+          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+        - ref: governance/owner-reviews/2026-08-01-xenophon-minister-adapter-r1-in-depth-review.yaml
+          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
 future_repositories:
   - id: talleyrand
     title: Talleyrand
