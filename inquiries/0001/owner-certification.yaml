@@ -34,6 +34,18 @@ preservation:
   proposition_classifications_preserved: true
   artificial_intelligence_self_certification: false
   presidential_synthesis_performed: false
+provenance:
+  produced_by:
+    actor: repository_owner
+    repo: izzy9118-blip/Sanctum
+    commit: 827cb36dc3ac8bd17fc376593765ee1452faf259
+  consumed_records:
+    - ref: inquiries/0001/envelope.yaml
+      commit: 827cb36dc3ac8bd17fc376593765ee1452faf259
+    - ref: inquiries/0001/ministerial-report-leo-strauss.yaml
+      commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
+    - ref: inquiries/0001/secretary-validation-record.yaml
+      commit: 827cb36dc3ac8bd17fc376593765ee1452faf259
 termination:
   proving_dispatch_status: CERTIFIED_COMPLETE
   next_action: PRESIDENTIAL_SYNTHESIS_REMAINS_SEPARATE_AND_UNPERFORMED
