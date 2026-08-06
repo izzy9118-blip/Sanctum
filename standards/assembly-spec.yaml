@@ -1,10 +1,18 @@
 ---
 record_type: sanctum_assembly_spec
 id: ASSEMBLY-SPEC-001
-version: 1.0.0
+version: 1.1.0
 status: PROPOSED_PENDING_OWNER_RATIFICATION
 provenance: Station 1 of the sovereign map, built 2026-08-05
 governs: harness.py, the ASSEMBLE step
+revision:
+  predecessor_version: 1.0.0
+  date: 2026-08-06
+  reason: >-
+    Carry the Horus charter amendment HORUS-AMD-001, the language tooth, into the
+    gate the harness enforces. The parity manifest now records per-principal T1
+    language and language state, and a T1 declared FILLED on translation alone is
+    recorded as a gap rather than a fill.
 ---
 
 principle: >-
@@ -55,6 +63,13 @@ segments:
       HOLD only by explicit override, and the mark is then written into the
       context, the report, and the run manifest. Bias enters as file depth; the
       gate makes depth visible before thought.
+    language_mark: >-
+      The manifest also carries, per principal, whether that principal was heard
+      in his own words - T1 FILLED on original-language primary matter - or only
+      in translation. The mark travels into the run. No judgment about a
+      principal may rise above the tier at which that principal was actually
+      heard, and depth has a language: a thick file of translations is a thin
+      file wearing a thick coat.
 
   - id: 4
     name: board_files
