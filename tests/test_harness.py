@@ -119,12 +119,16 @@ class ParityGate(unittest.TestCase):
             (horus / name).write_text(body, encoding="utf-8")
         return Path(tmp)
 
-    def _file(self, refresh="2026-08-04", statuses=("FILLED",) * 5):
+    def _file(self, refresh="2026-08-04", statuses=("FILLED",) * 5,
+              language="Russian", language_state="ORIGINAL"):
         lines = ["# Principal File", "", "- Principal name: X", "- Type: body",
                  "- Assembly date: 2026-08-04", "- Completeness: PENDING_PROBE"]
         for tier, status in zip(harness.TIERS, statuses):
             lines += ["- %s last refresh: %s" % (tier, refresh),
                       "- %s status: %s" % (tier, status)]
+            if tier == "T1":
+                lines += ["- T1 language: %s" % language,
+                          "- T1 language state: %s" % language_state]
         return "\n".join(lines) + "\n## T1 OWN WORDS\n"
 
     def _board(self, roster):
@@ -187,6 +191,39 @@ class ParityGate(unittest.TestCase):
             got = harness.parity(estate, board, dt.date(2026, 8, 5))
         self.assertEqual(got["verdict"], "PASS")
         self.assertEqual(got["principals"][0]["tiers"]["T3"]["status"], "EMPTY")
+
+    def test_a_filled_t1_on_translation_alone_is_a_gap(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            estate = self._estate(tmp, {"a.md": self._file(
+                language="English (translation of Russian originals)",
+                language_state="TRANSLATION_ONLY")})
+            board = self._board([{"id": "a", "name": "A", "type": "body",
+                                  "file": "files/a.md"}])
+            got = harness.parity(estate, board, dt.date(2026, 8, 5))
+        self.assertEqual(got["verdict"], "HOLD")
+        self.assertTrue(any("language state is TRANSLATION_ONLY" in g["gap"]
+                            for g in got["gaps"]))
+        self.assertEqual(got["language_mark"]["not_heard_in_own_words"], ["A"])
+        self.assertTrue(got["language_mark"]["carries_mark"])
+
+    def test_original_language_t1_is_heard_in_own_words(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            estate = self._estate(tmp, {"a.md": self._file()})
+            board = self._board([{"id": "a", "name": "A", "type": "body",
+                                  "file": "files/a.md"}])
+            got = harness.parity(estate, board, dt.date(2026, 8, 5))
+        self.assertEqual(got["verdict"], "PASS")
+        self.assertEqual(got["language_mark"]["heard_in_own_words"], ["A"])
+        self.assertFalse(got["language_mark"]["carries_mark"])
+        self.assertEqual(got["principals"][0]["tiers"]["T1"]["language"], "Russian")
+
+    def test_an_ungathered_principal_is_not_heard_in_own_words(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            estate = self._estate(tmp, {})
+            board = self._board([{"id": "a", "name": "A", "type": "body",
+                                  "file": "files/a.md"}])
+            got = harness.parity(estate, board, dt.date(2026, 8, 5))
+        self.assertEqual(got["language_mark"]["not_heard_in_own_words"], ["A"])
 
     def test_the_live_ukraine_board_holds(self):
         estate = BASE.parent

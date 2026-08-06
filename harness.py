@@ -307,11 +307,13 @@ def read_principal_file(path: Path):
     for line in path.read_text(encoding="utf-8").split("\n"):
         if line.startswith("## "):
             break
-        match = re.match(r"^- (T[1-5]) (last refresh|status): (.+)$", line.strip())
+        match = re.match(r"^- (T[1-5]) (last refresh|status|language|language state): (.+)$",
+                         line.strip())
         if match:
             tier = header["tiers"].setdefault(match.group(1), {})
-            tier["refreshed" if match.group(2) == "last refresh" else "status"] = \
-                match.group(3).strip()
+            field = {"last refresh": "refreshed", "status": "status",
+                     "language": "language", "language state": "language_state"}
+            tier[field[match.group(2)]] = match.group(3).strip()
             continue
         match = re.match(r"^- ([A-Za-z ]+): (.+)$", line.strip())
         if match:
@@ -362,7 +364,23 @@ def parity(estate: Path, board: dict, as_of: dt.date):
                 cell["staleness"] = "STALE" if stale else "within tolerance"
             else:
                 cell["staleness"] = "UNCOMPUTABLE"
+            if tier == "T1":
+                # the language tooth: a principal heard only in translation has
+                # not been heard, however thick the file (charter HORUS-AMD-001)
+                cell["language"] = found.get("language", "UNRECORDED")
+                cell["language_state"] = found.get("language_state", "UNRECORDED")
+                record["heard_in_own_words"] = (
+                    status == "FILLED" and cell["language_state"] == "ORIGINAL")
             record["tiers"][tier] = cell
+
+            if tier == "T1" and status == "FILLED" and \
+                    cell["language_state"] != "ORIGINAL":
+                gaps.append({
+                    "principal": entry["name"],
+                    "gap": "T1 is declared FILLED but its language state is %s; "
+                           "the charter fills T1 only on original-language "
+                           "primary matter" % cell["language_state"],
+                    "language": cell["language"]})
 
             if tier in GATE_TIERS:
                 if status != "FILLED":
@@ -378,6 +396,7 @@ def parity(estate: Path, board: dict, as_of: dt.date):
         principals.append(record)
 
     verdict = "PASS" if not gaps else "HOLD"
+    unheard = [p["name"] for p in principals if not p.get("heard_in_own_words")]
     return {
         "record_type": "horus_parity_manifest",
         "board": board["board"],
@@ -388,6 +407,18 @@ def parity(estate: Path, board: dict, as_of: dt.date):
         "verdict": verdict,
         "gap_count": len(gaps),
         "gaps": gaps,
+        "language_mark": {
+            "rule": "charter HORUS-AMD-001: T1 is filled only on original-language "
+                    "primary matter; a principal heard only in translation has not "
+                    "been heard",
+            "heard_in_own_words": [p["name"] for p in principals
+                                   if p.get("heard_in_own_words")],
+            "not_heard_in_own_words": unheard,
+            "carries_mark": bool(unheard),
+            "consequence": "No judgment about a principal may rise above the tier "
+                           "at which that principal was actually heard. This mark "
+                           "travels into any run made across this board.",
+        },
         "principals": principals,
         "generated_by": "harness.py, by rule; PASS/HOLD is not an opinion",
         "note": ("A file's silence means NOT GATHERED, never \"nothing there.\" "
