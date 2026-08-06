@@ -34,7 +34,7 @@ segments:
   - id: 2
     name: custos_manner_of_reading
     source: minister_house
-    path: custos_<house>/manner-of-reading.md
+    path: memory_<house>/manner-of-reading.md
     required: true
     on_missing: ABORT
     note: >-

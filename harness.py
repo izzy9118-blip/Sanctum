@@ -450,8 +450,8 @@ def assemble(estate: Path, spec: dict, house: str, minister: str, board: dict,
         ctx.file("%s / %s" % (house, item), house, house_dir / item, estate)
 
     # 2 — the manner of reading
-    ctx.file("%s / custos_%s/manner-of-reading.md" % (house, house.lower()),
-             house, house_dir / ("custos_%s" % house.lower()) / "manner-of-reading.md",
+    ctx.file("%s / memory_%s/manner-of-reading.md" % (house, house.lower()),
+             house, house_dir / ("memory_%s" % house.lower()) / "manner-of-reading.md",
              estate)
 
     # 3 — the parity manifest, first among the board's records, and a gate
