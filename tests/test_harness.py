@@ -225,15 +225,23 @@ class ParityGate(unittest.TestCase):
             got = harness.parity(estate, board, dt.date(2026, 8, 5))
         self.assertEqual(got["language_mark"]["not_heard_in_own_words"], ["A"])
 
-    def test_the_live_ukraine_board_holds(self):
+    def test_the_closed_ukraine_board_holds(self):
+        # ukraine-2026-08 is CLOSED, so it is a stable fixture: a frozen board
+        # cannot be topped up, which is the whole reason it was closed.
         estate = BASE.parent
         board = harness.yaml_load(
-            (estate / "Horus/boards/ukraine.yaml").read_text(encoding="utf-8"))
-        got = harness.parity(estate, board, dt.date(2026, 8, 5))
+            (estate / "Horus/boards/ukraine-2026-08.yaml").read_text(encoding="utf-8"))
+        got = harness.parity(estate, board, dt.date(2026, 8, 6))
         self.assertEqual(got["verdict"], "HOLD")
+        self.assertEqual(len(got["principals"]), 7)
         gathered = [p["id"] for p in got["principals"] if p["file_state"] == "PRESENT"]
-        self.assertEqual(sorted(gathered),
-                         ["russian-federation", "russian-federation--putin"])
+        self.assertEqual(len(gathered), 7)
+        # six of seven principals are heard in their own words; Ukraine as a
+        # body is not, and the mark says so rather than averaging it away
+        mark = got["language_mark"]
+        self.assertEqual(mark["not_heard_in_own_words"], ["Ukraine"])
+        self.assertEqual(len(mark["heard_in_own_words"]), 6)
+        self.assertTrue(mark["carries_mark"])
 
 
 if __name__ == "__main__":
