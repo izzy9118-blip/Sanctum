@@ -1,0 +1,51 @@
+schema_version: 1.0
+record_type: stage_2_minister_inventory_audit
+status: FINDINGS_ONLY_OWNER_VERDICT_REQUIRED
+audit_basis:
+  clause_record: governance/ratifications/2026-stage-1.yaml
+  clause_state: OWNER_RULINGS_PRESENT
+  locator: governance/ratifications/2026-stage-1.yaml:7-63
+registry:
+  path: registry/ministers.yaml
+  version: 2.9.0
+  locator: registry/ministers.yaml:3-20
+registered_ministers:
+  - minister_id: leo-strauss
+    repository: izzy9118-blip/Strauss
+    registry_membership_status: established
+    registry_locator: registry/ministers.yaml:21-64
+    manifest_path: manifest.yaml
+    manifest_lifecycle: ADDITIVE_OPERATIONAL_INTERFACE
+    manifest_locator: izzy9118-blip/Strauss:manifest.yaml:3-18
+    finding:
+      type: conforming_as_written
+      locator: registry/ministers.yaml:21-64; izzy9118-blip/Strauss:manifest.yaml:3-18
+      observation: The registry identity, repository, minister identifier, manifest version, and active lifecycle point to the same minister repository state. This is an observation only; the owner retains the verdict.
+future_or_predecessor_entries:
+  - id: talleyrand
+    repository: izzy9118-blip/Talleyrand
+    registry_state: not_yet_established
+    registry_locator: registry/ministers.yaml:97-104
+    manifest_state: unable_to_locate_manifest_in_registry
+    finding:
+      type: unable_to_assess
+      locator: registry/ministers.yaml:97-104
+      reason: The entry is explicitly future-facing and supplies no manifest path or committed minister interface. The rebuild is outside this audit.
+expected_but_not_registered:
+  - minister_id: xenophon
+    finding:
+      type: documented_gap
+      locator: registry/ministers.yaml:20-104
+      observation: No Xenophon minister entry or repository pointer appears in the complete current registry.
+  - minister_id: austen
+    finding:
+      type: documented_gap
+      locator: registry/ministers.yaml:20-104
+      observation: No Austen minister entry or repository pointer appears in the complete current registry.
+  - minister_id: graham
+    finding:
+      type: documented_gap
+      locator: registry/ministers.yaml:20-104
+      observation: No Graham minister entry or repository pointer appears in the complete current registry.
+uncertainty:
+  - The prompt names Xenophon, Austen, and Graham as expected ministers, while the canonical registry contains only Leo Strauss as established and Talleyrand as future-facing. This audit does not infer unregistered repository locations.
