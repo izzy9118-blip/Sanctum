@@ -657,7 +657,9 @@ def run(args, config):
 
     question = hub / "boards" / args.board / ("%s-question.md" % stamp)
     if args.question_file:
-        question = Path(args.question_file).expanduser()
+        # resolve: every source is recorded relative to the estate root, and a
+        # relative path given on the command line has no root to be relative to
+        question = Path(args.question_file).expanduser().resolve()
     if not question.exists():
         raise SystemExit("ASSEMBLE: no board question at %s" % question)
 
