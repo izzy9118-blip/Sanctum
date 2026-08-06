@@ -1,0 +1,122 @@
+---
+record_type: sanctum_assembly_spec
+id: ASSEMBLY-SPEC-001
+version: 1.0.0
+status: PROPOSED_PENDING_OWNER_RATIFICATION
+provenance: Station 1 of the sovereign map, built 2026-08-05
+governs: harness.py, the ASSEMBLE step
+---
+
+principle: >-
+  Assembly order is law. It lives here, versioned, in the constitutional
+  repository - not in the runtime. The harness reads this file and may not
+  reorder, skip, or silently substitute a segment. Every run records the spec
+  version and the hash of the context it produced, so a report is auditable to
+  its exact inputs.
+
+division_of_authority: >-
+  The hub fixes the order of the segments. A minister house fixes what is inside
+  its own house segment, through its manifest's load_order. The hub does not
+  reach into a house's ordering, and a house cannot change where it sits in the
+  run.
+
+segments:
+  - id: 1
+    name: house_records
+    source: minister_house
+    resolve: manifest load_order
+    required: true
+    on_missing: ABORT
+    note: >-
+      manifest, keel, deeds and whatever else the house's own load_order names,
+      in the house's own order. The map's ASSEMBLE names manifest, keel, deeds.
+
+  - id: 2
+    name: custos_manner_of_reading
+    source: minister_house
+    path: custos_<house>/manner-of-reading.md
+    required: true
+    on_missing: ABORT
+    note: >-
+      How this house is read. It precedes the board so the reading discipline is
+      in place before any fact is met.
+
+  - id: 3
+    name: parity_manifest
+    source: horus
+    path: manifests/<board>-<date>.yaml
+    required: true
+    on_missing: ABORT
+    generated_by_run: true
+    gate: true
+    note: >-
+      The parity manifest comes first among the board's records and it is a gate,
+      not a document. HOLD blocks the run. An owner may carry the run across a
+      HOLD only by explicit override, and the mark is then written into the
+      context, the report, and the run manifest. Bias enters as file depth; the
+      gate makes depth visible before thought.
+
+  - id: 4
+    name: board_files
+    source: horus
+    path: files/<principal>.md
+    order: board roster order
+    required: true
+    on_missing: RECORD_AS_NOT_GATHERED
+    note: >-
+      The board's Horus files, one per principal, tier order intact. A file's
+      silence means NOT GATHERED, never "nothing there." One board, all
+      ministers; tailored feeds are prohibited.
+
+  - id: 5
+    name: ledger
+    source: hub
+    path: ledger/<minister>.yaml
+    required: false
+    on_missing: RECORD_AS_NOT_ESTABLISHED
+    note: >-
+      The minister's open commitments, injected so the mind faces its own record
+      each time. Station 3 is unbuilt; until it exists this segment records
+      NOT_ESTABLISHED in the context. It is never silently omitted.
+
+  - id: 6
+    name: board_question
+    source: hub
+    path: boards/<board>/<date>-question.md
+    required: true
+    on_missing: ABORT
+    note: The question is last. Everything above it is ground.
+
+laws_enforced:
+  parity: >-
+    THE PARITY LAW - no analysis runs on an asymmetric board. Enforced in code at
+    segment 3, not left to the reasoner's discretion.
+  boundary: >-
+    THE BOUNDARY LAW - the harness gathers nothing and judges nothing. It reads
+    committed records, orders them, calls, and writes back.
+  portability: >-
+    THE PORTABILITY LAW - the order lives in a repository, not in a conversation
+    and not in a product.
+  no_self_certification: >-
+    The harness certifies nothing. It records what it did, including what it
+    could not do.
+
+write_contract:
+  report: reports/<board>/<minister>-<date>.md
+  run_manifest: reports/<board>/<minister>-<date>.run.yaml
+  parity_manifest: Horus manifests/<board>-<date>.yaml
+  run_manifest_must_record:
+    - context sha256
+    - this spec version
+    - every source file with its repository, path, and sha256
+    - the HEAD commit of every estate repository at PULL
+    - provider, model, endpoint
+    - the parity verdict, and the mark if the run was carried across a HOLD
+    - what the run did not do
+  ledger_extraction:
+    status: NOT_IMPLEMENTED
+    reason: >-
+      The map's WRITE step extracts dated calls into ledger entries. The ledger
+      schema is Station 3 and belongs to the owner. Until it exists the harness
+      writes no ledger entry and invents no schema; the report's dated calls
+      stand unextracted in the report.
