@@ -1,0 +1,88 @@
+record_type: binding_ledger
+minister: talleyrand
+version: 1.0.0
+status: PROPOSED_PENDING_OWNER_RATIFICATION
+opened: 2026-08-06
+authority: hub-administered, minister-keyed
+schema_status: >-
+  Station 3 of the sovereign map, first instance. The schema below is proposed,
+  not ratified. It is written because the owner has entered commitments to carry;
+  it is not a claim that the ledger bank is built.
+
+rules:
+  grading: >-
+    Graded only by the owner and by the rounds. No minister grades his own
+    ledger, and no run may write a grade.
+  standing: >-
+    Every entry is a standing commitment carried into every future run. The
+    harness injects the open entries at ASSEMBLE, so the mind faces its own
+    record each time it reasons.
+  reversal: >-
+    Reversal costs an on-record retraction, written into this file. The vice of
+    graceful reorganisation is priced here in plain text.
+  authority_balance: >-
+    An integer, spent by WRONG and RETRACTED, earned by CORRECT. It is not
+    computed until the first grading, and it is not a score of anything else.
+
+authority_balance:
+  value: 0
+  note: nothing graded yet; the balance begins at zero and is not a credit
+
+provenance:
+  origin: >-
+    The commitments below were made in a reading run in chat on 5-6 August 2026.
+    That run was itself a keel breach - runtime is the rounds only, and no
+    freelance prototypes - recorded in
+    memory_sanctum/session-2026-08-05-06-findings.md.
+  consequence: >-
+    The breach does not void the commitments. A judgment made irregularly is
+    still a judgment, and letting it evaporate because of how it was made is the
+    graceful reorganisation the ledger exists to prevent. It is carried, graded,
+    and its irregular origin is carried with it.
+  board: >-
+    The reading was made before the ukraine-2026-08 board was gathered and
+    closed. The commitments were therefore made on thinner ground than the board
+    now holds, and that is part of what the grading will test.
+
+commitments:
+  - id: TAL-LEDGER-0001
+    date: 2026-08-06
+    text: Russia enters no real negotiations before spring 2027.
+    kind: dated_call
+    status: OPEN
+    grade_at: 2027-04
+    what_would_falsify: >-
+      Russian entry into substantive negotiations - not a stated readiness, not a
+      channel, but negotiation on terms - at any point before spring 2027.
+  - id: TAL-LEDGER-0002
+    date: 2026-08-06
+    text: The winter energy campaign against Ukraine resumes.
+    kind: dated_call
+    status: OPEN
+    grade_at: 2027-04
+    what_would_falsify: >-
+      A winter passing without a renewed systematic campaign against Ukrainian
+      energy infrastructure.
+  - id: TAL-LEDGER-0003
+    date: 2026-08-06
+    text: >-
+      The European coalition, absent a named successor leader, weakens rather
+      than deploys before the season turns.
+    kind: dated_call
+    status: OPEN
+    grade_at: 2027-04
+    what_would_falsify: >-
+      A European deployment before the season turns, or a coalition that holds
+      and hardens without a named successor leader emerging.
+    note: >-
+      This call rests on a principal - Germany - who at the time it was made had
+      not been gathered in his own words. He has been since; the board is closed;
+      the call stands as made.
+
+grading:
+  due: 2027-04
+  by: owner and rounds
+  method: >-
+    Each commitment graded GRADED_CORRECT, GRADED_WRONG, or RETRACTED against the
+    record as it then stands. A retraction is written here, dated, with its
+    reason, and is not a neutral act.
