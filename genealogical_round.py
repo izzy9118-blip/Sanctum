@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Forward reasoned round with mandatory proposition-level evidence genealogy.
 
-This wrapper intentionally preserves sovereign_round.py as the v1.3 historical
-runtime. It first executes that validated investigative/adversarial sequence. The
-resulting free-form final draft is not authoritative. A final structured minister
-call must convert the judgment into a typed package whose substantive propositions
-resolve to exact documentary ground. Only after genealogy validation does Sanctum
-render the readable report that remains on disk.
+This wrapper preserves sovereign_round.py as the v1.3 predecessor runtime. It may
+execute that runtime only as an internal stage against the preserved v1.3 spec.
+The resulting free-form final draft is not authoritative. A final structured
+minister call must convert the judgment into a typed package whose substantive
+propositions resolve to exact documentary ground. Only after genealogy validation
+does Sanctum render the readable report that remains on disk.
 """
 from __future__ import annotations
 
@@ -22,7 +22,8 @@ import sovereign_round
 from evidence_genealogy import GenealogyError, render_report, validate_genealogy_package, write_genealogy_record
 from minister_ground_files import validate_minister_ground_files
 
-SPEC_PATH = "standards/assembly-spec.v1.4.0.yaml"
+SPEC_PATH = "standards/assembly-spec.yaml"
+PREDECESSOR_SPEC_PATH = "standards/assembly-spec.v1.3.0.yaml"
 FINAL_PACKAGE_CONTRACT = "contracts/final-judgment-package.schema.json"
 
 
@@ -109,14 +110,28 @@ def _genealogy_prompt(draft: str, round_record: dict, exchanges: list[dict],
     )
 
 
-def run(args) -> int:
-    result = sovereign_round.run(args)
-    if result != 0:
-        return result
+def _run_predecessor(args) -> int:
+    """Execute v1.3 only as an internal stage of the governing v1.4 runner."""
+    previous = sovereign_round.SPEC_PATH
+    sovereign_round.SPEC_PATH = PREDECESSOR_SPEC_PATH
+    try:
+        return sovereign_round.run(args)
+    finally:
+        sovereign_round.SPEC_PATH = previous
 
+
+def run(args) -> int:
     config = harness.load_config(Path(args.config).expanduser())
     estate = Path(config["estate"]).expanduser()
     hub = estate / "Sanctum"
+    governing = harness.yaml_load((hub / SPEC_PATH).read_text(encoding="utf-8"))
+    if str(governing.get("version")) != "1.4.0":
+        raise GenealogicalRoundError("genealogical finalization requires governing ASSEMBLY-SPEC-001 v1.4.0")
+
+    result = _run_predecessor(args)
+    if result != 0:
+        return result
+
     stamp = (dt.date.fromisoformat(args.date) if args.date else dt.date.today()).isoformat()
     report_dir = hub / "reports" / args.board
     report_path = report_dir / f"{args.minister}-{stamp}.md"
@@ -131,10 +146,6 @@ def run(args) -> int:
     house = config["ministers"][args.minister]["house"]
     repository_name = house
     exchanges = _exchange_records(round_record)
-
-    spec = harness.yaml_load((hub / SPEC_PATH).read_text(encoding="utf-8"))
-    if str(spec.get("version")) != "1.4.0":
-        raise GenealogicalRoundError("genealogical finalization requires ASSEMBLY-SPEC-001 v1.4.0")
 
     call_config = dict(config["model"])
     if args.provider:
@@ -175,10 +186,12 @@ def run(args) -> int:
     ).hexdigest()
     round_record["record_type"] = "sovereign_genealogical_round"
     round_record["assembly_spec"] = {"path": SPEC_PATH, "version": "1.4.0"}
+    round_record["predecessor_assembly_spec"] = {"path": PREDECESSOR_SPEC_PATH, "version": "1.3.0"}
     round_record["final_judgment_package"] = {
         "path": str(package_path),
         "sha256": package_sha,
         "proposition_count": len(package["propositions"]),
+        "contract": FINAL_PACKAGE_CONTRACT,
     }
     round_record["proposition_evidence_genealogy"] = {
         "path": str(genealogy_path),
