@@ -1,145 +1,95 @@
 ---
 record_type: sanctum_assembly_spec
 id: ASSEMBLY-SPEC-001
-version: 1.4.0
+version: 1.5.0
 status: PROPOSED_PENDING_OWNER_RATIFICATION
 predecessor:
-  path: standards/assembly-spec.v1.3.0.yaml
-  version: 1.3.0
+  path: standards/assembly-spec.v1.4.0.yaml
+  version: 1.4.0
 revision:
   date: 2026-08-08
   reason: >-
-    Add a mandatory proposition-level evidence genealogy gate after the adopted
-    investigative and adversarial sequence. The free-form final judgment produced
-    by the v1.3 predecessor becomes a non-authoritative draft until a structured
-    final package resolves every substantive proposition to exact documentary
-    ground.
+    Add an independent executable Secretary audit after proposition genealogy.
+    The Secretary re-reads committed run artifacts and independently re-resolves
+    their structural and provenance bindings before Sanctum may treat the reasoned
+    run as Secretary-audited.
 
 governs:
+  - secretary_audit.py
+  - genealogical_round.py
   - evidence_genealogy.py
   - minister_ground_files.py
-  - genealogical_round.py
-  - contracts/final-judgment-package.schema.json
-  - federation/contracts/ministerial-report.schema.v1.6.0.json
 
 principle: >-
-  No consequential proposition may survive into a forward Ministerial Report as
-  an untraceable sentence. A substantive proposition must resolve to exact ground
-  from either a validated Horus exchange or the sovereign minister repository.
-  Validation proves documentary linkage; it never certifies truth.
+  A minister cannot validate its own report merely by producing artifacts that say
+  they are valid. After the ministerial reasoning and genealogy stages finish, a
+  separate deterministic Secretary process must re-open the artifacts from disk,
+  recompute their bindings, and fail closed on disagreement. The Secretary audits
+  provenance and structure only; it never certifies truth, wisdom, or completeness.
 
 inheritance:
-  predecessor_runtime: sovereign_round.py
-  predecessor_spec: standards/assembly-spec.v1.3.0.yaml
-  v1_3_sequence_preserved: true
+  predecessor_spec: standards/assembly-spec.v1.4.0.yaml
+  predecessor_runtime: genealogical_round.py
+  v1_4_genealogy_preserved: true
   required_predecessor_steps:
-    - common ground
-    - MHQ investigative request
-    - Horus investigative response
-    - preserved provisional judgment
-    - MHAQ adversarial response
-    - non-authoritative final draft
-  note: >-
-    v1.4 does not rewrite v1.3. The v1.3 specification is preserved as a
-    historical predecessor and may be invoked only as an internal stage of the
-    v1.4 genealogical runner. A direct v1.3 finalization is non-conforming once
-    v1.4 governs.
+    - investigative Horus exchange
+    - provisional ministerial judgment
+    - adversarial Horus exchange
+    - revised non-authoritative draft
+    - structured final proposition package
+    - proposition-level genealogy validation
+    - sovereign minister file resolution
+    - rendered Ministerial Report
 
-mandatory_calls:
-  - id: 12
-    name: final_proposition_genealogy
-    actor: minister
-    required_for_mode: reasoned
-    runtime: genealogical_round.py
-    hard_validator: evidence_genealogy.validate_genealogy_package
-    sovereign_file_validator: minister_ground_files.validate_minister_ground_files
-    output_contract: contracts/final-judgment-package.schema.json
-    purpose: >-
-      Convert the non-authoritative final draft into explicit propositions and bind
-      every substantive proposition to exact documentary ground before a readable
-      report is rendered.
-    on_missing: ABORT_REASONED_RUN
-    on_invalid_ground: ABORT_REASONED_RUN
-
-proposition_law:
-  substantive_kinds:
-    - documented_finding
-    - supported_inference
-    - working_hypothesis
+mandatory_postcondition:
+  name: independent_secretary_audit
+  actor: secretary
+  runtime: secretary_audit.py
+  required_for_mode: reasoned
+  on_missing: HOLD_REASONED_RUN
+  on_failure: HOLD_REASONED_RUN
+  output: reports/<board>/<minister>-<date>.secretary-audit.json
   rule: >-
-    Every substantive proposition requires at least one genealogy entry. Questions
-    and unresolved uncertainties may carry no positive ground, but may not be
-    silently promoted to substantive findings.
+    A reasoned run produced under the forward contract is not Secretary-audited
+    until secretary_audit.py independently returns PASS over the persisted artifacts.
 
-ground_routes:
-  horus_exchange:
-    required:
-      - query_id
-      - exchange_sha256
-      - source_ref
-      - document_identity
-      - locator
-    resolution_law: >-
-      The source_ref must occur in sources_used of the bound Horus response and
-      must support at least one records_returned entry. A source merely searched,
-      rejected, or hidden outside the returned source trail cannot ground a
-      proposition. If Horus recorded a source sha256, the genealogy must match it.
-  minister_repository:
-    required:
-      - witness_id
-      - source_id
-      - repository_commit
-      - path
-      - locator
-    resolution_law: >-
-      The repository_commit must equal the exact minister repository commit pinned
-      for the run. The cited file must exist within the pinned house working tree,
-      and the cited witness_id and source_id must occur in that file. The sovereign
-      repository identity is preserved; Sanctum does not mint replacement IDs.
+secretary_checks:
+  - governing Secretary spec identity
+  - required artifact presence
+  - inquiry and minister identity continuity
+  - pinned minister repository commit continuity
+  - canonical final-package hash binding
+  - both Horus exchange request/response hash bindings
+  - independent proposition genealogy re-resolution
+  - sovereign minister repository file and identifier resolution
+  - persisted genealogy artifact equality with independent re-resolution
+  - no-self-certification markers
 
-rendering_law: >-
-  Free-form prose is not the authoritative reasoning object. After structural
-  genealogy validation succeeds, Sanctum renders the readable Ministerial Report
-  from the structured package. If validation fails, the earlier draft remains
-  non-authoritative and the reasoned run aborts.
+independence_law: >-
+  The Secretary audit may consume ministerial and Horus artifacts but may not accept
+  a model statement that those artifacts are valid as evidence of validity. It must
+  recompute the checks deterministically from the persisted records.
+
+failure_law: >-
+  Any missing artifact, changed hash, identity mismatch, unresolved genealogy,
+  sovereign-file failure, or forbidden certification marker causes a hard Secretary
+  failure. The failed audit must not be represented as a successful Assembly run.
 
 history_law: >-
-  Historical report contracts remain valid under the versions that governed them.
-  v1.6.0 is forward-only and may not retroactively invalidate certified v1.3,
-  v1.4, or v1.5 artifacts.
-
-write_contract:
-  final_judgment_package: reports/<board>/<minister>-<date>.final.json
-  proposition_genealogy: reports/<board>/<minister>-<date>.genealogy.json
-  rendered_report: reports/<board>/<minister>-<date>.md
-  run_manifest: reports/<board>/<minister>-<date>.round.json
-  run_manifest_must_record:
-    - assembly spec v1.4.0
-    - final judgment package path and sha256
-    - proposition count
-    - proposition genealogy path and validation status
-    - minister repository file resolution status
-    - both predecessor Horus exchange hashes
-    - pinned minister repository commit
-    - no self-certification
+  v1.5 is forward-only. The v1.4 genealogy specification is preserved at
+  standards/assembly-spec.v1.4.0.yaml. Historical artifacts remain governed by the
+  contracts under which they were produced.
 
 laws_enforced:
-  evidence_genealogy: >-
-    THE GENEALOGY LAW - a substantive proposition without a resolvable documentary
-    path cannot enter the forward Ministerial Report.
-  no_bibliography_substitution: >-
-    THE NO-BIBLIOGRAPHY LAW - a generic source list does not prove which source
-    grounds which proposition.
-  no_searched_source_as_ground: >-
-    THE USED-GROUND LAW - Horus material is ground only if Horus recorded it as
-    used and attached it to a returned record.
-  sovereign_identity: >-
-    THE SOVEREIGN IDENTITY LAW - minister repository evidence retains the house's
-    own witness and source identifiers at the exact pinned commit and file.
-  predecessor_non_bypass: >-
-    THE NON-BYPASS LAW - the preserved v1.3 runner is an internal predecessor
-    stage only. Once v1.4 governs, no reasoned run is conforming unless the final
-    proposition genealogy gate succeeds.
+  secretary_separation: >-
+    THE SECRETARY SEPARATION LAW - the reasoning actor does not perform or declare
+    the independent audit that admits its own output as structurally conforming.
+  recomputation: >-
+    THE RECOMPUTATION LAW - Secretary validation is based on recomputed hashes,
+    identities, genealogy resolution, and file resolution, not copied PASS fields.
+  fail_closed: >-
+    THE SECRETARY FAIL-CLOSED LAW - an absent or failed Secretary audit leaves the
+    forward reasoned run unaudited and held.
   no_self_certification: >-
-    Genealogy validation establishes linkage only. Truth and completeness remain
-    outside artificial-intelligence self-certification.
+    Secretary PASS means structural/provenance audit PASS only. It is never a truth,
+    completeness, correctness, or wisdom certification.
