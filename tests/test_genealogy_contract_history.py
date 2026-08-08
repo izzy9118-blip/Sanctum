@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-import yaml
+import harness
 from jsonschema import Draft202012Validator
 
 BASE = Path(__file__).resolve().parents[1]
@@ -12,7 +12,7 @@ def load(path):
 
 
 def load_yaml(path):
-    return yaml.safe_load((BASE / path).read_text(encoding="utf-8"))
+    return harness.yaml_load((BASE / path).read_text(encoding="utf-8"))
 
 
 def test_historical_root_report_contract_remains_v1_3_0():
