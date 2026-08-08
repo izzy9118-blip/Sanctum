@@ -52,15 +52,15 @@ def validate_silence_semantics(package):
         if unknown:
             raise MinisterialSilenceError(f"unknown proposition refs: {sorted(unknown)}")
 
+        uncertainty_ref = item.get("uncertainty_ref")
         if state in {"AFFIRMED", "REJECTED"} and not refs:
             raise MinisterialSilenceError(f"{state} requires proposition evidence")
         if state in {"NOT_ADDRESSED", "NOT_ASKED"} and refs:
             raise MinisterialSilenceError(f"{state} may not carry proposition refs")
-        if state == "UNCERTAIN" and not refs and not item.get("uncertainty_ref"):
+        if state == "UNCERTAIN" and not refs and uncertainty_ref is None:
             raise MinisterialSilenceError("UNCERTAIN requires a proposition or uncertainty reference")
-        if item.get("uncertainty_ref") is not None:
-            ref = item["uncertainty_ref"]
-            if not isinstance(ref, int) or ref < 0 or ref >= len(uncertainties):
+        if uncertainty_ref is not None:
+            if not isinstance(uncertainty_ref, int) or isinstance(uncertainty_ref, bool) or uncertainty_ref < 0 or uncertainty_ref >= len(uncertainties):
                 raise MinisterialSilenceError("uncertainty_ref does not resolve")
         if state == "OUTSIDE_MY_GROUND" and not item.get("basis"):
             raise MinisterialSilenceError("OUTSIDE_MY_GROUND requires an explicit basis")
