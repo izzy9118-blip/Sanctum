@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sanctum:final-judgment-package:1.0.0",
+  "title": "Structured Final Ministerial Judgment Package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "inquiry_id",
+    "minister_id",
+    "repository",
+    "summary",
+    "propositions",
+    "uncertainties"
+  ],
+  "properties": {
+    "record_type": {"const": "final_judgment_package"},
+    "inquiry_id": {"type": "string", "minLength": 1},
+    "minister_id": {"type": "string", "minLength": 1},
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["full_name", "git_commit"],
+      "properties": {
+        "full_name": {"type": "string", "minLength": 1},
+        "git_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "summary": {"type": "string", "minLength": 1},
+    "propositions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["proposition_id", "kind", "claim", "provisional_disposition", "genealogy"],
+        "properties": {
+          "proposition_id": {"type": "string", "pattern": "^PROP-[A-Z0-9_-]+$"},
+          "kind": {
+            "enum": [
+              "documented_finding",
+              "supported_inference",
+              "working_hypothesis",
+              "comparative_question",
+              "unresolved_uncertainty"
+            ]
+          },
+          "claim": {"type": "string", "minLength": 1},
+          "provisional_disposition": {
+            "enum": ["retained", "qualified", "withdrawn", "left_unresolved", "new_after_adversarial_ground"]
+          },
+          "genealogy": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {"$ref": "#/$defs/horus_ground"},
+                {"$ref": "#/$defs/minister_ground"}
+              ]
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "enum": ["documented_finding", "supported_inference", "working_hypothesis"]
+                }
+              },
+              "required": ["kind"]
+            },
+            "then": {"properties": {"genealogy": {"minItems": 1}}}
+          }
+        ]
+      }
+    },
+    "uncertainties": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    }
+  },
+  "$defs": {
+    "horus_ground": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "query_id",
+        "exchange_sha256",
+        "source_ref",
+        "document_identity",
+        "locator"
+      ],
+      "properties": {
+        "origin": {"const": "horus_exchange"},
+        "query_id": {"type": "string", "pattern": "^(MHQ|MHAQ)-[A-Z0-9_-]+$"},
+        "exchange_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_ref": {"type": "string", "minLength": 1},
+        "document_identity": {"type": "string", "minLength": 1},
+        "locator": {"type": "string", "minLength": 1},
+        "source_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "minister_ground": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "witness_id",
+        "source_id",
+        "repository_commit",
+        "path",
+        "locator"
+      ],
+      "properties": {
+        "origin": {"const": "minister_repository"},
+        "witness_id": {"type": "string", "minLength": 1},
+        "source_id": {"type": "string", "minLength": 1},
+        "repository_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "path": {"type": "string", "minLength": 1},
+        "locator": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}
