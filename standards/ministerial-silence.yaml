@@ -1,0 +1,39 @@
+---
+record_type: sanctum_ministerial_silence_standard
+id: MINISTERIAL-SILENCE-001
+version: 1.0.0
+status: PROPOSED_PENDING_OWNER_RATIFICATION
+date: 2026-08-08
+purpose: >-
+  Make non-assertion explicit inside each sovereign ministerial judgment package,
+  before Presidential comparison. Silence is data and may never be interpreted as
+  assent, dissent, uncertainty, or lack of evidence without an explicit state.
+
+states:
+  NOT_ADDRESSED:
+    meaning: The minister did not address the identified issue in this report.
+  NOT_ASKED:
+    meaning: The identified issue was outside the inquiry actually presented to the minister.
+  OUTSIDE_MY_GROUND:
+    meaning: The minister declines substantive judgment because the issue exceeds the minister's sovereign documentary or methodological ground.
+  UNCERTAIN:
+    meaning: The minister considered the issue but does not reach an affirmative or negative substantive judgment.
+  REJECTED:
+    meaning: The minister considered and affirmatively rejects the identified proposition or position.
+  AFFIRMED:
+    meaning: The minister affirmatively adopts the identified proposition or position.
+
+hard_rules:
+  - Every issue registered in the package's issue register must have exactly one ministerial state.
+  - AFFIRMED and REJECTED require at least one proposition reference and may not be inferred from silence.
+  - UNCERTAIN may reference propositions or explicit uncertainties but is never agreement.
+  - NOT_ADDRESSED and NOT_ASKED may not carry proposition references.
+  - OUTSIDE_MY_GROUND may cite documentary limits but may not be transformed into rejection.
+  - Absence of a state is a contract failure, not a semantic state.
+  - Presidential synthesis must preserve these ministerial states and may not upgrade them to agreement.
+  - This standard classifies ministerial disposition only; it does not certify truth or completeness.
+
+relationship_to_proposition_matrix: >-
+  The Presidential matrix remains a separate Presidential judgment layer. Ministerial
+  silence states are authored at the sovereign minister layer and are input evidence
+  for Presidential comparison; the President does not retroactively author a minister's silence.

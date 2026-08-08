@@ -1,0 +1,25 @@
+name: Ministerial Silence Semantics Safeguard
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  ministerial-silence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install validation dependencies
+        run: python -m pip install pyyaml jsonschema pytest
+      - name: Compile silence and synthesis boundaries
+        run: python -m py_compile ministerial_silence.py proposition_matrix.py presidential_synthesis.py
+      - name: Parse forward silence contract
+        run: python -c "import json; json.load(open('contracts/final-judgment-package.schema.v1.1.0.json'))"
+      - name: Run silence regressions
+        run: python -m pytest -q tests/test_ministerial_silence.py tests/test_silence_matrix_boundary.py
+      - name: Re-run Presidential matrix regressions
+        run: python -m pytest -q tests/test_proposition_matrix.py
