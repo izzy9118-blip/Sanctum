@@ -11,6 +11,7 @@ on:
       - 'tests/**'
       - '*.schema.json'
       - 'assembly.py'
+      - 'harness.py'
       - '.github/workflows/gate.yml'
   push:
     branches:
@@ -23,19 +24,57 @@ jobs:
   gate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out Sanctum into the estate
+        uses: actions/checkout@v4
+        with:
+          path: estate/Sanctum
+
+      - name: Check out Horus estate fixture
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Horus
+          path: estate/Horus
+
+      - name: Check out Talleyrand estate fixture
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Talleyrand
+          path: estate/Talleyrand
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
+      - name: Materialize estate-local runtime config
+        shell: bash
+        run: |
+          cat > estate/config.yaml <<EOF
+          estate: $GITHUB_WORKSPACE/estate
+          EOF
+          test -f estate/Horus/boards/ukraine.yaml
+          test -f estate/Horus/boards/ukraine-2026-08.yaml
+          test -f estate/Talleyrand/manifest.yaml
+          test -f estate/Talleyrand/deeds/index.yaml
+          test -f estate/config.yaml
+
       - name: Install validation dependencies
+        working-directory: estate/Sanctum
         run: python -m pip install pyyaml jsonschema pytest
+
       - name: Compile the constitutional runtime
+        working-directory: estate/Sanctum
         run: python -m py_compile assembly.py gate/gate.py projection/projection.py
+
       - name: Run the Assembly articulation harness
+        working-directory: estate/Sanctum
         run: python assembly.py
+
       - name: Run registry and federation artifact tests
+        working-directory: estate/Sanctum
         run: python -m pytest -q
+
       - name: Validate committed inquiry candidates through the constitutional gate
+        working-directory: estate/Sanctum
         run: |
           set -e
           status=0
