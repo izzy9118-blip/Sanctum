@@ -13,34 +13,49 @@ purpose: >-
   Make Presidential synthesis proposition-aware. The President may classify relationships
   among sovereign minister propositions, but no whole ministerial report may be collapsed
   into an undifferentiated prose summary before that comparison is recorded.
+
 principle: >-
   Semantic alignment is itself Presidential judgment. Code must not fabricate agreement
   by lexical similarity. Code instead guarantees exhaustive proposition coverage, explicit
   minister states, preserved sovereign wording, and visible silence before synthesis.
+
 input:
   authoritative_object: contracts/final-judgment-package.schema.json
   unit: proposition
   whole_report_summary_is_not_matrix_input: true
+
 row_law:
-  allowed_minister_states: [AFFIRMS, QUALIFIES, DISPUTES, UNCERTAIN, OUTSIDE_GROUND, NOT_ADDRESSED, NOT_ASKED]
+  allowed_minister_states:
+    - AFFIRMS
+    - QUALIFIES
+    - DISPUTES
+    - UNCERTAIN
+    - OUTSIDE_GROUND
+    - NOT_ADDRESSED
+    - NOT_ASKED
   silence_law: >-
     An absent proposition is never agreement. If a minister has no proposition assigned to
     a row, the President must mark NOT_ADDRESSED, NOT_ASKED, OUTSIDE_GROUND, or UNCERTAIN.
     AFFIRMS, QUALIFIES, and DISPUTES require at least one proposition reference.
+
 coverage_law: >-
   Every proposition in every participating final judgment package must appear in exactly one
   matrix row. A proposition may not disappear, be duplicated across rows, or be represented
   solely by paraphrase.
+
 wording_law: >-
   Each matrix proposition reference carries minister_id, proposition_id, proposition kind,
   and exact claim text copied from the sovereign structured package. The President may add a
   comparison note but may not rewrite the minister's proposition in place.
+
 presidential_law: >-
   Matrix relationship states and comparison questions are Presidential classifications, not
   ministerial consensus. The persisted matrix identifies them as PRESIDENTIAL_ALIGNMENT.
+
 synthesis_gate: >-
   A Presidential synthesis is non-conforming unless a validated proposition matrix exists for
   the same inquiry and participating minister package hashes.
+
 no_self_certification: >-
   Matrix validation proves exhaustive structural representation only. It does not certify the
   correctness of Presidential alignment, ministerial judgment, or final synthesis.
