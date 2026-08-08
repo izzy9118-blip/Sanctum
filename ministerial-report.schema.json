@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:sanctum:federation:ministerial-report:1.4.0",
+  "$id": "urn:sanctum:federation:ministerial-report:1.5.0",
   "title": "Sanctum Ministerial Report",
-  "description": "Report contract preserving draft, sovereign minister validation, and owner certification as distinct states. Evidence retains sovereign repository identifiers. Every reasoned report must carry at least one validated Minister-to-Horus exchange binding the judgment to the investigative request and the exact source trail returned by Horus.",
+  "description": "Report contract preserving draft, sovereign minister validation, and owner certification as distinct states. Every reasoned report must bind both the ordinary investigative Horus exchange and the distinct adversarial Horus exchange that tested the preserved provisional judgment before finalization.",
   "type": "object",
   "required": ["record_type", "id", "report_id", "report_status", "inquiry_ref", "minister", "repository", "governing_manifest", "evidence", "propositions", "uncertainties", "termination", "provenance", "certification_status"],
   "properties": {
@@ -16,20 +16,41 @@
     "repository": {"type": "object", "required": ["full_name", "git_commit"], "properties": {"full_name": {"type": "string"}, "git_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}}},
     "governing_manifest": {"type": "object", "required": ["path", "version"], "properties": {"path": {"type": "string"}, "version": {"type": "string"}}},
     "owner_certification": {"type": "object"},
+    "provisional_judgment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "proposition_count"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "proposition_count": {"type": "integer", "minimum": 1}
+      }
+    },
     "horus_exchanges": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["query_id", "request_path", "response_path", "exchange_sha256", "response_status", "unfilled_request_count"],
+        "required": ["exchange_kind", "query_id", "request_path", "response_path", "exchange_sha256", "response_status", "unfilled_request_count"],
         "properties": {
-          "query_id": {"type": "string", "pattern": "^MHQ-[A-Z0-9_-]+$"},
+          "exchange_kind": {"enum": ["investigative", "adversarial"]},
+          "query_id": {"type": "string", "pattern": "^(MHQ|MHAQ)-[A-Z0-9_-]+$"},
           "request_path": {"type": "string", "minLength": 1},
           "response_path": {"type": "string", "minLength": 1},
           "exchange_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
           "response_status": {"enum": ["GATHERED", "PARTIALLY_GATHERED", "NOT_GATHERED"]},
           "unfilled_request_count": {"type": "integer", "minimum": 0}
-        }
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"exchange_kind": {"const": "investigative"}}, "required": ["exchange_kind"]},
+            "then": {"properties": {"query_id": {"pattern": "^MHQ-[A-Z0-9_-]+$"}}}
+          },
+          {
+            "if": {"properties": {"exchange_kind": {"const": "adversarial"}}, "required": ["exchange_kind"]},
+            "then": {"properties": {"query_id": {"pattern": "^MHAQ-[A-Z0-9_-]+$"}}}
+          }
+        ]
       }
     },
     "evidence": {
@@ -42,7 +63,7 @@
           "witness_id": {
             "type": "string",
             "pattern": "^[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*-WIT-[A-Z0-9]+(?:-[A-Z0-9]+)*$",
-            "description": "Stable witness identifier assigned by the sovereign minister repository, including established CORPUS-WIT and repository-native forms such as XEN-WIT-PRI-001."
+            "description": "Stable witness identifier assigned by the sovereign minister repository."
           },
           "source_id": {"type": "string", "minLength": 1},
           "repository_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
@@ -59,7 +80,28 @@
   "allOf": [
     {
       "if": {"properties": {"mode": {"const": "reasoned"}}, "required": ["mode"]},
-      "then": {"required": ["horus_exchanges"], "properties": {"horus_exchanges": {"minItems": 1}}}
+      "then": {
+        "required": ["provisional_judgment", "horus_exchanges"],
+        "properties": {
+          "horus_exchanges": {
+            "minItems": 2,
+            "contains": {"type": "object", "properties": {"exchange_kind": {"const": "investigative"}}, "required": ["exchange_kind"]},
+            "minContains": 1,
+            "maxContains": 1
+          }
+        },
+        "allOf": [
+          {
+            "properties": {
+              "horus_exchanges": {
+                "contains": {"type": "object", "properties": {"exchange_kind": {"const": "adversarial"}}, "required": ["exchange_kind"]},
+                "minContains": 1,
+                "maxContains": 1
+              }
+            }
+          }
+        ]
+      }
     }
   ]
 }
