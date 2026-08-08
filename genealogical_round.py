@@ -21,7 +21,7 @@ import harness
 import sovereign_round
 from evidence_genealogy import GenealogyError, render_report, validate_genealogy_package, write_genealogy_record
 
-SPEC_PATH = "standards/assembly-spec.yaml"
+SPEC_PATH = "standards/assembly-spec.v1.4.0.yaml"
 FINAL_PACKAGE_CONTRACT = "contracts/final-judgment-package.schema.json"
 
 
@@ -108,7 +108,6 @@ def _genealogy_prompt(draft: str, round_record: dict, exchanges: list[dict],
 
 
 def run(args) -> int:
-    # First execute the already-adopted v1.3 investigative + adversarial round.
     result = sovereign_round.run(args)
     if result != 0:
         return result
@@ -163,7 +162,6 @@ def run(args) -> int:
     except GenealogyError as exc:
         raise GenealogicalRoundError(f"genealogy gate rejected final judgment: {exc}") from exc
 
-    # The free-form draft is replaced only after hard genealogy validation.
     package_text = json.dumps(package, indent=2, sort_keys=True) + "\n"
     package_path.write_text(package_text, encoding="utf-8")
     write_genealogy_record(genealogy_path, package, validation)
