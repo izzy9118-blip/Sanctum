@@ -1,247 +1,145 @@
 ---
 record_type: sanctum_assembly_spec
 id: ASSEMBLY-SPEC-001
-version: 1.3.0
+version: 1.4.0
 status: PROPOSED_PENDING_OWNER_RATIFICATION
-provenance: Station 1 of the sovereign map, built 2026-08-05
-
-governs:
-  - harness.py
-  - minister_horus.py
-  - adversarial_horus.py
-  - sovereign_round.py
-  - the ASSEMBLE, investigative-call, provisional-judgment, and adversarial-call sequence
+predecessor:
+  path: standards/assembly-spec.v1.3.0.yaml
+  version: 1.3.0
 revision:
-  predecessor_version: 1.2.0
   date: 2026-08-08
   reason: >-
-    Add a mandatory adversarial Horus call between provisional and final
-    ministerial judgment. Every substantive provisional proposition must state
-    what documentary information could weaken, qualify, or overturn it. Sanctum
-    deterministically turns those minister-stated vulnerabilities into a distinct
-    MHAQ request. Horus gathers responsive ground without judging its meaning, and
-    final judgment cannot proceed without the validated adversarial exchange.
----
+    Add a mandatory proposition-level evidence genealogy gate after the adopted
+    investigative and adversarial sequence. The free-form final judgment produced
+    by the v1.3 predecessor becomes a non-authoritative draft until a structured
+    final package resolves every substantive proposition to exact documentary
+    ground.
+
+governs:
+  - evidence_genealogy.py
+  - minister_ground_files.py
+  - genealogical_round.py
+  - contracts/final-judgment-package.schema.json
+  - federation/contracts/ministerial-report.schema.v1.6.0.json
 
 principle: >-
-  Assembly order is law. It lives here, versioned, in the constitutional
-  repository - not in the runtime. The runtime may not reorder, skip, or silently
-  substitute a segment or mandatory call. Every run records the spec version,
-  context hashes, provisional judgment, and both exact Minister-Horus exchanges
-  that governed final judgment.
+  No consequential proposition may survive into a forward Ministerial Report as
+  an untraceable sentence. A substantive proposition must resolve to exact ground
+  from either a validated Horus exchange or the sovereign minister repository.
+  Validation proves documentary linkage; it never certifies truth.
 
-division_of_authority: >-
-  The hub fixes the order of segments and calls. A minister house fixes what is
-  inside its own house segment and uses its own reconstructed method to decide
-  what information it needs and what could disconfirm its provisional judgment.
-  Horus alone controls ordinary source selection. The minister may request a
-  specifically identified document, but may not turn the gathering organ into a
-  hidden curator for its preferred conclusion. Horus never decides whether
-  adversarial evidence defeats a ministerial proposition.
-
-segments:
-  - id: 1
-    name: house_records
-    source: minister_house
-    resolve: manifest load_order
-    required: true
-    on_missing: ABORT
-    note: >-
-      Manifest, keel, deeds and whatever else the house's own load_order names,
-      in the house's own order.
-
-  - id: 2
-    name: custos_manner_of_reading
-    source: minister_house
-    path: memory_<house>/manner-of-reading.md
-    required: true
-    on_missing: ABORT
-    note: >-
-      How this house is read. It precedes the board so the reading discipline is
-      in place before any fact is met.
-
-  - id: 3
-    name: parity_manifest
-    source: horus
-    path: manifests/<board>-<date>.yaml
-    required: true
-    on_missing: ABORT
-    generated_by_run: true
-    gate: true
-    note: >-
-      The parity manifest comes first among the board's records and it is a gate,
-      not a document. HOLD blocks the run unless the owner explicitly carries
-      the mark. Bias enters as file depth; the gate makes depth visible before
-      thought.
-    language_mark: >-
-      The manifest carries, per principal, whether that principal was heard in
-      original-language own words. No judgment about a principal may rise above
-      the tier at which that principal was actually heard.
-
-  - id: 4
-    name: board_files
-    source: horus
-    path: files/<principal>.md
-    order: board roster order
-    required: true
-    on_missing: RECORD_AS_NOT_GATHERED
-    note: >-
-      One board, all ministers. A file's silence means NOT GATHERED, never
-      "nothing there." Tailored initial feeds are prohibited.
-
-  - id: 5
-    name: ledger
-    source: hub
-    path: ledger/<minister>.yaml
-    required: false
-    on_missing: RECORD_AS_NOT_ESTABLISHED
-    note: >-
-      The minister's open commitments, injected so the mind faces its own record.
-
-  - id: 6
-    name: board_question
-    source: hub
-    path: boards/<board>/<date>-question.md
-    required: true
-    on_missing: ABORT
-    note: >-
-      The question closes the common-ground context. The first minister call sees
-      the same board and question as every other minister.
+inheritance:
+  predecessor_runtime: sovereign_round.py
+  predecessor_spec: standards/assembly-spec.v1.3.0.yaml
+  v1_3_sequence_preserved: true
+  required_predecessor_steps:
+    - common ground
+    - MHQ investigative request
+    - Horus investigative response
+    - preserved provisional judgment
+    - MHAQ adversarial response
+    - non-authoritative final draft
+  note: >-
+    v1.4 does not rewrite v1.3. The v1.3 specification is preserved as a
+    historical predecessor and may be invoked only as an internal stage of the
+    v1.4 genealogical runner. A direct v1.3 finalization is non-conforming once
+    v1.4 governs.
 
 mandatory_calls:
-  - id: 7
-    name: minister_horus_investigative_query
+  - id: 12
+    name: final_proposition_genealogy
     actor: minister
     required_for_mode: reasoned
-    hard_function: minister_horus.required_horus_call
-    output_contract: contracts/minister-horus-query.schema.json
+    runtime: genealogical_round.py
+    hard_validator: evidence_genealogy.validate_genealogy_package
+    sovereign_file_validator: minister_ground_files.validate_minister_ground_files
+    output_contract: contracts/final-judgment-package.schema.json
     purpose: >-
-      The minister states what information it needs, why it matters, and what
-      evidentiary characteristics would count as adequate ground. This is an act
-      of investigative attention, not source selection.
+      Convert the non-authoritative final draft into explicit propositions and bind
+      every substantive proposition to exact documentary ground before a readable
+      report is rendered.
     on_missing: ABORT_REASONED_RUN
+    on_invalid_ground: ABORT_REASONED_RUN
 
-  - id: 8
-    name: horus_investigative_response
-    actor: horus
-    required_for_mode: reasoned
-    response_contract: Horus/contracts/horus-query-response.schema.json
-    query_prefix: MHQ-
-    source_selection_rule: HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS
-    purpose: >-
-      Horus gathers or fails to gather and returns every source searched, used,
-      rejected with reason, every record returned with exact source references,
-      and every unfilled information need. Completeness remains PENDING_PROBE.
-    on_missing: ABORT_REASONED_RUN
+proposition_law:
+  substantive_kinds:
+    - documented_finding
+    - supported_inference
+    - working_hypothesis
+  rule: >-
+    Every substantive proposition requires at least one genealogy entry. Questions
+    and unresolved uncertainties may carry no positive ground, but may not be
+    silently promoted to substantive findings.
 
-  - id: 9
-    name: provisional_minister_judgment
-    actor: minister
-    required_for_mode: reasoned
-    output_contract: contracts/provisional-judgment.schema.json
-    purpose: >-
-      After the investigative exchange, the minister states its strongest present
-      propositions but may not finalize them. Every substantive proposition must
-      identify what documentary information could weaken, qualify, or overturn it
-      and why that disconfirmation would matter.
-    preservation: >-
-      The complete provisional judgment is written separately and remains visible
-      even if the final judgment changes.
-    on_missing: ABORT_REASONED_RUN
+ground_routes:
+  horus_exchange:
+    required:
+      - query_id
+      - exchange_sha256
+      - source_ref
+      - document_identity
+      - locator
+    resolution_law: >-
+      The source_ref must occur in sources_used of the bound Horus response and
+      must support at least one records_returned entry. A source merely searched,
+      rejected, or hidden outside the returned source trail cannot ground a
+      proposition. If Horus recorded a source sha256, the genealogy must match it.
+  minister_repository:
+    required:
+      - witness_id
+      - source_id
+      - repository_commit
+      - path
+      - locator
+    resolution_law: >-
+      The repository_commit must equal the exact minister repository commit pinned
+      for the run. The cited file must exist within the pinned house working tree,
+      and the cited witness_id and source_id must occur in that file. The sovereign
+      repository identity is preserved; Sanctum does not mint replacement IDs.
 
-  - id: 10
-    name: horus_adversarial_response
-    actor: horus
-    required_for_mode: reasoned
-    hard_function: adversarial_horus.required_adversarial_horus_call
-    request_contract: contracts/minister-horus-adversarial-query.schema.json
-    response_contract: Horus/contracts/horus-query-response.schema.json
-    query_prefix: MHAQ-
-    source_selection_rule: HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS
-    request_derivation: >-
-      Sanctum constructs the MHAQ deterministically from the minister's preserved
-      provisional propositions and their minister-stated disconfirmation needs.
-      The hub may not invent a new vulnerability merely to satisfy the gate.
-    purpose: >-
-      Horus searches for documentary ground responsive to the stated
-      disconfirmation needs. Horus records what it found and did not find but does
-      not decide whether the evidence defeats, weakens, or leaves untouched the
-      provisional proposition.
-    not_gathered_rule: >-
-      NOT_GATHERED means only that qualifying responsive ground was not acquired.
-      It is never confirmation of the provisional proposition.
-    on_missing: ABORT_REASONED_RUN
+rendering_law: >-
+  Free-form prose is not the authoritative reasoning object. After structural
+  genealogy validation succeeds, Sanctum renders the readable Ministerial Report
+  from the structured package. If validation fails, the earlier draft remains
+  non-authoritative and the reasoned run aborts.
 
-  - id: 11
-    name: final_minister_judgment
-    actor: minister
-    required_for_mode: reasoned
-    requires_validated_investigative_exchange: true
-    requires_preserved_provisional_judgment: true
-    requires_validated_adversarial_exchange: true
-    input_addition: >-
-      Inject the complete investigative exchange, provisional judgment, and
-      adversarial exchange, including all unfilled requests and provenance, into
-      the final minister context.
-    final_duty: >-
-      The final judgment must confront the adversarial return proposition by
-      proposition and state whether each provisional proposition was retained,
-      qualified, withdrawn, or left unresolved. A change may not be concealed.
-    report_binding: >-
-      The Ministerial Report records both exchange kinds, query IDs, request and
-      response paths, exchange sha256 values, response statuses, and unfilled
-      request counts.
-    on_missing_exchange: ABORT_REASONED_RUN
-
-laws_enforced:
-  parity: >-
-    THE PARITY LAW - no analysis runs on an asymmetric board except under an
-    explicit owner-carried mark.
-  boundary: >-
-    THE BOUNDARY LAW - Horus gathers and never judges. A minister may direct
-    attention but may not silently lay its own ground.
-  investigative_call: >-
-    THE INVESTIGATIVE CALL LAW - every reasoned ministerial run crosses the
-    ordinary Minister-Horus hard boundary before provisional judgment.
-  adversarial_call: >-
-    THE ADVERSARIAL CALL LAW - every reasoned ministerial run exposes its
-    preserved provisional propositions to a distinct hard Horus call for
-    documentary ground capable of weakening, qualifying, or overturning them
-    before final judgment. A soft instruction to be skeptical is non-conforming.
-  no_confirmation_from_search_failure: >-
-    THE SEARCH-FAILURE LAW - an adversarial NOT_GATHERED result is an unresolved
-    evidentiary limit, never positive confirmation of the proposition tested.
-  provenance: >-
-    THE SOURCE-TRAIL LAW - no returned fact enters judgment without a disclosed
-    source trail. Sources used must be a subset of sources searched; rejected
-    sources and unresolved information needs remain visible.
-  portability: >-
-    THE PORTABILITY LAW - the order and contracts live in repositories, not in a
-    conversation or product.
-  no_self_certification: >-
-    Horus, the harness, and ministers may validate structure but may not certify
-    their own completeness or truth.
+history_law: >-
+  Historical report contracts remain valid under the versions that governed them.
+  v1.6.0 is forward-only and may not retroactively invalidate certified v1.3,
+  v1.4, or v1.5 artifacts.
 
 write_contract:
-  report: reports/<board>/<minister>-<date>.md
-  provisional_judgment: reports/<board>/<minister>-<date>.provisional.json
+  final_judgment_package: reports/<board>/<minister>-<date>.final.json
+  proposition_genealogy: reports/<board>/<minister>-<date>.genealogy.json
+  rendered_report: reports/<board>/<minister>-<date>.md
   run_manifest: reports/<board>/<minister>-<date>.round.json
-  parity_manifest: Horus manifests/<board>-<date>.yaml
-  horus_exchange_root: exchanges/<inquiry>/<minister>/
   run_manifest_must_record:
-    - context sha256 before the investigative query call
-    - context sha256 after adversarial response injection
-    - this spec version
-    - every source file with its repository, path, and sha256
-    - the HEAD commit of every estate repository at PULL
-    - provider, model, endpoint
-    - the parity verdict, and the mark if the run was carried across a HOLD
-    - the preserved provisional judgment path and sha256
-    - both Minister-Horus exchange kinds, query IDs, and exchange sha256 values
-    - every unfilled investigative and adversarial information need
-    - what the run did not do
-  ledger_extraction:
-    status: NOT_IMPLEMENTED
-    reason: >-
-      The map's WRITE step extracts dated calls into ledger entries. Until that
-      bank is fully ratified, the runtime writes no invented ledger structure.
+    - assembly spec v1.4.0
+    - final judgment package path and sha256
+    - proposition count
+    - proposition genealogy path and validation status
+    - minister repository file resolution status
+    - both predecessor Horus exchange hashes
+    - pinned minister repository commit
+    - no self-certification
+
+laws_enforced:
+  evidence_genealogy: >-
+    THE GENEALOGY LAW - a substantive proposition without a resolvable documentary
+    path cannot enter the forward Ministerial Report.
+  no_bibliography_substitution: >-
+    THE NO-BIBLIOGRAPHY LAW - a generic source list does not prove which source
+    grounds which proposition.
+  no_searched_source_as_ground: >-
+    THE USED-GROUND LAW - Horus material is ground only if Horus recorded it as
+    used and attached it to a returned record.
+  sovereign_identity: >-
+    THE SOVEREIGN IDENTITY LAW - minister repository evidence retains the house's
+    own witness and source identifiers at the exact pinned commit and file.
+  predecessor_non_bypass: >-
+    THE NON-BYPASS LAW - the preserved v1.3 runner is an internal predecessor
+    stage only. Once v1.4 governs, no reasoned run is conforming unless the final
+    proposition genealogy gate succeeds.
+  no_self_certification: >-
+    Genealogy validation establishes linkage only. Truth and completeness remain
+    outside artificial-intelligence self-certification.

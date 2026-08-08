@@ -1,0 +1,38 @@
+name: Proposition Evidence Genealogy Safeguard
+
+on:
+  pull_request:
+    paths:
+      - 'evidence_genealogy.py'
+      - 'minister_ground_files.py'
+      - 'genealogical_round.py'
+      - 'contracts/final-judgment-package.schema.json'
+      - 'standards/assembly-spec.yaml'
+      - 'standards/assembly-spec.v1.3.0.yaml'
+      - 'federation/contracts/ministerial-report.schema.v1.6.0.json'
+      - 'tests/test_evidence_genealogy.py'
+      - 'tests/test_minister_ground_files.py'
+      - 'tests/test_genealogy_contract_history.py'
+      - '.github/workflows/proposition-evidence-genealogy.yml'
+  workflow_dispatch:
+
+jobs:
+  genealogy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install validation dependencies
+        run: python -m pip install pyyaml jsonschema pytest
+      - name: Compile genealogy runtime
+        run: python -m py_compile minister_horus.py adversarial_horus.py sovereign_round.py evidence_genealogy.py minister_ground_files.py genealogical_round.py
+      - name: Run proposition genealogy regression tests
+        run: python -m pytest -q tests/test_evidence_genealogy.py
+      - name: Run sovereign house file-resolution tests
+        run: python -m pytest -q tests/test_minister_ground_files.py
+      - name: Run genealogy contract-history tests
+        run: python -m pytest -q tests/test_genealogy_contract_history.py
+      - name: Re-run predecessor safeguard regressions
+        run: python -m pytest -q tests/test_minister_horus.py tests/test_adversarial_horus.py tests/test_adversarial_report_contract.py

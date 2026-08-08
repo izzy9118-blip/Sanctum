@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sanctum:federation:ministerial-report:1.6.0",
+  "title": "Sanctum Ministerial Report — Genealogy-Bound Forward Contract",
+  "description": "Forward-only contract. A reasoned report must bind the preserved v1.3 adversarial record to a validated structured final judgment package and proposition-level evidence genealogy. Historical contracts remain unchanged.",
+  "type": "object",
+  "required": [
+    "record_type",
+    "id",
+    "report_id",
+    "report_status",
+    "inquiry_ref",
+    "minister",
+    "repository",
+    "governing_manifest",
+    "evidence",
+    "propositions",
+    "uncertainties",
+    "termination",
+    "provenance",
+    "certification_status"
+  ],
+  "properties": {
+    "record_type": {"const": "ministerial_report"},
+    "id": {"type": "string"},
+    "report_id": {"type": "string"},
+    "report_status": {
+      "enum": [
+        "DRAFT_PENDING_MINISTER_REPOSITORY_VALIDATION",
+        "MINISTER_REPOSITORY_VALIDATED_PENDING_OWNER_CERTIFICATION",
+        "OWNER_CERTIFIED_MINISTERIAL_REPORT"
+      ]
+    },
+    "inquiry_ref": {"type": "object"},
+    "minister": {
+      "type": "object",
+      "required": ["actor", "manifest_commit"],
+      "properties": {
+        "actor": {"type": "string"},
+        "manifest_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "mode": {"enum": ["reasoned", "outside_my_ground"]},
+    "repository": {
+      "type": "object",
+      "required": ["full_name", "git_commit"],
+      "properties": {
+        "full_name": {"type": "string"},
+        "git_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    },
+    "governing_manifest": {
+      "type": "object",
+      "required": ["path", "version"],
+      "properties": {
+        "path": {"type": "string"},
+        "version": {"type": "string"}
+      }
+    },
+    "provisional_judgment": {
+      "type": "object",
+      "required": ["path", "sha256", "proposition_count"]
+    },
+    "horus_exchanges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "exchange_kind",
+          "query_id",
+          "request_path",
+          "response_path",
+          "exchange_sha256",
+          "response_status",
+          "unfilled_request_count"
+        ]
+      }
+    },
+    "final_judgment_package": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "proposition_count", "contract"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "proposition_count": {"type": "integer", "minimum": 1},
+        "contract": {"const": "contracts/final-judgment-package.schema.json"}
+      }
+    },
+    "proposition_evidence_genealogy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "status", "proposition_count"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "status": {"const": "GENEALOGY_STRUCTURALLY_VALIDATED_NOT_TRUTH_CERTIFIED"},
+        "proposition_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["witness_id", "source_id", "repository_commit", "path"]
+      }
+    },
+    "propositions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["proposition_id", "kind", "claim"],
+        "properties": {
+          "proposition_id": {"type": "string", "pattern": "^PROP-[A-Z0-9_-]+$"},
+          "kind": {
+            "enum": [
+              "documented_finding",
+              "supported_inference",
+              "working_hypothesis",
+              "comparative_question",
+              "unresolved_uncertainty"
+            ]
+          },
+          "claim": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "uncertainties": {"type": "array", "items": {"type": "string"}},
+    "termination": {"type": "object", "required": ["status"]},
+    "provenance": {"type": "object"},
+    "certification_status": {"enum": ["PENDING_OWNER_CERTIFICATION", "OWNER_CERTIFIED"]}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"mode": {"const": "reasoned"}}, "required": ["mode"]},
+      "then": {
+        "required": [
+          "provisional_judgment",
+          "horus_exchanges",
+          "final_judgment_package",
+          "proposition_evidence_genealogy"
+        ],
+        "properties": {
+          "horus_exchanges": {"minItems": 2, "maxItems": 2}
+        }
+      }
+    }
+  ]
+}

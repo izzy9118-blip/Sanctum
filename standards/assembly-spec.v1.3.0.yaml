@@ -1,0 +1,247 @@
+---
+record_type: sanctum_assembly_spec
+id: ASSEMBLY-SPEC-001
+version: 1.3.0
+status: PROPOSED_PENDING_OWNER_RATIFICATION
+provenance: Station 1 of the sovereign map, built 2026-08-05
+
+governs:
+  - harness.py
+  - minister_horus.py
+  - adversarial_horus.py
+  - sovereign_round.py
+  - the ASSEMBLE, investigative-call, provisional-judgment, and adversarial-call sequence
+revision:
+  predecessor_version: 1.2.0
+  date: 2026-08-08
+  reason: >-
+    Add a mandatory adversarial Horus call between provisional and final
+    ministerial judgment. Every substantive provisional proposition must state
+    what documentary information could weaken, qualify, or overturn it. Sanctum
+    deterministically turns those minister-stated vulnerabilities into a distinct
+    MHAQ request. Horus gathers responsive ground without judging its meaning, and
+    final judgment cannot proceed without the validated adversarial exchange.
+---
+
+principle: >-
+  Assembly order is law. It lives here, versioned, in the constitutional
+  repository - not in the runtime. The runtime may not reorder, skip, or silently
+  substitute a segment or mandatory call. Every run records the spec version,
+  context hashes, provisional judgment, and both exact Minister-Horus exchanges
+  that governed final judgment.
+
+division_of_authority: >-
+  The hub fixes the order of segments and calls. A minister house fixes what is
+  inside its own house segment and uses its own reconstructed method to decide
+  what information it needs and what could disconfirm its provisional judgment.
+  Horus alone controls ordinary source selection. The minister may request a
+  specifically identified document, but may not turn the gathering organ into a
+  hidden curator for its preferred conclusion. Horus never decides whether
+  adversarial evidence defeats a ministerial proposition.
+
+segments:
+  - id: 1
+    name: house_records
+    source: minister_house
+    resolve: manifest load_order
+    required: true
+    on_missing: ABORT
+    note: >-
+      Manifest, keel, deeds and whatever else the house's own load_order names,
+      in the house's own order.
+
+  - id: 2
+    name: custos_manner_of_reading
+    source: minister_house
+    path: memory_<house>/manner-of-reading.md
+    required: true
+    on_missing: ABORT
+    note: >-
+      How this house is read. It precedes the board so the reading discipline is
+      in place before any fact is met.
+
+  - id: 3
+    name: parity_manifest
+    source: horus
+    path: manifests/<board>-<date>.yaml
+    required: true
+    on_missing: ABORT
+    generated_by_run: true
+    gate: true
+    note: >-
+      The parity manifest comes first among the board's records and it is a gate,
+      not a document. HOLD blocks the run unless the owner explicitly carries
+      the mark. Bias enters as file depth; the gate makes depth visible before
+      thought.
+    language_mark: >-
+      The manifest carries, per principal, whether that principal was heard in
+      original-language own words. No judgment about a principal may rise above
+      the tier at which that principal was actually heard.
+
+  - id: 4
+    name: board_files
+    source: horus
+    path: files/<principal>.md
+    order: board roster order
+    required: true
+    on_missing: RECORD_AS_NOT_GATHERED
+    note: >-
+      One board, all ministers. A file's silence means NOT GATHERED, never
+      "nothing there." Tailored initial feeds are prohibited.
+
+  - id: 5
+    name: ledger
+    source: hub
+    path: ledger/<minister>.yaml
+    required: false
+    on_missing: RECORD_AS_NOT_ESTABLISHED
+    note: >-
+      The minister's open commitments, injected so the mind faces its own record.
+
+  - id: 6
+    name: board_question
+    source: hub
+    path: boards/<board>/<date>-question.md
+    required: true
+    on_missing: ABORT
+    note: >-
+      The question closes the common-ground context. The first minister call sees
+      the same board and question as every other minister.
+
+mandatory_calls:
+  - id: 7
+    name: minister_horus_investigative_query
+    actor: minister
+    required_for_mode: reasoned
+    hard_function: minister_horus.required_horus_call
+    output_contract: contracts/minister-horus-query.schema.json
+    purpose: >-
+      The minister states what information it needs, why it matters, and what
+      evidentiary characteristics would count as adequate ground. This is an act
+      of investigative attention, not source selection.
+    on_missing: ABORT_REASONED_RUN
+
+  - id: 8
+    name: horus_investigative_response
+    actor: horus
+    required_for_mode: reasoned
+    response_contract: Horus/contracts/horus-query-response.schema.json
+    query_prefix: MHQ-
+    source_selection_rule: HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS
+    purpose: >-
+      Horus gathers or fails to gather and returns every source searched, used,
+      rejected with reason, every record returned with exact source references,
+      and every unfilled information need. Completeness remains PENDING_PROBE.
+    on_missing: ABORT_REASONED_RUN
+
+  - id: 9
+    name: provisional_minister_judgment
+    actor: minister
+    required_for_mode: reasoned
+    output_contract: contracts/provisional-judgment.schema.json
+    purpose: >-
+      After the investigative exchange, the minister states its strongest present
+      propositions but may not finalize them. Every substantive proposition must
+      identify what documentary information could weaken, qualify, or overturn it
+      and why that disconfirmation would matter.
+    preservation: >-
+      The complete provisional judgment is written separately and remains visible
+      even if the final judgment changes.
+    on_missing: ABORT_REASONED_RUN
+
+  - id: 10
+    name: horus_adversarial_response
+    actor: horus
+    required_for_mode: reasoned
+    hard_function: adversarial_horus.required_adversarial_horus_call
+    request_contract: contracts/minister-horus-adversarial-query.schema.json
+    response_contract: Horus/contracts/horus-query-response.schema.json
+    query_prefix: MHAQ-
+    source_selection_rule: HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS
+    request_derivation: >-
+      Sanctum constructs the MHAQ deterministically from the minister's preserved
+      provisional propositions and their minister-stated disconfirmation needs.
+      The hub may not invent a new vulnerability merely to satisfy the gate.
+    purpose: >-
+      Horus searches for documentary ground responsive to the stated
+      disconfirmation needs. Horus records what it found and did not find but does
+      not decide whether the evidence defeats, weakens, or leaves untouched the
+      provisional proposition.
+    not_gathered_rule: >-
+      NOT_GATHERED means only that qualifying responsive ground was not acquired.
+      It is never confirmation of the provisional proposition.
+    on_missing: ABORT_REASONED_RUN
+
+  - id: 11
+    name: final_minister_judgment
+    actor: minister
+    required_for_mode: reasoned
+    requires_validated_investigative_exchange: true
+    requires_preserved_provisional_judgment: true
+    requires_validated_adversarial_exchange: true
+    input_addition: >-
+      Inject the complete investigative exchange, provisional judgment, and
+      adversarial exchange, including all unfilled requests and provenance, into
+      the final minister context.
+    final_duty: >-
+      The final judgment must confront the adversarial return proposition by
+      proposition and state whether each provisional proposition was retained,
+      qualified, withdrawn, or left unresolved. A change may not be concealed.
+    report_binding: >-
+      The Ministerial Report records both exchange kinds, query IDs, request and
+      response paths, exchange sha256 values, response statuses, and unfilled
+      request counts.
+    on_missing_exchange: ABORT_REASONED_RUN
+
+laws_enforced:
+  parity: >-
+    THE PARITY LAW - no analysis runs on an asymmetric board except under an
+    explicit owner-carried mark.
+  boundary: >-
+    THE BOUNDARY LAW - Horus gathers and never judges. A minister may direct
+    attention but may not silently lay its own ground.
+  investigative_call: >-
+    THE INVESTIGATIVE CALL LAW - every reasoned ministerial run crosses the
+    ordinary Minister-Horus hard boundary before provisional judgment.
+  adversarial_call: >-
+    THE ADVERSARIAL CALL LAW - every reasoned ministerial run exposes its
+    preserved provisional propositions to a distinct hard Horus call for
+    documentary ground capable of weakening, qualifying, or overturning them
+    before final judgment. A soft instruction to be skeptical is non-conforming.
+  no_confirmation_from_search_failure: >-
+    THE SEARCH-FAILURE LAW - an adversarial NOT_GATHERED result is an unresolved
+    evidentiary limit, never positive confirmation of the proposition tested.
+  provenance: >-
+    THE SOURCE-TRAIL LAW - no returned fact enters judgment without a disclosed
+    source trail. Sources used must be a subset of sources searched; rejected
+    sources and unresolved information needs remain visible.
+  portability: >-
+    THE PORTABILITY LAW - the order and contracts live in repositories, not in a
+    conversation or product.
+  no_self_certification: >-
+    Horus, the harness, and ministers may validate structure but may not certify
+    their own completeness or truth.
+
+write_contract:
+  report: reports/<board>/<minister>-<date>.md
+  provisional_judgment: reports/<board>/<minister>-<date>.provisional.json
+  run_manifest: reports/<board>/<minister>-<date>.round.json
+  parity_manifest: Horus manifests/<board>-<date>.yaml
+  horus_exchange_root: exchanges/<inquiry>/<minister>/
+  run_manifest_must_record:
+    - context sha256 before the investigative query call
+    - context sha256 after adversarial response injection
+    - this spec version
+    - every source file with its repository, path, and sha256
+    - the HEAD commit of every estate repository at PULL
+    - provider, model, endpoint
+    - the parity verdict, and the mark if the run was carried across a HOLD
+    - the preserved provisional judgment path and sha256
+    - both Minister-Horus exchange kinds, query IDs, and exchange sha256 values
+    - every unfilled investigative and adversarial information need
+    - what the run did not do
+  ledger_extraction:
+    status: NOT_IMPLEMENTED
+    reason: >-
+      The map's WRITE step extracts dated calls into ledger entries. Until that
+      bank is fully ratified, the runtime writes no invented ledger structure.
