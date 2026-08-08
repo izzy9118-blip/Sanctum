@@ -1,0 +1,40 @@
+name: Adversarial Horus Safeguard
+
+on:
+  pull_request:
+    paths:
+      - 'adversarial_horus.py'
+      - 'minister_horus.py'
+      - 'sovereign_round.py'
+      - 'contracts/provisional-judgment.schema.json'
+      - 'contracts/minister-horus-adversarial-query.schema.json'
+      - 'federation/contracts/ministerial-report.schema.v1.5.0.json'
+      - 'federation/contracts/ministerial-report.schema.v1.4.0.json'
+      - 'ministerial-report.schema.json'
+      - 'standards/assembly-spec.yaml'
+      - 'tests/test_adversarial_horus.py'
+      - 'tests/test_adversarial_report_contract.py'
+      - 'tests/test_minister_horus.py'
+      - '.github/workflows/adversarial-safeguard.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  safeguard-one:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install validation dependencies
+        run: python -m pip install jsonschema pytest
+      - name: Compile safeguard runtime
+        run: python -m py_compile minister_horus.py adversarial_horus.py sovereign_round.py
+      - name: Run investigative boundary regression tests
+        run: python -m pytest -q tests/test_minister_horus.py
+      - name: Run adversarial boundary regression tests
+        run: python -m pytest -q tests/test_adversarial_horus.py
+      - name: Run contract-history and forward-contract tests
+        run: python -m pytest -q tests/test_adversarial_report_contract.py
