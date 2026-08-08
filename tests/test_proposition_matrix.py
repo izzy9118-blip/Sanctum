@@ -1,4 +1,6 @@
 import copy
+import hashlib
+import json
 
 import pytest
 
@@ -9,6 +11,7 @@ from proposition_matrix import (
     synthesis_payload,
     validate_matrix,
 )
+from presidential_synthesis import required_presidential_synthesis
 
 
 def package(minister, props):
@@ -136,3 +139,32 @@ def test_required_call_validates_presidential_alignment():
 def test_synthesis_payload_requires_validated_matrix():
     payload = synthesis_payload(packages(), valid_matrix())
     assert payload["rule"] == "SYNTHESIS_MUST_PRESERVE_MATRIX_DISAGREEMENT_AND_SILENCE"
+
+
+def test_presidential_synthesis_cannot_run_before_valid_matrix():
+    called = {"synthesis": False}
+    def synth(_):
+        called["synthesis"] = True
+        return {}
+    bad = valid_matrix()
+    bad["rows"].pop()
+    with pytest.raises(PropositionMatrixError):
+        required_presidential_synthesis(packages(), lambda _: bad, synth)
+    assert not called["synthesis"]
+
+
+def test_presidential_synthesis_is_bound_to_matrix():
+    pkgs = packages()
+    matrix = valid_matrix(pkgs)
+    digest = hashlib.sha256(json.dumps(matrix, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    def synth(payload):
+        assert payload["proposition_matrix"] == matrix
+        return {
+            "record_type": "presidential_synthesis",
+            "inquiry_id": "INQ-1",
+            "matrix_binding_sha256": digest,
+            "certification": "NONE_SELF_CERTIFICATION_PROHIBITED",
+        }
+    got_matrix, result = required_presidential_synthesis(pkgs, lambda _: matrix, synth)
+    assert got_matrix == matrix
+    assert result["matrix_binding_sha256"] == digest
