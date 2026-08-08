@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""The mandatory investigative round for reasoned Assembly runs.
+"""The mandatory investigative and adversarial round for reasoned Assembly runs.
 
 Sequence:
     1. Build the same common context the Sovereign Harness would give the minister.
     2. CALL the minister for an investigative request only.
-    3. CALL Horus through an explicit gather command; validate the full source trail.
-    4. Inject the exact request and response into the context.
-    5. CALL the minister for final judgment.
-    6. WRITE the exchange, report, and round manifest.
+    3. CALL Horus through the hard investigative boundary.
+    4. CALL the minister for a provisional judgment that names what could weaken it.
+    5. Deterministically build and CALL the adversarial Horus request.
+    6. Inject both complete exchanges and the provisional judgment.
+    7. CALL the minister for final judgment.
+    8. WRITE both exchanges, report, and round manifest.
 
-A direct one-shot reasoned call that skips steps 2-4 is non-conforming under
-ASSEMBLY-SPEC-001 v1.2.0.  This runner does not gather for Horus and does not judge
-for the minister.
+A direct one-shot reasoned call, or a run that forms a provisional judgment but skips
+its adversarial test, is non-conforming under ASSEMBLY-SPEC-001 v1.3.0.  This runner
+does not gather for Horus and does not judge for the minister.
 """
 from __future__ import annotations
 
@@ -24,6 +26,12 @@ import sys
 from pathlib import Path
 
 import harness
+from adversarial_horus import (
+    adversarial_exchange_digest,
+    required_adversarial_horus_call,
+    validate_provisional_judgment,
+    write_adversarial_exchange,
+)
 from minister_horus import (
     HorusExchangeError,
     exchange_digest,
@@ -34,6 +42,8 @@ from minister_horus import (
 
 SPEC_PATH = "standards/assembly-spec.yaml"
 QUERY_CONTRACT_PATH = "contracts/minister-horus-query.schema.json"
+PROVISIONAL_CONTRACT_PATH = "contracts/provisional-judgment.schema.json"
+ADVERSARIAL_QUERY_CONTRACT_PATH = "contracts/minister-horus-adversarial-query.schema.json"
 
 
 class RoundError(RuntimeError):
@@ -76,7 +86,7 @@ def _query_prompt(common_context: str, inquiry_id: str, minister_id: str, commit
         + "\n\n"
         + "Do not give final judgment yet. Read the common ground through your own "
           "ministerial method and identify what additional information you need before "
-          "final judgment. Return ONE JSON object only. The request must comply with "
+          "judgment. Return ONE JSON object only. The request must comply with "
           f"{QUERY_CONTRACT_PATH}.\n\n"
         + f"Set inquiry_id to {inquiry_id!r}, minister_id to {minister_id!r}, and "
           f"provenance.repository_commit to {commit!r}. Create a stable query_id beginning "
@@ -90,26 +100,71 @@ def _query_prompt(common_context: str, inquiry_id: str, minister_id: str, commit
     )
 
 
-def _final_prompt(common_context: str, query: dict, response: dict) -> str:
-    exchange = json.dumps({"minister_query": query, "horus_response": response}, indent=2, sort_keys=True)
+def _provisional_prompt(common_context: str, query: dict, response: dict,
+                        inquiry_id: str, minister_id: str, commit: str) -> str:
+    exchange = json.dumps({"minister_query": query, "horus_response": response},
+                          indent=2, sort_keys=True)
     return (
         common_context
         + "\n\n"
         + "=" * 72
-        + "\nMANDATORY MINISTER-HORUS EXCHANGE\n"
+        + "\nVALIDATED INVESTIGATIVE EXCHANGE\n"
         + "=" * 72
         + "\n\n"
         + exchange
+        + "\n\n"
+        + "=" * 72
+        + "\nPROVISIONAL JUDGMENT — NOT FINAL\n"
+        + "=" * 72
+        + "\n\n"
+        + "Form your strongest present judgment, but do not finalize it. Return ONE JSON "
+          f"object only, conforming to {PROVISIONAL_CONTRACT_PATH}. Set inquiry_id to "
+          f"{inquiry_id!r}, minister_id and provenance.produced_by to {minister_id!r}, and "
+          f"provenance.repository_commit to {commit!r}.\n\n"
+        + "For every substantive provisional proposition, state exactly what documentary "
+          "information could weaken, qualify, or overturn it, and why that possible "
+          "disconfirmation matters. Do not write an unfalsifiable proposition merely to "
+          "survive this gate. Only documented_finding, supported_inference, and "
+          "working_hypothesis belong in the provisional set."
+    )
+
+
+def _final_prompt(common_context: str, investigative_query: dict, investigative_response: dict,
+                  provisional: dict, adversarial_query: dict, adversarial_response: dict) -> str:
+    record = json.dumps(
+        {
+            "investigative_exchange": {
+                "minister_query": investigative_query,
+                "horus_response": investigative_response,
+            },
+            "provisional_judgment": provisional,
+            "adversarial_exchange": {
+                "minister_query": adversarial_query,
+                "horus_response": adversarial_response,
+            },
+        },
+        indent=2,
+        sort_keys=True,
+    )
+    return (
+        common_context
+        + "\n\n"
+        + "=" * 72
+        + "\nMANDATORY INVESTIGATIVE + ADVERSARIAL RECORD\n"
+        + "=" * 72
+        + "\n\n"
+        + record
         + "\n\n"
         + "=" * 72
         + "\nFINAL JUDGMENT ROUND\n"
         + "=" * 72
         + "\n\n"
         + "Now give the final ministerial judgment under the standing report requirements. "
-          "The exchange above is part of the evidentiary record. You must state every "
-          "material unfilled Horus request as a limitation; NOT_GATHERED never means that "
-          "the thing does not exist. Do not conceal disagreement between your initial "
-          "attention and what Horus actually returned."
+          "You must confront the adversarial Horus return proposition by proposition. "
+          "State whether each provisional proposition was retained, qualified, withdrawn, "
+          "or left unresolved, and explain the evidentiary reason. Every material unfilled "
+          "Horus request remains a limitation. NOT_GATHERED never means that the thing does "
+          "not exist. Do not conceal a change from provisional to final judgment."
     )
 
 
@@ -131,8 +186,8 @@ def run(args) -> int:
     stamp = as_of.isoformat()
 
     spec = harness.yaml_load((hub / SPEC_PATH).read_text(encoding="utf-8"))
-    if str(spec.get("version")) != "1.2.0":
-        raise RoundError("mandatory investigative runner requires ASSEMBLY-SPEC-001 v1.2.0")
+    if str(spec.get("version")) != "1.3.0":
+        raise RoundError("adversarial runner requires ASSEMBLY-SPEC-001 v1.3.0")
 
     ministers = config["ministers"]
     if args.minister not in ministers:
@@ -156,7 +211,7 @@ def run(args) -> int:
     if parity_record["verdict"] == "HOLD":
         carried["carried"] = True
         carried["text"] = (
-            "This investigative round crossed a parity HOLD by explicit owner override. "
+            "This adversarial round crossed a parity HOLD by explicit owner override. "
             f"The board carries {parity_record['gap_count']} named gaps."
         )
 
@@ -176,31 +231,72 @@ def run(args) -> int:
 
     print("\nCALL 1 — MINISTER INVESTIGATIVE QUERY")
     first = harness.call(call_config, _query_prompt(common_context, inquiry_id, args.minister, minister_commit))
-    query = _json_object(first["text"], "minister query call")
-    validate_query(query)
+    investigative_query = _json_object(first["text"], "minister query call")
+    validate_query(investigative_query)
 
-    print("\nCALL 2 — HORUS GATHER")
+    print("\nCALL 2 — HORUS INVESTIGATIVE GATHER")
     try:
-        response = required_horus_call(query, lambda q: _run_horus_command(args.horus_command, q))
+        investigative_response = required_horus_call(
+            investigative_query,
+            lambda q: _run_horus_command(args.horus_command, q),
+        )
     except HorusExchangeError as exc:
-        raise RoundError(f"Horus exchange contract violation: {exc}") from exc
+        raise RoundError(f"Horus investigative exchange contract violation: {exc}") from exc
 
-    print("\nCALL 3 — FINAL MINISTER JUDGMENT")
-    final_context = _final_prompt(common_context, query, response)
+    print("\nCALL 3 — MINISTER PROVISIONAL JUDGMENT")
+    provisional_call = harness.call(
+        call_config,
+        _provisional_prompt(
+            common_context,
+            investigative_query,
+            investigative_response,
+            inquiry_id,
+            args.minister,
+            minister_commit,
+        ),
+    )
+    provisional = _json_object(provisional_call["text"], "minister provisional judgment call")
+    validate_provisional_judgment(provisional)
+    if provisional["inquiry_id"] != inquiry_id or provisional["minister_id"] != args.minister:
+        raise RoundError("provisional judgment identity does not match this round")
+    if provisional["provenance"]["repository_commit"] != minister_commit:
+        raise RoundError("provisional judgment repository commit does not match the pinned minister")
+
+    print("\nCALL 4 — HORUS ADVERSARIAL GATHER")
+    try:
+        adversarial_query, adversarial_response = required_adversarial_horus_call(
+            provisional,
+            lambda q: _run_horus_command(args.horus_command, q),
+        )
+    except HorusExchangeError as exc:
+        raise RoundError(f"Horus adversarial exchange contract violation: {exc}") from exc
+
+    print("\nCALL 5 — FINAL MINISTER JUDGMENT")
+    final_context = _final_prompt(
+        common_context,
+        investigative_query,
+        investigative_response,
+        provisional,
+        adversarial_query,
+        adversarial_response,
+    )
     final = harness.call(call_config, final_context)
 
     print("\nWRITE")
     exchange_root = hub / "exchanges"
-    paths = write_exchange(exchange_root, query, response)
+    investigative_paths = write_exchange(exchange_root, investigative_query, investigative_response)
+    adversarial_paths = write_adversarial_exchange(exchange_root, adversarial_query, adversarial_response)
     report_dir = hub / "reports" / args.board
     report_dir.mkdir(parents=True, exist_ok=True)
     report_path = report_dir / f"{args.minister}-{stamp}.md"
     manifest_path = report_dir / f"{args.minister}-{stamp}.round.json"
+    provisional_path = report_dir / f"{args.minister}-{stamp}.provisional.json"
     report_path.write_text(final["text"].rstrip() + "\n", encoding="utf-8")
+    provisional_path.write_text(json.dumps(provisional, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     round_record = {
-        "record_type": "sovereign_investigative_round",
-        "assembly_spec": {"path": SPEC_PATH, "version": "1.2.0"},
+        "record_type": "sovereign_adversarial_round",
+        "assembly_spec": {"path": SPEC_PATH, "version": "1.3.0"},
         "inquiry_id": inquiry_id,
         "board": args.board,
         "minister": args.minister,
@@ -212,38 +308,69 @@ def run(args) -> int:
             "gap_count": parity_record["gap_count"],
             "carried_across_hold": carried["carried"],
         },
-        "horus_exchange": {
-            "query_id": query["query_id"],
-            "request_path": paths["request"],
-            "response_path": paths["response"],
-            "exchange_sha256": exchange_digest(query, response),
-            "response_status": response["status"],
-            "unfilled_request_count": len(response["unfilled_requests"]),
+        "horus_exchanges": [
+            {
+                "exchange_kind": "investigative",
+                "query_id": investigative_query["query_id"],
+                "request_path": investigative_paths["request"],
+                "response_path": investigative_paths["response"],
+                "exchange_sha256": exchange_digest(investigative_query, investigative_response),
+                "response_status": investigative_response["status"],
+                "unfilled_request_count": len(investigative_response["unfilled_requests"]),
+            },
+            {
+                "exchange_kind": "adversarial",
+                "query_id": adversarial_query["query_id"],
+                "request_path": adversarial_paths["request"],
+                "response_path": adversarial_paths["response"],
+                "exchange_sha256": adversarial_exchange_digest(adversarial_query, adversarial_response),
+                "response_status": adversarial_response["status"],
+                "unfilled_request_count": len(adversarial_response["unfilled_requests"]),
+            },
+        ],
+        "provisional_judgment": {
+            "path": str(provisional_path),
+            "proposition_count": len(provisional["propositions"]),
+            "sha256": hashlib.sha256(
+                json.dumps(provisional, sort_keys=True, separators=(",", ":")).encode("utf-8")
+            ).hexdigest(),
         },
         "model": {
             "provider": call_config["provider"],
             "model_requested": call_config.get("model"),
             "query_model_returned": first.get("model"),
+            "provisional_model_returned": provisional_call.get("model"),
             "final_model_returned": final.get("model"),
         },
-        "outputs": {"report": str(report_path), "round_manifest": str(manifest_path)},
+        "outputs": {
+            "report": str(report_path),
+            "provisional_judgment": str(provisional_path),
+            "round_manifest": str(manifest_path),
+        },
         "certification": "NONE_SELF_CERTIFICATION_PROHIBITED",
     }
     manifest_path.write_text(json.dumps(round_record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"  {report_path}")
+    print(f"  {provisional_path}")
     print(f"  {manifest_path}")
-    print(f"  exchange sha256: {round_record['horus_exchange']['exchange_sha256']}")
-    print("\nNothing was certified. Final judgment is now auditable through the mandatory Horus exchange.")
+    print(f"  investigative exchange sha256: {round_record['horus_exchanges'][0]['exchange_sha256']}")
+    print(f"  adversarial exchange sha256: {round_record['horus_exchanges'][1]['exchange_sha256']}")
+    print("\nNothing was certified. Final judgment followed a recorded adversarial evidence call.")
     return 0
 
 
 def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(description="Run a mandatory Minister -> Horus -> Minister round.")
+    parser = argparse.ArgumentParser(
+        description="Run mandatory investigative and adversarial Minister -> Horus -> Minister rounds."
+    )
     parser.add_argument("--config", default=str(Path(__file__).resolve().parent.parent / "config.yaml"))
     parser.add_argument("--board", required=True)
     parser.add_argument("--minister", required=True)
-    parser.add_argument("--horus-command", required=True,
-                        help="command that reads one query JSON object on stdin and returns one Horus response JSON object on stdout")
+    parser.add_argument(
+        "--horus-command",
+        required=True,
+        help="command that reads one query JSON object on stdin and returns one Horus response JSON object on stdout",
+    )
     parser.add_argument("--inquiry-id")
     parser.add_argument("--question-file")
     parser.add_argument("--date")
