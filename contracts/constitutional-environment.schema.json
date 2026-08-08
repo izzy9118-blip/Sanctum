@@ -17,7 +17,7 @@
         "repository": {"const": "izzy9118-blip/Sanctum"},
         "repository_commit": {"$ref": "#/$defs/commit"},
         "assembly_spec": {"$ref": "#/$defs/file_binding"},
-        "registry": {"allOf": [{"$ref": "#/$defs/file_binding"}, {"type": "object", "required": ["version"], "properties": {"version": {"type": "string", "minLength": 1}}}]},
+        "registry": {"$ref": "#/$defs/registry_binding"},
         "final_judgment_contract": {"$ref": "#/$defs/file_binding"},
         "proposition_matrix_standard": {"$ref": "#/$defs/file_binding"},
         "ministerial_silence_standard": {"$ref": "#/$defs/file_binding"},
@@ -67,6 +67,15 @@
       "properties": {
         "path": {"type": "string", "minLength": 1},
         "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "registry_binding": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "sha256", "version"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "version": {"type": "string", "minLength": 1}
       }
     }
   }
