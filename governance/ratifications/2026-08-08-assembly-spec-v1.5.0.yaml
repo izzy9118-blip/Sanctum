@@ -1,0 +1,23 @@
+---
+record_type: owner_ratification
+id: RATIFICATION-ASSEMBLY-SPEC-1.5.0-2026-08-08
+status: RATIFIED_BY_OWNER
+date: 2026-08-08
+authority: REPOSITORY_OWNER_DIRECTIVE
+owner_directive: "Lets do it"
+subject:
+  record_type: sanctum_assembly_spec
+  id: ASSEMBLY-SPEC-001
+  version: 1.5.0
+  path: standards/assembly-spec.yaml
+effect:
+  - Assembly Spec v1.5.0 is no longer pending owner ratification.
+  - The independent executable Secretary audit is adopted as a mandatory postcondition for forward reasoned runs.
+  - Missing or failed Secretary audit leaves a forward reasoned run held and unaudited.
+  - Proposition genealogy and adversarial Horus safeguards remain inherited and in force.
+limits:
+  - This ratification does not certify any ministerial proposition as true.
+  - This ratification does not certify Horus completeness.
+  - This ratification does not resolve the known estate-layout failure in the broad Sanctum Validation Gate.
+  - This ratification does not alter historical artifacts governed by predecessor specifications.
+self_certification: PROHIBITED
