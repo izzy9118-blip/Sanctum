@@ -1,32 +1,38 @@
 ---
 record_type: sanctum_assembly_spec
 id: ASSEMBLY-SPEC-001
-version: 1.1.0
+version: 1.2.0
 status: PROPOSED_PENDING_OWNER_RATIFICATION
 provenance: Station 1 of the sovereign map, built 2026-08-05
-governs: harness.py, the ASSEMBLE step
+
+governs:
+  - harness.py
+  - minister_horus.py
+  - the ASSEMBLE and investigative-call sequence
 revision:
-  predecessor_version: 1.0.0
-  date: 2026-08-06
+  predecessor_version: 1.1.0
+  date: 2026-08-07
   reason: >-
-    Carry the Horus charter amendment HORUS-AMD-001, the language tooth, into the
-    gate the harness enforces. The parity manifest now records per-principal T1
-    language and language state, and a T1 declared FILLED on translation alone is
-    recorded as a gap rather than a fill.
+    Add the mandatory minister-directed Horus investigative round. A reasoned
+    minister may direct attention by stating what information it needs and what
+    would count as adequate evidence, but Horus retains source-selection
+    independence and returns a complete source trail. Final judgment cannot be
+    valid without at least one recorded exchange.
 ---
 
 principle: >-
   Assembly order is law. It lives here, versioned, in the constitutional
-  repository - not in the runtime. The harness reads this file and may not
-  reorder, skip, or silently substitute a segment. Every run records the spec
-  version and the hash of the context it produced, so a report is auditable to
-  its exact inputs.
+  repository - not in the runtime. The runtime may not reorder, skip, or silently
+  substitute a segment or mandatory call. Every run records the spec version,
+  context hashes, and the exact Minister-Horus exchanges that governed final
+  judgment.
 
 division_of_authority: >-
-  The hub fixes the order of the segments. A minister house fixes what is inside
-  its own house segment, through its manifest's load_order. The hub does not
-  reach into a house's ordering, and a house cannot change where it sits in the
-  run.
+  The hub fixes the order of segments and calls. A minister house fixes what is
+  inside its own house segment and uses its own reconstructed method to decide
+  what information it needs. Horus alone controls ordinary source selection.
+  The minister may request a specifically identified document, but may not turn
+  the gathering organ into a hidden curator for its preferred conclusion.
 
 segments:
   - id: 1
@@ -36,8 +42,8 @@ segments:
     required: true
     on_missing: ABORT
     note: >-
-      manifest, keel, deeds and whatever else the house's own load_order names,
-      in the house's own order. The map's ASSEMBLE names manifest, keel, deeds.
+      Manifest, keel, deeds and whatever else the house's own load_order names,
+      in the house's own order.
 
   - id: 2
     name: custos_manner_of_reading
@@ -59,17 +65,13 @@ segments:
     gate: true
     note: >-
       The parity manifest comes first among the board's records and it is a gate,
-      not a document. HOLD blocks the run. An owner may carry the run across a
-      HOLD only by explicit override, and the mark is then written into the
-      context, the report, and the run manifest. Bias enters as file depth; the
-      gate makes depth visible before thought.
+      not a document. HOLD blocks the run unless the owner explicitly carries
+      the mark. Bias enters as file depth; the gate makes depth visible before
+      thought.
     language_mark: >-
-      The manifest also carries, per principal, whether that principal was heard
-      in his own words - T1 FILLED on original-language primary matter - or only
-      in translation. The mark travels into the run. No judgment about a
-      principal may rise above the tier at which that principal was actually
-      heard, and depth has a language: a thick file of translations is a thin
-      file wearing a thick coat.
+      The manifest carries, per principal, whether that principal was heard in
+      original-language own words. No judgment about a principal may rise above
+      the tier at which that principal was actually heard.
 
   - id: 4
     name: board_files
@@ -79,9 +81,8 @@ segments:
     required: true
     on_missing: RECORD_AS_NOT_GATHERED
     note: >-
-      The board's Horus files, one per principal, tier order intact. A file's
-      silence means NOT GATHERED, never "nothing there." One board, all
-      ministers; tailored feeds are prohibited.
+      One board, all ministers. A file's silence means NOT GATHERED, never
+      "nothing there." Tailored initial feeds are prohibited.
 
   - id: 5
     name: ledger
@@ -90,9 +91,7 @@ segments:
     required: false
     on_missing: RECORD_AS_NOT_ESTABLISHED
     note: >-
-      The minister's open commitments, injected so the mind faces its own record
-      each time. Station 3 is unbuilt; until it exists this segment records
-      NOT_ESTABLISHED in the context. It is never silently omitted.
+      The minister's open commitments, injected so the mind faces its own record.
 
   - id: 6
     name: board_question
@@ -100,38 +99,88 @@ segments:
     path: boards/<board>/<date>-question.md
     required: true
     on_missing: ABORT
-    note: The question is last. Everything above it is ground.
+    note: >-
+      The question closes the common-ground context. The first minister call sees
+      the same board and question as every other minister.
+
+mandatory_calls:
+  - id: 7
+    name: minister_horus_query
+    actor: minister
+    required_for_mode: reasoned
+    hard_function: minister_horus.required_horus_call
+    output_contract: contracts/minister-horus-query.schema.json
+    purpose: >-
+      The minister states what information it needs, why it matters, and what
+      evidentiary characteristics would count as adequate ground. This is an act
+      of investigative attention, not source selection.
+    on_missing: ABORT_REASONED_RUN
+
+  - id: 8
+    name: horus_gather_response
+    actor: horus
+    required_for_mode: reasoned
+    response_contract: Horus/contracts/horus-query-response.schema.json
+    source_selection_rule: HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS
+    purpose: >-
+      Horus gathers or fails to gather and returns every source searched, used,
+      rejected with reason, every record returned with exact source references,
+      and every unfilled information need. Completeness remains PENDING_PROBE.
+    on_missing: ABORT_REASONED_RUN
+
+  - id: 9
+    name: final_minister_judgment
+    actor: minister
+    required_for_mode: reasoned
+    requires_validated_exchange: true
+    input_addition: >-
+      Inject the complete request and Horus response, including all unfilled
+      requests and provenance, into the final minister context.
+    report_binding: >-
+      The Ministerial Report records query_id, request path, response path,
+      exchange sha256, response status, and unfilled request count.
+    on_missing_exchange: ABORT_REASONED_RUN
 
 laws_enforced:
   parity: >-
-    THE PARITY LAW - no analysis runs on an asymmetric board. Enforced in code at
-    segment 3, not left to the reasoner's discretion.
+    THE PARITY LAW - no analysis runs on an asymmetric board except under an
+    explicit owner-carried mark.
   boundary: >-
-    THE BOUNDARY LAW - the harness gathers nothing and judges nothing. It reads
-    committed records, orders them, calls, and writes back.
+    THE BOUNDARY LAW - Horus gathers and never judges. A minister may direct
+    attention but may not silently lay its own ground.
+  investigative_call: >-
+    THE INVESTIGATIVE CALL LAW - every reasoned ministerial run crosses the
+    Minister-Horus hard boundary before final judgment. A soft prompt or omitted
+    call is non-conforming.
+  provenance: >-
+    THE SOURCE-TRAIL LAW - no returned fact enters final judgment without a
+    disclosed source trail. Sources used must be a subset of sources searched;
+    rejected sources and unresolved information needs remain visible.
   portability: >-
-    THE PORTABILITY LAW - the order lives in a repository, not in a conversation
-    and not in a product.
+    THE PORTABILITY LAW - the order and contracts live in repositories, not in a
+    conversation or product.
   no_self_certification: >-
-    The harness certifies nothing. It records what it did, including what it
-    could not do.
+    Horus, the harness, and ministers may validate structure but may not certify
+    their own completeness or truth.
 
 write_contract:
   report: reports/<board>/<minister>-<date>.md
   run_manifest: reports/<board>/<minister>-<date>.run.yaml
   parity_manifest: Horus manifests/<board>-<date>.yaml
+  horus_exchange_root: exchanges/<inquiry>/<minister>/
   run_manifest_must_record:
-    - context sha256
+    - context sha256 before the query call
+    - context sha256 after every Horus response injection
     - this spec version
     - every source file with its repository, path, and sha256
     - the HEAD commit of every estate repository at PULL
     - provider, model, endpoint
     - the parity verdict, and the mark if the run was carried across a HOLD
+    - every Minister-Horus query_id and exchange sha256
+    - every unfilled Minister-Horus information need
     - what the run did not do
   ledger_extraction:
     status: NOT_IMPLEMENTED
     reason: >-
-      The map's WRITE step extracts dated calls into ledger entries. The ledger
-      schema is Station 3 and belongs to the owner. Until it exists the harness
-      writes no ledger entry and invents no schema; the report's dated calls
-      stand unextracted in the report.
+      The map's WRITE step extracts dated calls into ledger entries. Until that
+      bank is fully ratified, the runtime writes no invented ledger structure.
