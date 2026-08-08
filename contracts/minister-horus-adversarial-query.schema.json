@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sanctum:minister-horus-adversarial-query:1.0.0",
+  "title": "Mandatory Minister to Horus Adversarial Query",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "query_id",
+    "inquiry_id",
+    "minister_id",
+    "provisional_propositions",
+    "information_needed",
+    "source_requirements",
+    "reason_for_request",
+    "source_selection_rule",
+    "provenance"
+  ],
+  "properties": {
+    "record_type": {"const": "minister_horus_adversarial_query"},
+    "query_id": {"type": "string", "pattern": "^MHAQ-[A-Z0-9_-]+$"},
+    "inquiry_id": {"type": "string", "minLength": 1},
+    "minister_id": {"type": "string", "minLength": 1},
+    "provisional_propositions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["proposition_id", "claim", "kind"],
+        "properties": {
+          "proposition_id": {"type": "string", "pattern": "^P-[A-Z0-9_-]+$"},
+          "claim": {"type": "string", "minLength": 1},
+          "kind": {"enum": ["documented_finding", "supported_inference", "working_hypothesis"]}
+        }
+      }
+    },
+    "information_needed": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "source_requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["proposition_id", "requirement", "rationale"],
+        "properties": {
+          "proposition_id": {"type": "string", "pattern": "^P-[A-Z0-9_-]+$"},
+          "requirement": {"type": "string", "minLength": 1},
+          "rationale": {"type": "string", "minLength": 1},
+          "acceptable_tiers": {
+            "type": "array",
+            "items": {"enum": ["T1", "T2", "T3", "T4", "T5"]},
+            "uniqueItems": true
+          },
+          "original_language_required": {"type": "boolean"}
+        }
+      }
+    },
+    "specific_document_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["document", "why_material"],
+        "properties": {
+          "document": {"type": "string", "minLength": 1},
+          "why_material": {"type": "string", "minLength": 1}
+        }
+      },
+      "default": []
+    },
+    "reason_for_request": {"type": "string", "minLength": 1},
+    "source_selection_rule": {
+      "const": "HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS"
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["produced_by", "repository_commit"],
+      "properties": {
+        "produced_by": {"type": "string", "minLength": 1},
+        "repository_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      }
+    }
+  }
+}
