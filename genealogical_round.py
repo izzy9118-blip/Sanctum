@@ -20,6 +20,7 @@ from pathlib import Path
 import harness
 import sovereign_round
 from evidence_genealogy import GenealogyError, render_report, validate_genealogy_package, write_genealogy_record
+from minister_ground_files import validate_minister_ground_files
 
 SPEC_PATH = "standards/assembly-spec.v1.4.0.yaml"
 FINAL_PACKAGE_CONTRACT = "contracts/final-judgment-package.schema.json"
@@ -93,7 +94,8 @@ def _genealogy_prompt(draft: str, round_record: dict, exchanges: list[dict],
         "rejected is not ground.\n\n"
         "For ground from your own sovereign repository, use origin=minister_repository "
         "and give the exact witness_id, source_id, pinned repository_commit, repository "
-        "path, and a precise locator. Do not invent a witness or source identity.\n\n"
+        "path, and a precise locator. Do not invent a witness or source identity. The "
+        "runtime will verify that the cited witness_id and source_id occur in the file.\n\n"
         "Preserve the effect of the adversarial round with provisional_disposition: "
         "retained, qualified, withdrawn, left_unresolved, or new_after_adversarial_ground. "
         "Withdrawn propositions may be recorded as unresolved_uncertainty rather than "
@@ -159,6 +161,7 @@ def run(args) -> int:
 
     try:
         validation = validate_genealogy_package(package, exchanges)
+        validate_minister_ground_files(package, estate)
     except GenealogyError as exc:
         raise GenealogicalRoundError(f"genealogy gate rejected final judgment: {exc}") from exc
 
@@ -181,6 +184,7 @@ def run(args) -> int:
         "path": str(genealogy_path),
         "status": validation["status"],
         "proposition_count": validation["proposition_count"],
+        "minister_repository_files_resolved": True,
     }
     round_record["model"]["genealogy_model_returned"] = final_call.get("model")
     round_record["outputs"]["final_judgment_package"] = str(package_path)
