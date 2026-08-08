@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:sanctum:minister-horus-adversarial-query:1.1.0",
+  "$id": "urn:sanctum:minister-horus-adversarial-query:1.0.0",
   "title": "Mandatory Minister to Horus Adversarial Query",
   "type": "object",
   "additionalProperties": false,
-  "required": ["record_type", "query_id", "inquiry_id", "minister_id", "provisional_propositions", "information_needed", "source_requirements", "reason_for_request", "source_selection_rule", "source_absence_taxonomy", "provenance"],
+  "required": ["record_type", "query_id", "inquiry_id", "minister_id", "provisional_propositions", "information_needed", "source_requirements", "reason_for_request", "source_selection_rule", "provenance"],
   "properties": {
     "record_type": {"const": "minister_horus_adversarial_query"},
     "query_id": {"type": "string", "pattern": "^MHAQ-[A-Z0-9_-]+$"},
@@ -16,7 +16,6 @@
     "specific_document_requests": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["document", "why_material"], "properties": {"document": {"type": "string", "minLength": 1}, "why_material": {"type": "string", "minLength": 1}}}, "default": []},
     "reason_for_request": {"type": "string", "minLength": 1},
     "source_selection_rule": {"const": "HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS"},
-    "source_absence_taxonomy": {"const": "HORUS-SOURCE-STATE-1.0"},
     "provenance": {"type": "object", "additionalProperties": false, "required": ["produced_by", "repository_commit"], "properties": {"produced_by": {"type": "string", "minLength": 1}, "repository_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}}}
   }
 }

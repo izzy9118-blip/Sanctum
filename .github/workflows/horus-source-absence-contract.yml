@@ -1,0 +1,46 @@
+name: Horus Source-Absence Contract Gate
+
+on:
+  pull_request:
+    paths:
+      - 'source_absence.py'
+      - 'minister_horus.py'
+      - 'adversarial_horus.py'
+      - 'contracts/minister-horus-query.schema.json'
+      - 'contracts/minister-horus-adversarial-query.schema.json'
+      - 'standards/source-absence-taxonomy.yaml'
+      - 'tests/test_source_absence.py'
+      - 'tests/test_minister_horus.py'
+      - 'tests/test_adversarial_horus.py'
+      - '.github/workflows/horus-source-absence-contract.yml'
+  push:
+    branches: [main]
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Sanctum
+        uses: actions/checkout@v4
+        with:
+          path: Sanctum
+      - name: Check out canonical Horus
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Horus
+          ref: main
+          path: Horus
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install validation dependencies
+        run: python -m pip install jsonschema pytest
+      - name: Run Horus response-contract tests
+        working-directory: Horus
+        run: python -m pytest -q tests/test_query_response_schema.py
+      - name: Compile Sanctum Horus boundaries
+        working-directory: Sanctum
+        run: python -m py_compile source_absence.py minister_horus.py adversarial_horus.py
+      - name: Run Sanctum taxonomy and boundary tests
+        working-directory: Sanctum
+        run: python -m pytest -q tests/test_source_absence.py tests/test_minister_horus.py tests/test_adversarial_horus.py

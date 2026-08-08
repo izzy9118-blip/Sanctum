@@ -1,0 +1,38 @@
+---
+record_type: sanctum_source_absence_taxonomy
+id: HORUS-SOURCE-STATE-001
+version: 1.0.0
+status: PROPOSED_PENDING_OWNER_RATIFICATION
+date: 2026-08-08
+paired_horus_contract:
+  repository: izzy9118-blip/Horus
+  schema: contracts/horus-query-response.schema.json
+  schema_version: 1.2.0
+principle: >-
+  The state of a search and the state of the world are different facts. Failure to
+  locate or acquire qualifying evidence must never be promoted into evidence that
+  the underlying thing is absent.
+returned_states:
+  SUPPORTED: qualifying documentary ground positively supports the returned record
+  CONTRADICTORY_RECORD: qualifying ground materially conflicts and Horus preserves the conflict without resolving it
+  DOCUMENTED_ABSENCE: qualifying ground positively documents an absence inside an explicit scope
+unresolved_states:
+  NOT_SEARCHED: no search was performed for the information need
+  SEARCHED_NOT_FOUND: qualifying locations were searched but no qualifying record was found
+  SOURCE_EXISTS_NOT_ACQUIRED: a source known to exist could not be acquired or accessed
+  SOURCE_ACQUIRED_INCOMPLETE: acquired material was insufficient to answer the information need
+hard_laws:
+  - every forward MHQ and MHAQ response declares HORUS-SOURCE-STATE-1.0
+  - every returned record carries exactly one returned state
+  - every unfilled request carries exactly one unresolved state
+  - every unresolved state carries absence_claim false
+  - DOCUMENTED_ABSENCE may occur only in records_returned
+  - DOCUMENTED_ABSENCE requires exact source refs, absence_scope, and absence_basis
+  - NOT_SEARCHED carries no searched source refs
+  - every other unresolved state identifies the searched or attempted source refs
+  - source refs on returned records must resolve to sources_used
+  - source refs on unresolved records must resolve to sources_searched
+historical_contracts:
+  investigative_query_predecessor: contracts/minister-horus-query.schema.v1.0.0.json
+  adversarial_query_predecessor: contracts/minister-horus-adversarial-query.schema.v1.0.0.json
+self_certification: PROHIBITED
