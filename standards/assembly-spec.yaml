@@ -2,7 +2,12 @@
 record_type: sanctum_assembly_spec
 id: ASSEMBLY-SPEC-001
 version: 1.5.0
-status: PROPOSED_PENDING_OWNER_RATIFICATION
+status: RATIFIED_BY_OWNER
+ratification:
+  date: 2026-08-08
+  authority: REPOSITORY_OWNER_DIRECTIVE
+  directive: "Lets do it"
+  record: governance/ratifications/2026-08-08-assembly-spec-v1.5.0.yaml
 predecessor:
   path: standards/assembly-spec.v1.4.0.yaml
   version: 1.4.0
