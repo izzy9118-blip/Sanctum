@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+import yaml
 from jsonschema import Draft202012Validator
 
 BASE = Path(__file__).resolve().parents[1]
@@ -10,7 +11,11 @@ def load(path):
     return json.loads((BASE / path).read_text(encoding="utf-8"))
 
 
-def test_historical_root_contract_remains_v1_3_0():
+def load_yaml(path):
+    return yaml.safe_load((BASE / path).read_text(encoding="utf-8"))
+
+
+def test_historical_root_report_contract_remains_v1_3_0():
     assert load("ministerial-report.schema.json")["$id"] == "urn:sanctum:federation:ministerial-report:1.3.0"
 
 
@@ -20,6 +25,17 @@ def test_adversarial_forward_contract_remains_v1_5_0():
 
 def test_genealogy_forward_contract_is_v1_6_0():
     assert load("federation/contracts/ministerial-report.schema.v1.6.0.json")["$id"] == "urn:sanctum:federation:ministerial-report:1.6.0"
+
+
+def test_governing_assembly_spec_is_v1_4_0():
+    spec = load_yaml("standards/assembly-spec.yaml")
+    assert str(spec["version"]) == "1.4.0"
+    assert spec["predecessor"]["path"] == "standards/assembly-spec.v1.3.0.yaml"
+
+
+def test_adversarial_assembly_spec_is_preserved_as_v1_3_0():
+    spec = load_yaml("standards/assembly-spec.v1.3.0.yaml")
+    assert str(spec["version"]) == "1.3.0"
 
 
 def test_final_judgment_contract_accepts_typed_horus_genealogy():
