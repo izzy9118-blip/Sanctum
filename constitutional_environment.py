@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build and validate a forward Sanctum constitutional environment manifest."""
+"""Build, persist, and validate a forward Sanctum constitutional environment manifest."""
 from __future__ import annotations
 
 import hashlib
@@ -8,11 +8,13 @@ import platform
 import subprocess
 import sys
 from pathlib import Path
+from typing import Callable, TypeVar
 
 import harness
 
 STANDARD_ID = "CONSTITUTIONAL-ENVIRONMENT-001"
 CERTIFICATION = "NONE_SELF_CERTIFICATION_PROHIBITED"
+T = TypeVar("T")
 
 
 class ConstitutionalEnvironmentError(RuntimeError):
@@ -44,33 +46,28 @@ def git_commit(repo: Path) -> str:
 
 
 def _binding(base: Path, relpath: str) -> dict:
-    path = base / relpath
-    return {"path": relpath, "sha256": sha256_file(path)}
+    return {"path": relpath, "sha256": sha256_file(base / relpath)}
 
 
 def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
-    sanctum = estate / "Sanctum"
-    horus = estate / "Horus"
+    sanctum, horus = estate / "Sanctum", estate / "Horus"
     _require(sanctum.is_dir(), "Sanctum repository missing from estate")
     _require(horus.is_dir(), "Horus repository missing from estate")
+    _require(isinstance(inquiry_id, str) and inquiry_id.strip(), "inquiry_id is required")
 
     registry_path = sanctum / "registry/ministers.yaml"
     registry = harness.yaml_load(registry_path.read_text(encoding="utf-8"))
     established = [m for m in registry.get("ministers", []) if m.get("membership_status") == "established"]
     _require(established, "registry contains no established ministers")
 
-    minister_bindings = []
-    seen = set()
+    minister_bindings, seen = [], set()
     for item in established:
-        minister_id = item.get("minister_id")
-        repository = item.get("repository")
-        pinned = item.get("pinned_commit")
+        minister_id, repository, pinned = item.get("minister_id"), item.get("repository"), item.get("pinned_commit")
         manifest_path = item.get("manifest_path") or item.get("manifest_ref") or "manifest.yaml"
         _require(minister_id and repository and pinned, "established minister registry entry incomplete")
         _require(minister_id not in seen, f"duplicate established minister: {minister_id}")
         seen.add(minister_id)
-        repo_name = repository.split("/")[-1]
-        repo = estate / repo_name
+        repo = estate / repository.split("/")[-1]
         actual = git_commit(repo)
         _require(actual == pinned, f"{minister_id} checkout {actual} does not match registry pin {pinned}")
         minister_bindings.append({
@@ -89,8 +86,6 @@ def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
         "ministerial_silence_standard": _binding(sanctum, "standards/ministerial-silence.yaml"),
         "source_absence_standard": _binding(sanctum, "standards/source-absence-taxonomy.yaml"),
     }
-    horus_contract = _binding(horus, "contracts/minister-horus-response.schema.json")
-
     manifest = {
         "record_type": "constitutional_environment_manifest",
         "standard": STANDARD_ID,
@@ -108,7 +103,7 @@ def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
         "horus": {
             "repository": "izzy9118-blip/Horus",
             "repository_commit": git_commit(horus),
-            "response_contract": horus_contract,
+            "response_contract": _binding(horus, "contracts/minister-horus-response.schema.json"),
         },
         "ministers": sorted(minister_bindings, key=lambda x: x["minister_id"]),
         "runtime": {
@@ -127,8 +122,7 @@ def validate_manifest(manifest: dict, *, estate: Path) -> dict:
     _require(manifest.get("record_type") == "constitutional_environment_manifest", "wrong manifest record_type")
     _require(manifest.get("standard") == STANDARD_ID, "wrong constitutional environment standard")
     _require(manifest.get("certification") == CERTIFICATION, "manifest may not self-certify truth or completeness")
-    sanctum = estate / "Sanctum"
-    horus = estate / "Horus"
+    sanctum, horus = estate / "Sanctum", estate / "Horus"
     _require(manifest.get("sanctum", {}).get("repository_commit") == git_commit(sanctum), "Sanctum commit mismatch")
     _require(manifest.get("horus", {}).get("repository_commit") == git_commit(horus), "Horus commit mismatch")
 
@@ -139,8 +133,11 @@ def validate_manifest(manifest: dict, *, estate: Path) -> dict:
     _require(hb["sha256"] == sha256_file(horus / hb["path"]), "Horus response contract binding changed")
 
     registry = harness.yaml_load((sanctum / "registry/ministers.yaml").read_text(encoding="utf-8"))
+    _require(str(manifest["sanctum"]["registry"].get("version")) == str(registry.get("version")), "registry version mismatch")
     expected = {m["minister_id"]: m for m in registry.get("ministers", []) if m.get("membership_status") == "established"}
-    actual = {m["minister_id"]: m for m in manifest.get("ministers", [])}
+    actual_items = manifest.get("ministers", [])
+    _require(len(actual_items) == len({m.get("minister_id") for m in actual_items}), "duplicate minister binding in manifest")
+    actual = {m["minister_id"]: m for m in actual_items}
     _require(set(actual) == set(expected), "manifest minister set differs from established registry")
     for minister_id, reg in expected.items():
         item = actual[minister_id]
@@ -149,15 +146,37 @@ def validate_manifest(manifest: dict, *, estate: Path) -> dict:
         repo = estate / reg["repository"].split("/")[-1]
         _require(git_commit(repo) == reg["pinned_commit"], f"{minister_id} live checkout differs from registry pin")
         _require(item["manifest_sha256"] == sha256_file(repo / item["manifest_path"]), f"{minister_id} manifest hash mismatch")
+    _require(manifest.get("runtime", {}).get("manifest_builder_sha256") == sha256_file(sanctum / "constitutional_environment.py"), "manifest builder hash mismatch")
     return manifest
 
 
+def manifest_path(*, estate: Path, inquiry_id: str) -> Path:
+    return estate / "Sanctum" / "inquiries" / inquiry_id / "constitutional-environment.json"
+
+
 def write_manifest(*, estate: Path, inquiry_id: str) -> Path:
+    target = manifest_path(estate=estate, inquiry_id=inquiry_id)
+    if target.exists():
+        existing = json.loads(target.read_text(encoding="utf-8"))
+        _require(existing.get("inquiry_id") == inquiry_id, "existing constitutional environment inquiry identity mismatch")
+        validate_manifest(existing, estate=estate)
+        return target
     manifest = build_manifest(estate=estate, inquiry_id=inquiry_id)
-    target = estate / "Sanctum" / "inquiries" / inquiry_id / "constitutional-environment.json"
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return target
+
+
+def required_environment_call(*, estate: Path, inquiry_id: str, downstream: Callable[[], T]) -> T:
+    """Hard precondition seam for forward inquiry work.
+
+    The downstream reasoning function is never called unless an immutable environment
+    manifest has first been created or revalidated against the exact checked-out estate.
+    """
+    path = write_manifest(estate=estate, inquiry_id=inquiry_id)
+    persisted = json.loads(path.read_text(encoding="utf-8"))
+    validate_manifest(persisted, estate=estate)
+    return downstream()
 
 
 def main(argv=None) -> int:
@@ -169,9 +188,9 @@ def main(argv=None) -> int:
     try:
         config = harness.load_config(Path(args.config))
         path = write_manifest(estate=Path(config["estate"]), inquiry_id=args.inquiry_id)
-        print(f"CONSTITUTIONAL ENVIRONMENT WRITTEN: {path}")
+        print(f"CONSTITUTIONAL ENVIRONMENT READY: {path}")
         return 0
-    except (ConstitutionalEnvironmentError, OSError, ValueError) as exc:
+    except (ConstitutionalEnvironmentError, OSError, ValueError, json.JSONDecodeError) as exc:
         print(f"CONSTITUTIONAL ENVIRONMENT FAIL: {exc}", file=sys.stderr)
         return 6
 
