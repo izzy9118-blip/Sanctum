@@ -2,13 +2,17 @@
 record_type: sanctum_constitutional_environment_manifest_standard
 id: CONSTITUTIONAL-ENVIRONMENT-001
 version: 1.0.0
-status: PROPOSED_PENDING_OWNER_RATIFICATION
+status: RATIFIED_BY_OWNER
+ratification:
+  date: 2026-08-08
+  authority: REPOSITORY_OWNER_DIRECTIVE
+  directive: "Let’s ratify everything"
+  record: governance/ratifications/2026-08-08-forward-standards.yaml
 date: 2026-08-08
 purpose: >-
   Bind every forward Assembly inquiry to the exact constitutional and repository
   environment under which it was executed, so the inquiry can later be reconstructed
   without relying on floating branches, mutable version labels, or memory.
-
 required_bindings:
   sanctum:
     - repository_commit
@@ -39,7 +43,6 @@ required_bindings:
     - python_version
     - platform
     - manifest_builder_sha256
-
 hard_rules:
   - Every established minister in the live registry must appear exactly once.
   - A checked-out sovereign minister repository must match the registry pinned_commit.
@@ -49,7 +52,6 @@ hard_rules:
   - A manifest with a missing required repository, file, hash, or pin mismatch fails closed.
   - Historical manifests are immutable records of the environment that actually governed that inquiry.
   - Manifest validation certifies identity and reproducibility only; it never certifies truth or completeness.
-
 output:
   path: inquiries/<inquiry-id>/constitutional-environment.json
   certification: NONE_SELF_CERTIFICATION_PROHIBITED
