@@ -2,13 +2,17 @@
 record_type: sanctum_ministerial_silence_standard
 id: MINISTERIAL-SILENCE-001
 version: 1.0.0
-status: PROPOSED_PENDING_OWNER_RATIFICATION
+status: RATIFIED_BY_OWNER
+ratification:
+  date: 2026-08-08
+  authority: REPOSITORY_OWNER_DIRECTIVE
+  directive: "Let’s ratify everything"
+  record: governance/ratifications/2026-08-08-forward-standards.yaml
 date: 2026-08-08
 purpose: >-
   Make non-assertion explicit inside each sovereign ministerial judgment package,
   before Presidential comparison. Silence is data and may never be interpreted as
   assent, dissent, uncertainty, or lack of evidence without an explicit state.
-
 states:
   NOT_ADDRESSED:
     meaning: The minister did not address the identified issue in this report.
@@ -22,7 +26,6 @@ states:
     meaning: The minister considered and affirmatively rejects the identified proposition or position.
   AFFIRMED:
     meaning: The minister affirmatively adopts the identified proposition or position.
-
 hard_rules:
   - Every issue registered in the package's issue register must have exactly one ministerial state.
   - AFFIRMED and REJECTED require at least one proposition reference and may not be inferred from silence.
@@ -32,7 +35,6 @@ hard_rules:
   - Absence of a state is a contract failure, not a semantic state.
   - Presidential synthesis must preserve these ministerial states and may not upgrade them to agreement.
   - This standard classifies ministerial disposition only; it does not certify truth or completeness.
-
 relationship_to_proposition_matrix: >-
   The Presidential matrix remains a separate Presidential judgment layer. Ministerial
   silence states are authored at the sovereign minister layer and are input evidence

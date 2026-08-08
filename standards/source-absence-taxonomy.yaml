@@ -2,7 +2,12 @@
 record_type: sanctum_source_absence_taxonomy
 id: HORUS-SOURCE-STATE-001
 version: 1.0.0
-status: PROPOSED_PENDING_OWNER_RATIFICATION
+status: RATIFIED_BY_OWNER
+ratification:
+  date: 2026-08-08
+  authority: REPOSITORY_OWNER_DIRECTIVE
+  directive: "Let’s ratify everything"
+  record: governance/ratifications/2026-08-08-forward-standards.yaml
 date: 2026-08-08
 paired_horus_contract:
   repository: izzy9118-blip/Horus
