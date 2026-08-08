@@ -1,0 +1,33 @@
+---
+record_type: owner_ratification
+id: RATIFICATION-2026-08-08-FORWARD-STANDARDS
+date: 2026-08-08
+authority: REPOSITORY_OWNER_DIRECTIVE
+directive: "Let’s ratify everything"
+scope:
+  - id: HORUS-SOURCE-STATE-001
+    version: 1.0.0
+    path: standards/source-absence-taxonomy.yaml
+  - id: PROPOSITION-MATRIX-001
+    version: 1.0.0
+    path: standards/proposition-matrix.yaml
+  - id: MINISTERIAL-SILENCE-001
+    version: 1.0.0
+    path: standards/ministerial-silence.yaml
+  - id: CONSTITUTIONAL-ENVIRONMENT-001
+    version: 1.0.0
+    path: standards/constitutional-environment-manifest.yaml
+  - id: HORUS-AMD-001
+    repository: izzy9118-blip/Horus
+  - id: HORUS-AMD-002
+    repository: izzy9118-blip/Horus
+  - id: HORUS-AMD-003
+    repository: izzy9118-blip/Horus
+  - id: HORUS-AMD-004
+    repository: izzy9118-blip/Horus
+preservation:
+  - Historical predecessor Assembly specs remain byte-historical records and are not rewritten merely to change their former proposal status.
+  - Existing evidentiary and board records whose PENDING/PROPOSED fields express probe or establishment state are outside this constitutional ratification.
+effect: >-
+  The listed live forward standards and Horus charter amendments are adopted by owner authority. This act changes constitutional status only; it does not certify truth, completeness, evidentiary sufficiency, or ministerial establishment.
+self_certification: PROHIBITED
