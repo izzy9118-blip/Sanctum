@@ -1,0 +1,131 @@
+---
+record_type: sanctum_assembly_spec
+id: ASSEMBLY-SPEC-001
+version: 1.4.0
+status: PROPOSED_PENDING_OWNER_RATIFICATION
+predecessor:
+  path: standards/assembly-spec.yaml
+  version: 1.3.0
+revision:
+  date: 2026-08-08
+  reason: >-
+    Add a mandatory proposition-level evidence genealogy gate after the adopted
+    investigative and adversarial sequence. The free-form final judgment produced
+    by the v1.3 runner becomes a non-authoritative draft until a structured final
+    package resolves every substantive proposition to exact documentary ground.
+
+governs:
+  - evidence_genealogy.py
+  - genealogical_round.py
+  - contracts/final-judgment-package.schema.json
+  - federation/contracts/ministerial-report.schema.v1.6.0.json
+
+principle: >-
+  No consequential proposition may survive into a forward Ministerial Report as
+  an untraceable sentence. A substantive proposition must resolve to exact ground
+  from either a validated Horus exchange or the sovereign minister repository.
+  Validation proves the documentary linkage; it never certifies truth.
+
+inheritance:
+  v1_3_sequence_preserved: true
+  required_predecessor_steps:
+    - common ground
+    - MHQ investigative request
+    - Horus investigative response
+    - preserved provisional judgment
+    - MHAQ adversarial response
+    - non-authoritative final draft
+  note: >-
+    v1.4 does not rewrite or weaken v1.3. It adds a forward finalization gate.
+
+mandatory_calls:
+  - id: 12
+    name: final_proposition_genealogy
+    actor: minister
+    required_for_mode: reasoned
+    runtime: genealogical_round.py
+    hard_validator: evidence_genealogy.validate_genealogy_package
+    output_contract: contracts/final-judgment-package.schema.json
+    purpose: >-
+      Convert the non-authoritative final draft into explicit propositions and bind
+      every substantive proposition to exact documentary ground before a readable
+      report is rendered.
+    on_missing: ABORT_REASONED_RUN
+    on_invalid_ground: ABORT_REASONED_RUN
+
+proposition_law:
+  substantive_kinds:
+    - documented_finding
+    - supported_inference
+    - working_hypothesis
+  rule: >-
+    Every substantive proposition requires at least one genealogy entry. Questions
+    and unresolved uncertainties may carry no positive ground, but may not be
+    silently promoted to substantive findings.
+
+ground_routes:
+  horus_exchange:
+    required:
+      - query_id
+      - exchange_sha256
+      - source_ref
+      - document_identity
+      - locator
+    resolution_law: >-
+      The source_ref must occur in sources_used of the bound Horus response and
+      must support at least one records_returned entry. A source merely searched,
+      rejected, or hidden outside the returned source trail cannot ground a
+      proposition. If Horus recorded a source sha256, the genealogy must match it.
+  minister_repository:
+    required:
+      - witness_id
+      - source_id
+      - repository_commit
+      - path
+      - locator
+    resolution_law: >-
+      The repository_commit must equal the exact minister repository commit pinned
+      for the run. The sovereign repository identity is preserved; Sanctum does not
+      mint replacement witness or source identifiers.
+
+rendering_law: >-
+  Free-form prose is not the authoritative reasoning object. After structural
+  genealogy validation succeeds, Sanctum renders the readable Ministerial Report
+  from the structured package. If validation fails, the earlier draft remains
+  non-authoritative and the reasoned run aborts.
+
+history_law: >-
+  Historical report contracts remain valid under the versions that governed them.
+  v1.6.0 is forward-only and may not retroactively invalidate certified v1.3 or
+  v1.4 report artifacts.
+
+write_contract:
+  final_judgment_package: reports/<board>/<minister>-<date>.final.json
+  proposition_genealogy: reports/<board>/<minister>-<date>.genealogy.json
+  rendered_report: reports/<board>/<minister>-<date>.md
+  run_manifest: reports/<board>/<minister>-<date>.round.json
+  run_manifest_must_record:
+    - assembly spec v1.4.0
+    - final judgment package path and sha256
+    - proposition count
+    - proposition genealogy path and validation status
+    - both predecessor Horus exchange hashes
+    - pinned minister repository commit
+    - no self-certification
+
+laws_enforced:
+  evidence_genealogy: >-
+    THE GENEALOGY LAW - a substantive proposition without a resolvable documentary
+    path cannot enter the forward Ministerial Report.
+  no_bibliography_substitution: >-
+    THE NO-BIBLIOGRAPHY LAW - a generic source list does not prove which source
+    grounds which proposition.
+  no_searched_source_as_ground: >-
+    THE USED-GROUND LAW - Horus material is ground only if Horus recorded it as
+    used and attached it to a returned record.
+  sovereign_identity: >-
+    THE SOVEREIGN IDENTITY LAW - minister repository evidence retains the house's
+    own witness and source identifiers at the exact pinned commit.
+  no_self_certification: >-
+    Genealogy validation establishes linkage only. Truth and completeness remain
+    outside artificial-intelligence self-certification.
