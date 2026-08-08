@@ -14,6 +14,7 @@ import harness
 
 STANDARD_ID = "CONSTITUTIONAL-ENVIRONMENT-001"
 CERTIFICATION = "NONE_SELF_CERTIFICATION_PROHIBITED"
+HORUS_RESPONSE_CONTRACT = "contracts/horus-query-response.schema.json"
 T = TypeVar("T")
 
 
@@ -103,7 +104,7 @@ def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
         "horus": {
             "repository": "izzy9118-blip/Horus",
             "repository_commit": git_commit(horus),
-            "response_contract": _binding(horus, "contracts/minister-horus-response.schema.json"),
+            "response_contract": _binding(horus, HORUS_RESPONSE_CONTRACT),
         },
         "ministers": sorted(minister_bindings, key=lambda x: x["minister_id"]),
         "runtime": {
@@ -130,6 +131,7 @@ def validate_manifest(manifest: dict, *, estate: Path) -> dict:
         binding = manifest["sanctum"][key]
         _require(binding["sha256"] == sha256_file(sanctum / binding["path"]), f"Sanctum binding changed: {key}")
     hb = manifest["horus"]["response_contract"]
+    _require(hb.get("path") == HORUS_RESPONSE_CONTRACT, "Horus response contract path mismatch")
     _require(hb["sha256"] == sha256_file(horus / hb["path"]), "Horus response contract binding changed")
 
     registry = harness.yaml_load((sanctum / "registry/ministers.yaml").read_text(encoding="utf-8"))
@@ -168,11 +170,7 @@ def write_manifest(*, estate: Path, inquiry_id: str) -> Path:
 
 
 def required_environment_call(*, estate: Path, inquiry_id: str, downstream: Callable[[], T]) -> T:
-    """Hard precondition seam for forward inquiry work.
-
-    The downstream reasoning function is never called unless an immutable environment
-    manifest has first been created or revalidated against the exact checked-out estate.
-    """
+    """Hard precondition seam for forward inquiry work."""
     path = write_manifest(estate=estate, inquiry_id=inquiry_id)
     persisted = json.loads(path.read_text(encoding="utf-8"))
     validate_manifest(persisted, estate=estate)
