@@ -84,10 +84,13 @@ class YamlSubset(unittest.TestCase):
     def test_deed_index_order_is_recoverable(self):
         index = harness.yaml_load(
             (BASE.parent / "Talleyrand/deeds/index.yaml").read_text(encoding="utf-8"))
-        self.assertEqual(len(index["deeds"]), 19)
-        self.assertEqual(index["deeds"][0]["id"], "0")
-        ratified = [d for d in index["deeds"] if d["ratification"] == "OWNER_RATIFIED"]
-        self.assertEqual([d["id"] for d in ratified], ["C1"])
+        deeds = index["deeds"]
+        self.assertEqual(len(deeds), index["counts"]["deeds"])
+        self.assertEqual(index["counts"]["effective_owner_ratified"], len(deeds))
+        self.assertEqual(deeds[0]["id"], "0")
+        self.assertEqual(index["status"]["ratification"], "ALL_LIVE_DEEDS_OWNER_RATIFIED")
+        allowed = {"OWNER_RATIFIED", "OWNER_RATIFIED_BY_RECORD"}
+        self.assertTrue(all(d["ratification"] in allowed for d in deeds))
 
 
 class PrincipalFile(unittest.TestCase):
