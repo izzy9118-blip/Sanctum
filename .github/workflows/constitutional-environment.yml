@@ -22,13 +22,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Strauss
-          ref: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          ref: fb417d1d4ab7b5d349e801544c0c703d8998a93f
           path: estate/Strauss
       - name: Check out Xenophon at registry pin
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Xenophon
-          ref: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+          ref: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
           path: estate/Xenophon
       - uses: actions/setup-python@v5
         with:
@@ -67,7 +67,7 @@ jobs:
           schema = json.load(open('contracts/constitutional-environment.schema.json'))
           Draft202012Validator(schema).validate(doc)
           validate_manifest(doc, estate=estate)
-          assert doc['sanctum']['registry']['version'] == '3.0.0'
+          assert doc['sanctum']['registry']['version'] == '3.1.0'
           assert {m['minister_id'] for m in doc['ministers']} == {'leo-strauss', 'xenophon'}
           PY
       - name: Prove tampering fails closed

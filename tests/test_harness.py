@@ -5,6 +5,7 @@ Run with: python3 -m unittest discover -s tests   (or pytest)
 """
 import datetime as dt
 import importlib.util
+import re
 import tempfile
 import unittest
 from pathlib import Path
@@ -82,12 +83,17 @@ class YamlSubset(unittest.TestCase):
                 self.assertTrue(got)
 
     def test_deed_index_order_is_recoverable(self):
-        index = harness.yaml_load(
-            (BASE.parent / "Talleyrand/deeds/index.yaml").read_text(encoding="utf-8"))
-        self.assertEqual(len(index["deeds"]), 19)
-        self.assertEqual(index["deeds"][0]["id"], "0")
-        ratified = [d for d in index["deeds"] if d["ratification"] == "OWNER_RATIFIED"]
-        self.assertEqual([d["id"] for d in ratified], ["C1"])
+        path = BASE.parent / "Talleyrand/deeds/index.yaml"
+        text = path.read_text(encoding="utf-8")
+        index = harness.yaml_load(text)
+        deeds = index["deeds"]
+        self.assertEqual(len(deeds), index["counts"]["deeds"])
+        self.assertEqual(index["counts"]["effective_owner_ratified"], len(deeds))
+        self.assertEqual(index["status"]["ratification"], "ALL_LIVE_DEEDS_OWNER_RATIFIED")
+        ordered_ids = re.findall(r'^\s*-\s+\{?id:\s*"([^"]+)"', text, flags=re.MULTILINE)
+        self.assertEqual(len(ordered_ids), index["counts"]["deeds"])
+        self.assertEqual(ordered_ids[0], "0")
+        self.assertIn("C1", ordered_ids)
 
 
 class PrincipalFile(unittest.TestCase):
