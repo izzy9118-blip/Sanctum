@@ -1,14 +1,18 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 3.0.0
+version: 3.1.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 2.9.0
-  predecessor_commit: 4ad09dc75897dda2a4f68d32148a72a342c2917c
+  predecessor_version: 3.0.0
+  predecessor_commit: ffdfda65c87e52b50ad8835db466b5ef458d3dcb
   reason: >-
-    Add Xenophon as the second established sovereign minister after completion of his
-    documentary foundation, owner-adopted adapter, operational authorization, exact-commit
-    validation, and merger to the Xenophon main branch. The 2.9.0 registry remains preserved.
+    Repin the two already-established sovereign ministers to the repository owner's
+    current main heads without changing the minister set, universal participation,
+    sovereign jurisdiction, or recorded evidentiary limits. Strauss advances to the
+    sovereignly validated Inquiry 0001 state. Xenophon advances to the repository-level
+    Hieron / On Tyranny integration while preserving that integration as pending bounded
+    owner review and outside the active Anabasis adapter jurisdiction. Registry 3.0.0
+    remains preserved in Git history.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -20,7 +24,7 @@ ministers:
     minister_id: leo-strauss
     title: Minister of Political Philosophy
     repository: izzy9118-blip/Strauss
-    pinned_commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+    pinned_commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
     manifest_ref: manifest.yaml
     manifest_path: manifest.yaml
     manifest_version: "1.20.0"
@@ -30,8 +34,8 @@ ministers:
     pin_status: OWNER_CERTIFIED
     pin_certification:
       authority: REPOSITORY_OWNER_DIRECTIVE
-      date: "2026-07-28"
-      decision_ref: docs/decisions/0003-repin-strauss-current-main.md
+      date: "2026-08-09"
+      decision_ref: docs/decisions/0006-repin-current-minister-heads.md
     interface_status: ACTIVE_OWNER_AUTHORIZED_OPERATIONAL_INTERFACE
     semantic_completion: INCOMPLETE
     doctrinal_certification: OWNER_CERTIFIED_FOR_OPERATIONAL_USE
@@ -46,7 +50,7 @@ ministers:
     findings_loader_ref: findings_registry.py
     speech_ref: speech/speech-mechanism.yaml
     current_manifest_summary:
-      manifest_blob_sha: fe4b53c32b0d70b4a95832a6109446381d2004e8
+      manifest_blob_sha: 8cfddf3e658508f5435b90cb0b3d64e44714c2d8
       corpus_registry_version: "1.24.0"
       component_state:
         adapter: OPERATIONAL_OWNER_AUTHORIZED
@@ -64,39 +68,39 @@ ministers:
       produced_by:
         actor: leo-strauss
         repo: izzy9118-blip/Strauss
-        commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+        commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
       consumed_records:
         - ref: manifest.yaml
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: audits/operational-completeness.yaml
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: migrations/lean-operational-interface.yaml
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: adapter.py
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: problem_bundles.py
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: corpus/index.yaml
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: corpus_registry.py
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: findings/index.yaml
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: findings_registry.py
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: speech/speech-mechanism.yaml
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: hermeneutics/
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: method/
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
         - ref: problems/
-          commit: 32c96337cc29413a9f97cc843eaabf56a5ed38d6
+          commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
   - id: xenophon
     minister_id: xenophon
     title: Xenophon Minister
     repository: izzy9118-blip/Xenophon
-    pinned_commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+    pinned_commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
     manifest_ref: manifest.yaml
     manifest_path: manifest.yaml
     manifest_version: "1.70.0"
@@ -106,8 +110,8 @@ ministers:
     pin_status: OWNER_CERTIFIED
     pin_certification:
       authority: REPOSITORY_OWNER_DIRECTIVE
-      date: "2026-08-01"
-      decision_ref: docs/decisions/0005-register-xenophon-operational-minister.md
+      date: "2026-08-09"
+      decision_ref: docs/decisions/0006-repin-current-minister-heads.md
     interface_status: ACTIVE_OWNER_AUTHORIZED_OPERATIONAL_INTERFACE
     semantic_completion: INCOMPLETE
     doctrinal_certification: OWNER_CERTIFIED_FOR_OPERATIONAL_USE_WITH_RECORDED_LIMITS
@@ -133,6 +137,13 @@ ministers:
         primary_reconstruction: OWNER_ADOPTED_ENGLISH_WITNESS
         controlled_comparison: OWNER_ADOPTED_R3
         controlled_synthesis: OWNER_ADOPTED_R1
+      hieron_on_tyranny_integration:
+        audit_ref: audits/hieron-on-tyranny-integration-state.yaml
+        status: OPEN_INTEGRATION_AUDIT_PENDING_BOUNDED_OWNER_REVIEW
+        owner_directed: true
+        owner_adopted: false
+        active_adapter_jurisdiction_changed: false
+        assembly_dispatch_for_integration_authorized: false
       evidentiary_limits_preserved:
         - semantic research remains incomplete
         - Greek-language review is deferred by owner
@@ -140,29 +151,32 @@ ministers:
         - all nineteen unresolved questions remain positive results
         - operational authority does not certify a final teaching
         - wider Xenophontic corpus reconstruction remains incomplete
+        - Hieron / On Tyranny integration remains pending bounded owner review
     membership_status: established
     provenance:
       produced_by:
         actor: xenophon
         repo: izzy9118-blip/Xenophon
-        commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+        commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
       consumed_records:
         - ref: manifest.yaml
-          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
         - ref: governance/repository-authorization.yaml
-          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
         - ref: adapter.py
-          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
         - ref: speech/speech-mechanism.yaml
-          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
         - ref: corpus/index.yaml
-          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
         - ref: studies/comparisons/anabasis-primary-strauss/syntheses/XEN-STRAUSS-GUIDED-CONTROLLED-SYNTHESIS-001-R1.yaml
-          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
         - ref: speech/reviews/XEN-MINISTER-ADAPTER-R1-IN-DEPTH-REVIEW-001.yaml
-          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
         - ref: governance/owner-reviews/2026-08-01-xenophon-minister-adapter-r1-in-depth-review.yaml
-          commit: 77ae6a2fedc133bbc6ef63b58ab1751ba8ffe1c5
+          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
+        - ref: audits/hieron-on-tyranny-integration-state.yaml
+          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
 future_repositories:
   - id: talleyrand
     title: Talleyrand
