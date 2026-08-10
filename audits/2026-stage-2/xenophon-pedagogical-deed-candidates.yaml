@@ -1,0 +1,22 @@
+schema_version: 1.0
+record_type: xenophon_pedagogical_deed_candidate_audit
+status: FINDINGS_ONLY_OWNER_SELECTION_REQUIRED
+audit_basis:
+  clause_record: governance/ratifications/2026-stage-1.yaml
+  clause_locator: governance/ratifications/2026-stage-1.yaml:56-59
+  registry_locator: registry/ministers.yaml:20-104
+candidate_search:
+  expected_deed_count: 34
+  expected_structure: two-pole Socrates/Cyrus
+  result: NOT_EXECUTABLE_FROM_CANONICAL_REGISTRY
+candidates: []
+finding:
+  type: unable_to_assess
+  locator: registry/ministers.yaml:20-104
+  reason: The current registry contains no Xenophon repository, manifest, deed corpus, deed index, or pinned commit. Candidate locators cannot be supplied without inventing or selecting an unregistered source.
+required_next_evidence:
+  - A canonical Xenophon registry entry with repository and pinned commit.
+  - A manifest-declared deed index containing the expected deed records.
+  - Stable file and line locators for the Socrates and Cyrus poles.
+uncertainty:
+  - The prompt states that a 34-deed, two-pole corpus exists, but that assertion is not independently resolvable through the current Sanctum registry. It is preserved as an expected object, not treated as repository evidence.
