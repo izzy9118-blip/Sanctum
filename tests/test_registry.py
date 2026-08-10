@@ -35,31 +35,47 @@ def test_xenophon_registry_entry_matches_federation_contract():
     Draft202012Validator(schema).validate(xenophon)
     assert xenophon["repository"] == "izzy9118-blip/Xenophon"
     assert xenophon["manifest_path"] == "manifest.yaml"
-    assert xenophon["manifest_version"] == "1.70.0"
-    assert xenophon["pinned_commit"] == "38e5c5bcd77c46e01b2571f23b15a614334bbf9a"
+    assert xenophon["manifest_version"] == "1.71.0"
+    assert xenophon["pinned_commit"] == "b665e323d0780431764b565616e629b2e2aec00f"
     assert xenophon["participation"] == "universal"
-    assert xenophon["authorization_ref"] == "governance/repository-authorization.yaml"
-    assert xenophon["authorization_id"] == "XENOPHON-AUTH-001"
+    assert xenophon["authorization_ref"] == "governance/repository-authorization-r2.yaml"
+    assert xenophon["authorization_id"] == "XENOPHON-AUTH-002"
     assert xenophon["pin_status"] == "OWNER_CERTIFIED"
-    assert xenophon["pin_certification"]["decision_ref"] == "docs/decisions/0006-repin-current-minister-heads.md"
+    assert xenophon["pin_certification"]["decision_ref"] == "docs/decisions/0007-register-xenophon-r2-multi-work-minister.md"
     assert xenophon["membership_status"] == "established"
     assert xenophon["semantic_completion"] == "INCOMPLETE"
-    assert xenophon["authorization_scope"]["greek_language_review"] == "DEFERRED_BY_OWNER"
-    assert xenophon["authorization_scope"]["greek_dependent_claims"] == "PROHIBITED"
-    assert xenophon["authorization_scope"]["unresolved_question_count"] == 19
-    assert xenophon["authorization_scope"]["final_teaching_authorized"] is False
-    integration = xenophon["current_manifest_summary"]["hieron_on_tyranny_integration"]
-    assert integration["status"] == "OPEN_INTEGRATION_AUDIT_PENDING_BOUNDED_OWNER_REVIEW"
-    assert integration["owner_adopted"] is False
-    assert integration["active_adapter_jurisdiction_changed"] is False
-    assert integration["assembly_dispatch_for_integration_authorized"] is False
+    scope = xenophon["authorization_scope"]
+    assert scope["current_textual_jurisdiction"] == "CONTROLLED_MULTI_WORK_ENGLISH_WITNESS_PRIMARY_SECONDARY_SYNTHESIS"
+    assert scope["source_lines"] == ["anabasis", "hieron_on_tyranny"]
+    assert scope["authorized_source_witness_pairs"] == 8
+    assert scope["registers"] == 6
+    assert scope["guards"] == 4
+    assert scope["evidence_layers"] == 8
+    assert scope["greek_language_review"] == "DEFERRED_BY_OWNER"
+    assert scope["greek_dependent_claims"] == "PROHIBITED"
+    assert scope["unresolved_question_count"] == 37
+    assert scope["final_teaching_authorized"] is False
+    assert scope["assembly_dispatch_status"] == "PENDING_END_TO_END_PROVING_INQUIRY"
+    summary = xenophon["current_manifest_summary"]
+    assert summary["manifest_blob_sha"] == "8f9e0bf4143dc40436f8df4ad683cc7b0b367f4b"
+    inventory = summary["operational_inventory"]
+    assert inventory["source_lines"] == 2
+    assert inventory["source_witness_pairs"] == 8
+    assert inventory["hieron_source_roles"] == 6
+    assert inventory["registers"] == 6
+    assert inventory["guards"] == 4
+    assert inventory["evidence_layers"] == 8
+    assert inventory["anabasis_unresolved_questions"] == 19
+    assert inventory["hieron_unresolved_questions"] == 18
+    assert inventory["combined_unresolved_questions"] == 37
 
 
 def test_registry_contains_two_established_sovereign_ministers():
     registry, _ = registry_and_schema()
     established = [item for item in registry["ministers"] if item.get("membership_status") == "established"]
-    assert registry["version"] == "3.1.0"
-    assert registry["revision"]["predecessor_version"] == "3.0.0"
+    assert registry["version"] == "3.2.0"
+    assert registry["revision"]["predecessor_version"] == "3.1.0"
+    assert registry["revision"]["predecessor_commit"] == "23078c3abc1b72ecec0a280ddea70631a37d3e7c"
     assert [item["minister_id"] for item in established] == ["leo-strauss", "xenophon"]
     assert len({item["repository"] for item in established}) == 2
 
