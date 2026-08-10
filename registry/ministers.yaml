@@ -1,18 +1,16 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 3.1.0
+version: 3.2.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 3.0.0
-  predecessor_commit: ffdfda65c87e52b50ad8835db466b5ef458d3dcb
+  predecessor_version: 3.1.0
+  predecessor_commit: 23078c3abc1b72ecec0a280ddea70631a37d3e7c
   reason: >-
-    Repin the two already-established sovereign ministers to the repository owner's
-    current main heads without changing the minister set, universal participation,
-    sovereign jurisdiction, or recorded evidentiary limits. Strauss advances to the
-    sovereignly validated Inquiry 0001 state. Xenophon advances to the repository-level
-    Hieron / On Tyranny integration while preserving that integration as pending bounded
-    owner review and outside the active Anabasis adapter jurisdiction. Registry 3.0.0
-    remains preserved in Git history.
+    Register Xenophon's exact validated R2 multi-work sovereign state after completion
+    and owner authorization of the Hieron / On Tyranny operational incorporation. The
+    established minister set, universal participation, ministerial sovereignty, Greek
+    deferral, semantic incompletion, and report-certification boundaries remain unchanged.
+    Registry 3.1.0 remains preserved in Git history.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -98,85 +96,105 @@ ministers:
           commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
   - id: xenophon
     minister_id: xenophon
-    title: Xenophon Minister
+    title: Xenophon Multi-Work Minister
     repository: izzy9118-blip/Xenophon
-    pinned_commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
+    pinned_commit: b665e323d0780431764b565616e629b2e2aec00f
     manifest_ref: manifest.yaml
     manifest_path: manifest.yaml
-    manifest_version: "1.70.0"
+    manifest_version: "1.71.0"
     participation: universal
-    authorization_ref: governance/repository-authorization.yaml
-    authorization_id: XENOPHON-AUTH-001
+    authorization_ref: governance/repository-authorization-r2.yaml
+    authorization_id: XENOPHON-AUTH-002
     pin_status: OWNER_CERTIFIED
     pin_certification:
       authority: REPOSITORY_OWNER_DIRECTIVE
-      date: "2026-08-09"
-      decision_ref: docs/decisions/0006-repin-current-minister-heads.md
-    interface_status: ACTIVE_OWNER_AUTHORIZED_OPERATIONAL_INTERFACE
+      date: "2026-08-10"
+      decision_ref: docs/decisions/0007-register-xenophon-r2-multi-work-minister.md
+    interface_status: ACTIVE_OWNER_AUTHORIZED_OPERATIONAL_MULTI_WORK_INTERFACE
     semantic_completion: INCOMPLETE
     doctrinal_certification: OWNER_CERTIFIED_FOR_OPERATIONAL_USE_WITH_RECORDED_LIMITS
-    runtime_readiness: FULL_OPERATIONAL_USE_WITH_ENGLISH_WITNESS_AND_OPEN_RESEARCH_LIMITS
+    runtime_readiness: FULL_OPERATIONAL_MULTI_WORK_USE_WITH_ENGLISH_WITNESS_AND_OPEN_RESEARCH_LIMITS
     authorization_scope:
-      current_textual_jurisdiction: CONTROLLED_ENGLISH_WITNESS_PRIMARY_SECONDARY_SYNTHESIS
+      current_textual_jurisdiction: CONTROLLED_MULTI_WORK_ENGLISH_WITNESS_PRIMARY_SECONDARY_SYNTHESIS
+      source_lines:
+        - anabasis
+        - hieron_on_tyranny
+      authorized_source_witness_pairs: 8
+      registers: 6
+      guards: 4
+      evidence_layers: 8
+      unresolved_question_count: 37
       greek_language_review: DEFERRED_BY_OWNER
       greek_dependent_claims: PROHIBITED
-      unresolved_question_count: 19
       final_teaching_authorized: false
+      assembly_dispatch_status: PENDING_END_TO_END_PROVING_INQUIRY
     adapter_ref: adapter.py
-    speech_ref: speech/speech-mechanism.yaml
+    speech_ref: speech/speech-mechanism-r2.yaml
     corpus_ref: corpus/index.yaml
     synthesis_ref: studies/comparisons/anabasis-primary-strauss/syntheses/XEN-STRAUSS-GUIDED-CONTROLLED-SYNTHESIS-001-R1.yaml
-    adapter_review_ref: speech/reviews/XEN-MINISTER-ADAPTER-R1-IN-DEPTH-REVIEW-001.yaml
-    owner_review_ref: governance/owner-reviews/2026-08-01-xenophon-minister-adapter-r1-in-depth-review.yaml
+    hieron_reconstruction_ref: studies/hieron-on-tyranny/cumulative/XEN-HIERON-ON-TYRANNY-CUMULATIVE-001.yaml
+    derivation_boundary_ref: governance/derivation-boundaries/2026-08-10-hieron-on-tyranny-operational-boundary.yaml
+    adapter_review_ref: speech/reviews/XEN-MINISTER-ADAPTER-R2-IN-DEPTH-REVIEW-001.yaml
+    owner_review_ref: governance/owner-reviews/2026-08-10-xenophon-minister-adapter-r2-in-depth-review.yaml
+    operational_audit_ref: audits/hieron-on-tyranny-operational-incorporation-state.yaml
     federation_schema_ref: federation/contracts/ministerial-report.schema.v1.3.0.json
     current_manifest_summary:
-      manifest_blob_sha: 0d0a9dae28637f95a163b628001f7b65f25daa06
+      manifest_blob_sha: 8f9e0bf4143dc40436f8df4ad683cc7b0b367f4b
       component_state:
-        adapter: OWNER_AUTHORIZED_OPERATIONAL_INTERFACE
-        speech_mechanism: OWNER_AUTHORIZED_OPERATIONAL_OPEN_RESEARCH
-        primary_reconstruction: OWNER_ADOPTED_ENGLISH_WITNESS
-        controlled_comparison: OWNER_ADOPTED_R3
-        controlled_synthesis: OWNER_ADOPTED_R1
-      hieron_on_tyranny_integration:
-        audit_ref: audits/hieron-on-tyranny-integration-state.yaml
-        status: OPEN_INTEGRATION_AUDIT_PENDING_BOUNDED_OWNER_REVIEW
-        owner_directed: true
-        owner_adopted: false
-        active_adapter_jurisdiction_changed: false
-        assembly_dispatch_for_integration_authorized: false
+        adapter: OWNER_AUTHORIZED_OPERATIONAL_MULTI_WORK_INTERFACE
+        anabasis_primary_reconstruction: OWNER_ADOPTED_ENGLISH_WITNESS
+        anabasis_controlled_comparison: OWNER_ADOPTED_R3
+        anabasis_controlled_synthesis: OWNER_ADOPTED_R1
+        hieron_on_tyranny_reconstruction: OWNER_ADOPTED_WITH_ENGLISH_COMPOSITE_WITNESS_JURISDICTION
+        hieron_on_tyranny_operational_incorporation: OPERATIONALLY_INCORPORATED_OWNER_AUTHORIZED
+      operational_inventory:
+        source_lines: 2
+        source_witness_pairs: 8
+        hieron_source_roles: 6
+        registers: 6
+        guards: 4
+        evidence_layers: 8
+        anabasis_unresolved_questions: 19
+        hieron_unresolved_questions: 18
+        combined_unresolved_questions: 37
       evidentiary_limits_preserved:
         - semantic research remains incomplete
         - Greek-language review is deferred by owner
         - Greek-dependent claims remain prohibited
-        - all nineteen unresolved questions remain positive results
+        - all thirty-seven unresolved questions remain positive results
         - operational authority does not certify a final teaching
         - wider Xenophontic corpus reconstruction remains incomplete
-        - Hieron / On Tyranny integration remains pending bounded owner review
+        - report certification and presidential synthesis remain separate
+        - Assembly dispatch remains pending the end-to-end proving inquiry
     membership_status: established
     provenance:
       produced_by:
         actor: xenophon
         repo: izzy9118-blip/Xenophon
-        commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
+        commit: b665e323d0780431764b565616e629b2e2aec00f
       consumed_records:
         - ref: manifest.yaml
-          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
-        - ref: governance/repository-authorization.yaml
-          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
+          commit: b665e323d0780431764b565616e629b2e2aec00f
+        - ref: governance/repository-authorization-r2.yaml
+          commit: b665e323d0780431764b565616e629b2e2aec00f
         - ref: adapter.py
-          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
-        - ref: speech/speech-mechanism.yaml
-          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
+          commit: b665e323d0780431764b565616e629b2e2aec00f
+        - ref: speech/speech-mechanism-r2.yaml
+          commit: b665e323d0780431764b565616e629b2e2aec00f
         - ref: corpus/index.yaml
-          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
+          commit: b665e323d0780431764b565616e629b2e2aec00f
         - ref: studies/comparisons/anabasis-primary-strauss/syntheses/XEN-STRAUSS-GUIDED-CONTROLLED-SYNTHESIS-001-R1.yaml
-          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
-        - ref: speech/reviews/XEN-MINISTER-ADAPTER-R1-IN-DEPTH-REVIEW-001.yaml
-          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
-        - ref: governance/owner-reviews/2026-08-01-xenophon-minister-adapter-r1-in-depth-review.yaml
-          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
-        - ref: audits/hieron-on-tyranny-integration-state.yaml
-          commit: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
+          commit: b665e323d0780431764b565616e629b2e2aec00f
+        - ref: studies/hieron-on-tyranny/cumulative/XEN-HIERON-ON-TYRANNY-CUMULATIVE-001.yaml
+          commit: b665e323d0780431764b565616e629b2e2aec00f
+        - ref: governance/derivation-boundaries/2026-08-10-hieron-on-tyranny-operational-boundary.yaml
+          commit: b665e323d0780431764b565616e629b2e2aec00f
+        - ref: speech/reviews/XEN-MINISTER-ADAPTER-R2-IN-DEPTH-REVIEW-001.yaml
+          commit: b665e323d0780431764b565616e629b2e2aec00f
+        - ref: governance/owner-reviews/2026-08-10-xenophon-minister-adapter-r2-in-depth-review.yaml
+          commit: b665e323d0780431764b565616e629b2e2aec00f
+        - ref: audits/hieron-on-tyranny-operational-incorporation-state.yaml
+          commit: b665e323d0780431764b565616e629b2e2aec00f
 future_repositories:
   - id: talleyrand
     title: Talleyrand

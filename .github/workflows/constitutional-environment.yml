@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Xenophon
-          ref: 38e5c5bcd77c46e01b2571f23b15a614334bbf9a
+          ref: b665e323d0780431764b565616e629b2e2aec00f
           path: estate/Xenophon
       - uses: actions/setup-python@v5
         with:
@@ -67,8 +67,10 @@ jobs:
           schema = json.load(open('contracts/constitutional-environment.schema.json'))
           Draft202012Validator(schema).validate(doc)
           validate_manifest(doc, estate=estate)
-          assert doc['sanctum']['registry']['version'] == '3.1.0'
+          assert doc['sanctum']['registry']['version'] == '3.2.0'
           assert {m['minister_id'] for m in doc['ministers']} == {'leo-strauss', 'xenophon'}
+          xenophon = next(m for m in doc['ministers'] if m['minister_id'] == 'xenophon')
+          assert xenophon['pinned_commit'] == 'b665e323d0780431764b565616e629b2e2aec00f'
           PY
       - name: Prove tampering fails closed
         working-directory: estate/Sanctum
