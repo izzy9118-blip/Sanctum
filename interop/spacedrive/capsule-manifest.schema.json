@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sanctum.local/schemas/capsule-manifest.schema.json",
+  "title": "Sanctum Portable Inquiry Capsule Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["contract_version", "capsule_id", "created_at", "repository", "governing_state", "files"],
+  "properties": {
+    "contract_version": {"const": "1.0.0"},
+    "capsule_id": {"type": "string", "pattern": "^CAP-[0-9]{9}$"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "commit"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "branch": {"type": "string"},
+        "dirty": {"type": "boolean"}
+      }
+    },
+    "active_inquiry": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["inquiry_id", "envelope_path"],
+      "properties": {
+        "inquiry_id": {"type": "string", "pattern": "^INQ-[0-9]{9}$"},
+        "envelope_path": {"type": "string", "minLength": 1}
+      }
+    },
+    "governing_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["orientation", "safeguards"],
+      "properties": {
+        "orientation": {"type": "string", "minLength": 1},
+        "safeguards": {"type": "string", "minLength": 1},
+        "schemas": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    },
+    "files": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "size_bytes", "role"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "size_bytes": {"type": "integer", "minimum": 0},
+          "role": {"type": "string", "enum": ["governing", "source", "transcript", "inquiry", "report", "provenance", "llm-instruction", "other"]},
+          "repository_identifier": {"type": ["string", "null"]},
+          "media_type": {"type": ["string", "null"]}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sanctum.local/schemas/transfer-record.schema.json",
+  "title": "Sanctum LLM Transfer Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["transfer_version", "transfer_id", "capsule_id", "exported_at", "source", "verification", "recipient"],
+  "properties": {
+    "transfer_version": {"const": "1.0.0"},
+    "transfer_id": {"type": "string", "pattern": "^XFR-[0-9]{9}$"},
+    "capsule_id": {"type": "string", "pattern": "^CAP-[0-9]{9}$"},
+    "exported_at": {"type": "string", "format": "date-time"},
+    "received_at": {"type": ["string", "null"], "format": "date-time"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "commit", "exporter"],
+      "properties": {
+        "repository": {"type": "string"},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+        "exporter": {"type": "string"},
+        "device": {"type": ["string", "null"]}
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "manifest_sha256"],
+      "properties": {
+        "status": {"type": "string", "enum": ["not-run", "passed", "failed"]},
+        "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "verified_at": {"type": ["string", "null"], "format": "date-time"},
+        "errors": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "recipient": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["runtime", "model"],
+      "properties": {
+        "runtime": {"type": "string"},
+        "model": {"type": "string"},
+        "provider": {"type": ["string", "null"]},
+        "session_reference": {"type": ["string", "null"]}
+      }
+    }
+  }
+}
