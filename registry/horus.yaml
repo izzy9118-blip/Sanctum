@@ -1,0 +1,21 @@
+record_type: sanctum_horus_registry
+version: 1.0.0
+status: OWNER_CERTIFIED
+repository: izzy9118-blip/Horus
+pinned_commit: ec82d22f1cb6d7d944b8347f8c7516b1fd38affc
+manifest_path: manifest.yaml
+response_contract: contracts/horus-query-response.schema.json
+response_contract_version: 1.3.0
+acquisition_receipt_contract: contracts/acquisition-receipt.schema.json
+principal_source_profile_contract: contracts/principal-source-profile.schema.json
+canonical_runtime: runtime/gather.py
+acquisition_protocol: HORUS-ACQUISITION-1.0
+source_absence_taxonomy: HORUS-SOURCE-STATE-1.0
+completeness: PENDING_PROBE
+certification:
+  authority: REPOSITORY_OWNER_DIRECTIVE
+  date: 2026-08-10
+  scope: >-
+    Pins the Horus organ and its acquisition interface for forward Assembly inquiry
+    execution. This certifies repository identity and owner authorization only; it
+    does not certify the truth or completeness of any Horus file or acquisition.
