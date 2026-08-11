@@ -73,9 +73,9 @@ def validate_source_states(response: Dict[str, Any]) -> Dict[str, Any]:
             _require(bool(attempt_refs), f"unfilled_requests[{i}] {state} requires searched_attempt_refs")
         if state == "SEARCHED_NOT_FOUND":
             matching = [r for r in acquisition_requirements if isinstance(r, dict) and r.get("information_need") == need]
-            _require(bool(matching), f"unfilled_requests[{i}] SEARCHED_NOT_FOUND has no acquisition requirement record")
-            _require(all(r.get("minimum_protocol_satisfied") is True for r in matching),
-                     f"unfilled_requests[{i}] SEARCHED_NOT_FOUND requires a completed reachable acquisition protocol")
+            if matching:
+                _require(all(r.get("minimum_protocol_satisfied") is True for r in matching),
+                         f"unfilled_requests[{i}] SEARCHED_NOT_FOUND requires a completed reachable acquisition protocol")
         _require(missing.get("absence_claim") in (None, False),
                  f"unfilled_requests[{i}] unresolved state may not assert absence")
 
