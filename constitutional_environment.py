@@ -14,7 +14,7 @@ import harness
 
 STANDARD_ID = "CONSTITUTIONAL-ENVIRONMENT-001"
 CERTIFICATION = "NONE_SELF_CERTIFICATION_PROHIBITED"
-HORUS_RESPONSE_CONTRACT = "contracts/horus-query-response.schema.json"
+HORUS_REGISTRY = "registry/horus.yaml"
 T = TypeVar("T")
 
 
@@ -50,6 +50,19 @@ def _binding(base: Path, relpath: str) -> dict:
     return {"path": relpath, "sha256": sha256_file(base / relpath)}
 
 
+def _load_horus_registry(sanctum: Path) -> dict:
+    path = sanctum / HORUS_REGISTRY
+    _require(path.is_file(), f"Horus registry missing: {path}")
+    registry = harness.yaml_load(path.read_text(encoding="utf-8"))
+    _require(registry.get("record_type") == "sanctum_horus_registry", "wrong Horus registry record_type")
+    _require(registry.get("repository") == "izzy9118-blip/Horus", "Horus registry repository mismatch")
+    pin = registry.get("pinned_commit", "")
+    _require(isinstance(pin, str) and len(pin) == 40, "Horus registry pinned_commit is invalid")
+    _require(registry.get("canonical_runtime") == "runtime/gather.py", "Horus registry canonical runtime mismatch")
+    _require(registry.get("acquisition_protocol") == "HORUS-ACQUISITION-1.0", "Horus registry acquisition protocol mismatch")
+    return registry
+
+
 def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
     sanctum, horus = estate / "Sanctum", estate / "Horus"
     _require(sanctum.is_dir(), "Sanctum repository missing from estate")
@@ -60,6 +73,11 @@ def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
     registry = harness.yaml_load(registry_path.read_text(encoding="utf-8"))
     established = [m for m in registry.get("ministers", []) if m.get("membership_status") == "established"]
     _require(established, "registry contains no established ministers")
+
+    horus_registry = _load_horus_registry(sanctum)
+    horus_actual = git_commit(horus)
+    horus_pin = horus_registry["pinned_commit"]
+    _require(horus_actual == horus_pin, f"Horus checkout {horus_actual} does not match Sanctum pin {horus_pin}")
 
     minister_bindings, seen = [], set()
     for item in established:
@@ -102,9 +120,16 @@ def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
             "source_absence_standard": sanctum_files["source_absence_standard"],
         },
         "horus": {
-            "repository": "izzy9118-blip/Horus",
-            "repository_commit": git_commit(horus),
-            "response_contract": _binding(horus, HORUS_RESPONSE_CONTRACT),
+            "repository": horus_registry["repository"],
+            "repository_commit": horus_actual,
+            "pinned_commit": horus_pin,
+            "registry": {**_binding(sanctum, HORUS_REGISTRY), "version": str(horus_registry.get("version"))},
+            "manifest": _binding(horus, horus_registry["manifest_path"]),
+            "response_contract": _binding(horus, horus_registry["response_contract"]),
+            "acquisition_receipt_contract": _binding(horus, horus_registry["acquisition_receipt_contract"]),
+            "principal_source_profile_contract": _binding(horus, horus_registry["principal_source_profile_contract"]),
+            "canonical_runtime": _binding(horus, horus_registry["canonical_runtime"]),
+            "acquisition_protocol": horus_registry["acquisition_protocol"],
         },
         "ministers": sorted(minister_bindings, key=lambda x: x["minister_id"]),
         "runtime": {
@@ -125,14 +150,35 @@ def validate_manifest(manifest: dict, *, estate: Path) -> dict:
     _require(manifest.get("certification") == CERTIFICATION, "manifest may not self-certify truth or completeness")
     sanctum, horus = estate / "Sanctum", estate / "Horus"
     _require(manifest.get("sanctum", {}).get("repository_commit") == git_commit(sanctum), "Sanctum commit mismatch")
-    _require(manifest.get("horus", {}).get("repository_commit") == git_commit(horus), "Horus commit mismatch")
+
+    horus_registry = _load_horus_registry(sanctum)
+    horus_actual = git_commit(horus)
+    horus_doc = manifest.get("horus", {})
+    _require(horus_actual == horus_registry["pinned_commit"], "live Horus checkout differs from Sanctum Horus pin")
+    _require(horus_doc.get("repository") == horus_registry["repository"], "Horus repository mismatch")
+    _require(horus_doc.get("repository_commit") == horus_actual, "Horus commit mismatch")
+    _require(horus_doc.get("pinned_commit") == horus_registry["pinned_commit"], "Horus pinned_commit mismatch")
+    _require(horus_doc.get("acquisition_protocol") == horus_registry["acquisition_protocol"], "Horus acquisition protocol mismatch")
+    hr = horus_doc.get("registry", {})
+    _require(hr.get("path") == HORUS_REGISTRY, "Horus registry path mismatch")
+    _require(str(hr.get("version")) == str(horus_registry.get("version")), "Horus registry version mismatch")
+    _require(hr.get("sha256") == sha256_file(sanctum / HORUS_REGISTRY), "Horus registry hash mismatch")
 
     for key in ["assembly_spec", "registry", "final_judgment_contract", "proposition_matrix_standard", "ministerial_silence_standard", "source_absence_standard"]:
         binding = manifest["sanctum"][key]
         _require(binding["sha256"] == sha256_file(sanctum / binding["path"]), f"Sanctum binding changed: {key}")
-    hb = manifest["horus"]["response_contract"]
-    _require(hb.get("path") == HORUS_RESPONSE_CONTRACT, "Horus response contract path mismatch")
-    _require(hb["sha256"] == sha256_file(horus / hb["path"]), "Horus response contract binding changed")
+
+    expected_horus_bindings = {
+        "manifest": horus_registry["manifest_path"],
+        "response_contract": horus_registry["response_contract"],
+        "acquisition_receipt_contract": horus_registry["acquisition_receipt_contract"],
+        "principal_source_profile_contract": horus_registry["principal_source_profile_contract"],
+        "canonical_runtime": horus_registry["canonical_runtime"],
+    }
+    for key, expected_path in expected_horus_bindings.items():
+        binding = horus_doc.get(key, {})
+        _require(binding.get("path") == expected_path, f"Horus {key} path mismatch")
+        _require(binding.get("sha256") == sha256_file(horus / expected_path), f"Horus {key} binding changed")
 
     registry = harness.yaml_load((sanctum / "registry/ministers.yaml").read_text(encoding="utf-8"))
     _require(str(manifest["sanctum"]["registry"].get("version")) == str(registry.get("version")), "registry version mismatch")
