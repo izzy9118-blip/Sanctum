@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:sanctum:constitutional-environment:1.0.0",
+  "$id": "urn:sanctum:constitutional-environment:1.1.0",
   "title": "Sanctum Constitutional Environment Manifest",
   "type": "object",
   "additionalProperties": false,
@@ -26,11 +26,18 @@
     },
     "horus": {
       "type": "object", "additionalProperties": false,
-      "required": ["repository", "repository_commit", "response_contract"],
+      "required": ["repository", "repository_commit", "pinned_commit", "registry", "manifest", "response_contract", "acquisition_receipt_contract", "principal_source_profile_contract", "canonical_runtime", "acquisition_protocol"],
       "properties": {
         "repository": {"const": "izzy9118-blip/Horus"},
         "repository_commit": {"$ref": "#/$defs/commit"},
-        "response_contract": {"$ref": "#/$defs/file_binding"}
+        "pinned_commit": {"$ref": "#/$defs/commit"},
+        "registry": {"$ref": "#/$defs/registry_binding"},
+        "manifest": {"$ref": "#/$defs/file_binding"},
+        "response_contract": {"$ref": "#/$defs/file_binding"},
+        "acquisition_receipt_contract": {"$ref": "#/$defs/file_binding"},
+        "principal_source_profile_contract": {"$ref": "#/$defs/file_binding"},
+        "canonical_runtime": {"$ref": "#/$defs/file_binding"},
+        "acquisition_protocol": {"const": "HORUS-ACQUISITION-1.0"}
       }
     },
     "ministers": {
