@@ -303,6 +303,7 @@ def run(args) -> int:
         adversarial_query, adversarial_response = required_adversarial_horus_call(
             provisional,
             lambda q: _run_horus_command(horus_command, q),
+            investigative_query=investigative_query,
         )
     except HorusExchangeError as exc:
         raise RoundError(f"Horus adversarial exchange contract violation: {exc}") from exc
