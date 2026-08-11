@@ -4,16 +4,17 @@
 Sequence:
     1. Build the same common context the Sovereign Harness would give the minister.
     2. CALL the minister for an investigative request only.
-    3. CALL Horus through the hard investigative boundary.
+    3. CALL the pinned Horus repository through its canonical acquisition runtime.
     4. CALL the minister for a provisional judgment that names what could weaken it.
     5. Deterministically build and CALL the adversarial Horus request.
     6. Inject both complete exchanges and the provisional judgment.
     7. CALL the minister for final judgment.
     8. WRITE both exchanges, report, and round manifest.
 
-A direct one-shot reasoned call, or a run that forms a provisional judgment but skips
-its adversarial test, is non-conforming under ASSEMBLY-SPEC-001 v1.3.0.  This runner
-does not gather for Horus and does not judge for the minister.
+A direct one-shot reasoned call, a run that substitutes an arbitrary Horus command,
+or a run that forms a provisional judgment but skips its adversarial test is
+non-conforming under ASSEMBLY-SPEC-001 v1.3.0. This runner does not gather for
+Horus and does not judge for the minister.
 """
 from __future__ import annotations
 
@@ -21,6 +22,7 @@ import argparse
 import datetime as dt
 import hashlib
 import json
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -44,6 +46,8 @@ SPEC_PATH = "standards/assembly-spec.yaml"
 QUERY_CONTRACT_PATH = "contracts/minister-horus-query.schema.json"
 PROVISIONAL_CONTRACT_PATH = "contracts/provisional-judgment.schema.json"
 ADVERSARIAL_QUERY_CONTRACT_PATH = "contracts/minister-horus-adversarial-query.schema.json"
+CANONICAL_HORUS_RUNTIME = "runtime/gather.py"
+ACQUISITION_PROTOCOL = "HORUS-ACQUISITION-1.0"
 
 
 class RoundError(RuntimeError):
@@ -51,7 +55,6 @@ class RoundError(RuntimeError):
 
 
 def _json_object(text: str, label: str) -> dict:
-    """Parse a model/tool response as one JSON object; no prose fallback."""
     try:
         value = json.loads(text)
     except json.JSONDecodeError as exc:
@@ -61,19 +64,46 @@ def _json_object(text: str, label: str) -> dict:
     return value
 
 
-def _run_horus_command(command: str, query: dict) -> dict:
-    """Invoke the Horus gatherer as a hard subprocess boundary."""
+def _run_horus_command(command: list[str], query: dict) -> dict:
+    """Invoke the canonical Horus gatherer as a hard subprocess boundary."""
     process = subprocess.run(
         command,
         input=json.dumps(query),
         text=True,
-        shell=True,
+        shell=False,
         capture_output=True,
     )
     if process.returncode != 0:
         detail = process.stderr.strip() or process.stdout.strip() or "no detail"
         raise RoundError(f"HORUS CALL failed with exit {process.returncode}: {detail[:500]}")
     return _json_object(process.stdout, "Horus gatherer")
+
+
+def _resolve_horus_command(horus: Path, args) -> list[str]:
+    canonical = (horus / CANONICAL_HORUS_RUNTIME).resolve()
+    if args.horus_command:
+        if not args.allow_horus_command_override:
+            raise RoundError(
+                "--horus-command is test-only; production rounds must use the canonical pinned Horus runtime. "
+                "Use --allow-horus-command-override only for explicit fixture tests."
+            )
+        command = shlex.split(args.horus_command)
+        if not command:
+            raise RoundError("test Horus command override is empty")
+        return command
+    if not canonical.exists():
+        raise RoundError(f"canonical Horus acquisition runtime is missing: {canonical}")
+    return [sys.executable, str(canonical)]
+
+
+def _require_horus_commit(response: dict, expected_commit: str) -> None:
+    provenance = response.get("provenance") or {}
+    actual = provenance.get("horus_repository_commit")
+    if actual != expected_commit:
+        raise RoundError(
+            "Horus response provenance does not match the exact Horus commit pulled for this round: "
+            f"expected {expected_commit}, got {actual}"
+        )
 
 
 def _query_prompt(common_context: str, inquiry_id: str, minister_id: str, commit: str) -> str:
@@ -93,7 +123,10 @@ def _query_prompt(common_context: str, inquiry_id: str, minister_id: str, commit
           "with MHQ-. State information_needed, source_requirements with rationale, any "
           "specific document requests, relevant scope, disallowed substitutions, and "
           "reason_for_request.\n\n"
-        + "You may specify what would count as adequate evidence. Except for an explicit "
+        + "If original-language T1 is required, principal_scope must explicitly name every "
+          "principal for whom that language requirement applies; Horus resolves language, "
+          "timezone, local calendar and first-party channels from its pinned source registry. "
+          "You may specify what would count as adequate evidence. Except for an explicit "
           "document request, you may NOT select the sources Horus must use. Set "
           "source_selection_rule exactly to "
           "HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS."
@@ -174,7 +207,7 @@ def _source_head(repo_state: list[dict], house: str) -> str:
             head = item.get("head", "")
             if len(head) == 40:
                 return head
-    raise RoundError(f"cannot determine exact commit for minister house {house}")
+    raise RoundError(f"cannot determine exact commit for repository {house}")
 
 
 def run(args) -> int:
@@ -197,6 +230,8 @@ def run(args) -> int:
     print("PULL")
     repo_state = harness.pull(estate, config["repositories"], not args.no_pull)
     minister_commit = _source_head(repo_state, house)
+    horus_commit = _source_head(repo_state, "Horus")
+    horus_command = _resolve_horus_command(horus, args)
 
     board = harness.yaml_load((horus / "boards" / f"{args.board}.yaml").read_text(encoding="utf-8"))
     manifest = harness.yaml_load((estate / house / "manifest.yaml").read_text(encoding="utf-8"))
@@ -238,10 +273,11 @@ def run(args) -> int:
     try:
         investigative_response = required_horus_call(
             investigative_query,
-            lambda q: _run_horus_command(args.horus_command, q),
+            lambda q: _run_horus_command(horus_command, q),
         )
     except HorusExchangeError as exc:
         raise RoundError(f"Horus investigative exchange contract violation: {exc}") from exc
+    _require_horus_commit(investigative_response, horus_commit)
 
     print("\nCALL 3 — MINISTER PROVISIONAL JUDGMENT")
     provisional_call = harness.call(
@@ -266,10 +302,12 @@ def run(args) -> int:
     try:
         adversarial_query, adversarial_response = required_adversarial_horus_call(
             provisional,
-            lambda q: _run_horus_command(args.horus_command, q),
+            lambda q: _run_horus_command(horus_command, q),
+            investigative_query=investigative_query,
         )
     except HorusExchangeError as exc:
         raise RoundError(f"Horus adversarial exchange contract violation: {exc}") from exc
+    _require_horus_commit(adversarial_response, horus_commit)
 
     print("\nCALL 5 — FINAL MINISTER JUDGMENT")
     final_context = _final_prompt(
@@ -301,6 +339,9 @@ def run(args) -> int:
         "board": args.board,
         "minister": args.minister,
         "minister_repository_commit": minister_commit,
+        "horus_repository_commit": horus_commit,
+        "horus_runtime": CANONICAL_HORUS_RUNTIME if not args.horus_command else "TEST_OVERRIDE",
+        "horus_acquisition_protocol": ACQUISITION_PROTOCOL,
         "common_context_sha256": hashlib.sha256(common_context.encode("utf-8")).hexdigest(),
         "final_context_sha256": hashlib.sha256(final_context.encode("utf-8")).hexdigest(),
         "parity": {
@@ -368,8 +409,12 @@ def main(argv=None) -> int:
     parser.add_argument("--minister", required=True)
     parser.add_argument(
         "--horus-command",
-        required=True,
-        help="command that reads one query JSON object on stdin and returns one Horus response JSON object on stdout",
+        help="TEST ONLY: alternate command that reads query JSON on stdin and emits a Horus response. Production uses <estate>/Horus/runtime/gather.py.",
+    )
+    parser.add_argument(
+        "--allow-horus-command-override",
+        action="store_true",
+        help="explicitly allow --horus-command for fixture tests; never use for a proving or certified Assembly run",
     )
     parser.add_argument("--inquiry-id")
     parser.add_argument("--question-file")

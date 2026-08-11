@@ -7,7 +7,14 @@ import json
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable
 
-from minister_horus import HorusExchangeError, SOURCE_SELECTION_RULE, TIERS
+from minister_horus import (
+    ACQUISITION_PROTOCOL,
+    CANONICAL_ACQUISITION_ENGINE,
+    CANONICAL_ACQUISITION_PATH,
+    HorusExchangeError,
+    SOURCE_SELECTION_RULE,
+    TIERS,
+)
 from source_absence import SourceStateError, validate_source_states
 
 PROVISIONAL_RECORD_TYPE = "minister_provisional_judgment"
@@ -54,7 +61,7 @@ def validate_provisional_judgment(record: Dict[str, Any]) -> Dict[str, Any]:
     return record
 
 
-def build_adversarial_query(provisional: Dict[str, Any]) -> Dict[str, Any]:
+def build_adversarial_query(provisional: Dict[str, Any], investigative_query: Dict[str, Any] | None = None) -> Dict[str, Any]:
     validate_provisional_judgment(provisional)
     propositions = provisional["propositions"]
     seed = json.dumps({"inquiry_id": provisional["inquiry_id"], "minister_id": provisional["minister_id"], "propositions": propositions}, sort_keys=True, separators=(",", ":")).encode()
@@ -68,6 +75,8 @@ def build_adversarial_query(provisional: Dict[str, Any]) -> Dict[str, Any]:
         "information_needed": [p["disconfirmation_need"] for p in propositions],
         "source_requirements": [{"proposition_id": p["proposition_id"], "requirement": p["disconfirmation_need"], "rationale": p["why_it_matters"], "acceptable_tiers": p.get("acceptable_tiers", []), "original_language_required": bool(p.get("original_language_required", False))} for p in propositions],
         "specific_document_requests": [],
+        "principal_scope": list((investigative_query or {}).get("principal_scope") or []),
+        "time_scope": dict((investigative_query or {}).get("time_scope") or {}),
         "reason_for_request": "Seek documentary ground capable of weakening, qualifying, or overturning the minister's stated provisional propositions before final judgment.",
         "source_selection_rule": SOURCE_SELECTION_RULE,
         "source_absence_taxonomy": "HORUS-SOURCE-STATE-1.0",
@@ -100,6 +109,7 @@ def validate_adversarial_query(query: Dict[str, Any]) -> Dict[str, Any]:
     requirements = query.get("source_requirements")
     _require(isinstance(requirements, list) and len(requirements) == len(props), "source_requirements must contain one entry per provisional proposition")
     requirement_ids = set()
+    original_t1 = False
     for i, req in enumerate(requirements):
         _require(isinstance(req, dict), f"source_requirements[{i}] must be an object")
         pid = req.get("proposition_id")
@@ -109,12 +119,36 @@ def validate_adversarial_query(query: Dict[str, Any]) -> Dict[str, Any]:
             _require(isinstance(req.get(field), str) and req[field].strip(), f"source_requirements[{i}].{field} is required")
         tiers = req.get("acceptable_tiers", [])
         _require(isinstance(tiers, list) and all(t in TIERS for t in tiers), f"source_requirements[{i}].acceptable_tiers contains an invalid tier")
+        if req.get("original_language_required") is True and (not tiers or "T1" in tiers):
+            original_t1 = True
     _require(requirement_ids == prop_ids, "every provisional proposition must receive exactly one adversarial source requirement")
+    principal_scope = query.get("principal_scope", [])
+    _require(isinstance(principal_scope, list) and all(isinstance(x, str) and x.strip() for x in principal_scope), "principal_scope must be a string list")
+    _require(len(set(principal_scope)) == len(principal_scope), "principal_scope must not contain duplicates")
+    if original_t1:
+        _require(bool(principal_scope), "original-language T1 adversarial acquisition requires principal_scope inherited from the investigative query")
+    time_scope = query.get("time_scope", {})
+    _require(isinstance(time_scope, dict), "time_scope must be an object")
     provenance = query.get("provenance")
     _require(isinstance(provenance, dict), "adversarial provenance is required")
     _require(provenance.get("produced_by") == query["minister_id"], "adversarial provenance.produced_by must equal minister_id")
     _git_sha(provenance.get("repository_commit"), "adversarial provenance.repository_commit")
     return query
+
+
+def _validate_acquisition(response: Dict[str, Any]) -> None:
+    acquisition = response.get("acquisition")
+    _require(isinstance(acquisition, dict), "Horus adversarial response requires acquisition receipt")
+    _require(acquisition.get("protocol") == ACQUISITION_PROTOCOL, f"acquisition.protocol must be {ACQUISITION_PROTOCOL}")
+    digest = acquisition.get("plan_sha256", "")
+    _require(isinstance(digest, str) and len(digest) == 64 and all(c in "0123456789abcdef" for c in digest), "acquisition.plan_sha256 must be a lowercase sha256")
+    for field in ("principal_profiles", "date_normalizations", "search_attempts", "requirements"):
+        _require(isinstance(acquisition.get(field), list), f"acquisition.{field} must be a list")
+    runtime = acquisition.get("runtime")
+    _require(isinstance(runtime, dict), "acquisition.runtime is required")
+    _require(runtime.get("engine") == CANONICAL_ACQUISITION_ENGINE, "Horus adversarial response was not produced by the canonical acquisition engine")
+    _require(runtime.get("engine_path") == CANONICAL_ACQUISITION_PATH, "Horus adversarial response acquisition engine path is not canonical")
+    _require(runtime.get("mode") in {"LIVE", "FIXTURE"}, "acquisition.runtime.mode must be LIVE or FIXTURE")
 
 
 def validate_adversarial_response(query: Dict[str, Any], response: Dict[str, Any]) -> Dict[str, Any]:
@@ -123,9 +157,11 @@ def validate_adversarial_response(query: Dict[str, Any], response: Dict[str, Any
     _require(response.get("record_type") == RESPONSE_RECORD_TYPE, f"response.record_type must be {RESPONSE_RECORD_TYPE}")
     _require(response.get("query_id") == query["query_id"], "Horus adversarial response query_id does not match the request")
     _require(response.get("requesting_minister") == query["minister_id"], "Horus adversarial response requesting_minister does not match the request")
+    _require(response.get("request_as_received") == query, "Horus adversarial response must preserve the request exactly as received")
     _require(response.get("status") in RESPONSE_STATUSES, "Horus response status is invalid")
     _require(response.get("source_absence_taxonomy") == "HORUS-SOURCE-STATE-1.0", "Horus adversarial response must declare source-absence taxonomy HORUS-SOURCE-STATE-1.0")
     _require(response.get("completeness") == "PENDING_PROBE", "Horus may not self-certify adversarial completeness")
+    _validate_acquisition(response)
 
     searched, used, rejected = response.get("sources_searched"), response.get("sources_used"), response.get("sources_rejected")
     _require(isinstance(searched, list) and isinstance(used, list) and isinstance(rejected, list), "Horus source trails must be lists")
@@ -164,8 +200,8 @@ def validate_adversarial_response(query: Dict[str, Any], response: Dict[str, Any
     return response
 
 
-def required_adversarial_horus_call(provisional: Dict[str, Any], horus_gather: Callable[[Dict[str, Any]], Dict[str, Any]]) -> tuple[Dict[str, Any], Dict[str, Any]]:
-    query = build_adversarial_query(provisional)
+def required_adversarial_horus_call(provisional: Dict[str, Any], horus_gather: Callable[[Dict[str, Any]], Dict[str, Any]], investigative_query: Dict[str, Any] | None = None) -> tuple[Dict[str, Any], Dict[str, Any]]:
+    query = build_adversarial_query(provisional, investigative_query=investigative_query)
     response = horus_gather(json.loads(json.dumps(query)))
     return query, validate_adversarial_response(query, response)
 

@@ -13,6 +13,13 @@ COMMIT = "a" * 40
 HORUS_COMMIT = "b" * 40
 
 
+def investigative_query():
+    return {
+        "principal_scope": ["Ukraine"],
+        "time_scope": {"start": "2026-07-22", "end": "2026-08-08"},
+    }
+
+
 def provisional():
     return {
         "record_type": "minister_provisional_judgment",
@@ -28,6 +35,39 @@ def provisional():
             "original_language_required": False,
         }],
         "provenance": {"produced_by": "xenophon", "repository_commit": COMMIT},
+    }
+
+
+def acquisition(query, result="FOUND"):
+    need = query["information_needed"][0]
+    return {
+        "protocol": "HORUS-ACQUISITION-1.0",
+        "plan_sha256": "c" * 64,
+        "principal_profiles": [],
+        "date_normalizations": [],
+        "search_attempts": [{
+            "attempt_id": "ATT-ADV-1",
+            "information_need": need,
+            "principal_id": "ukraine",
+            "channel_id": "president-gov-ua",
+            "channel_class": "PRIMARY",
+            "search_method": "DIRECT_FIRST_PARTY_SITE_SEARCH",
+            "language": "uk",
+            "canonical_date": "2026-08-08",
+            "local_date": "2026-08-08",
+            "query": "operational command",
+            "url": "https://example.invalid/command",
+            "result": result,
+            "source_ref": "SRC-ADV-1" if result == "FOUND" else None,
+            "detail": None,
+            "attempted_at": "2026-08-08T12:00:00Z",
+        }],
+        "requirements": [],
+        "runtime": {
+            "engine": "HORUS_CANONICAL_ACQUISITION_ENGINE",
+            "engine_path": "runtime/gather.py",
+            "mode": "FIXTURE",
+        },
     }
 
 
@@ -52,6 +92,7 @@ def adversarial_response(query):
         "request_as_received": query,
         "status": "GATHERED",
         "source_absence_taxonomy": "HORUS-SOURCE-STATE-1.0",
+        "acquisition": acquisition(query),
         "sources_searched": [source],
         "sources_used": [source],
         "sources_rejected": [],
@@ -81,57 +122,88 @@ class AdversarialHorusCall(unittest.TestCase):
             validate_provisional_judgment(item)
 
     def test_adversarial_query_is_deterministic(self):
-        one = build_adversarial_query(provisional()); two = build_adversarial_query(provisional())
+        one = build_adversarial_query(provisional(), investigative_query()); two = build_adversarial_query(provisional(), investigative_query())
         self.assertEqual(one, two)
         self.assertTrue(one["query_id"].startswith("MHAQ-"))
         self.assertEqual(one["source_absence_taxonomy"], "HORUS-SOURCE-STATE-1.0")
 
+    def test_adversarial_query_inherits_principal_and_time_scope(self):
+        item = build_adversarial_query(provisional(), investigative_query())
+        self.assertEqual(item["principal_scope"], ["Ukraine"])
+        self.assertEqual(item["time_scope"], {"start": "2026-07-22", "end": "2026-08-08"})
+
+    def test_original_language_adversarial_request_requires_inherited_principal_scope(self):
+        item = provisional()
+        item["propositions"][0]["acceptable_tiers"] = ["T1"]
+        item["propositions"][0]["original_language_required"] = True
+        with self.assertRaises(HorusExchangeError):
+            build_adversarial_query(item)
+        self.assertEqual(build_adversarial_query(item, investigative_query())["principal_scope"], ["Ukraine"])
+
     def test_every_proposition_gets_exactly_one_requirement(self):
-        item = build_adversarial_query(provisional()); item["source_requirements"] = []
+        item = build_adversarial_query(provisional(), investigative_query()); item["source_requirements"] = []
         with self.assertRaises(HorusExchangeError):
             validate_adversarial_query(item)
 
     def test_hard_call_returns_query_and_valid_response(self):
-        query, response = required_adversarial_horus_call(provisional(), lambda q: adversarial_response(q))
+        query, response = required_adversarial_horus_call(provisional(), lambda q: adversarial_response(q), investigative_query())
         self.assertTrue(query["query_id"].startswith("MHAQ-"))
         self.assertEqual(response["status"], "GATHERED")
 
+    def test_adversarial_response_requires_canonical_acquisition(self):
+        query = build_adversarial_query(provisional(), investigative_query()); response = adversarial_response(query)
+        response["acquisition"]["runtime"]["engine"] = "OTHER"
+        with self.assertRaises(HorusExchangeError):
+            validate_adversarial_response(query, response)
+
+    def test_adversarial_response_must_preserve_request(self):
+        query = build_adversarial_query(provisional(), investigative_query()); response = adversarial_response(query)
+        response["request_as_received"] = dict(query); response["request_as_received"]["principal_scope"] = []
+        with self.assertRaises(HorusExchangeError):
+            validate_adversarial_response(query, response)
+
     def test_adversarial_source_use_must_be_disclosed_as_searched(self):
-        query = build_adversarial_query(provisional()); response = adversarial_response(query)
+        query = build_adversarial_query(provisional(), investigative_query()); response = adversarial_response(query)
         response["sources_searched"] = []
         with self.assertRaises(HorusExchangeError):
             validate_adversarial_response(query, response)
 
     def test_horus_cannot_self_certify_adversarial_completeness(self):
-        query = build_adversarial_query(provisional()); response = adversarial_response(query)
+        query = build_adversarial_query(provisional(), investigative_query()); response = adversarial_response(query)
         response["completeness"] = "COMPLETE"
         with self.assertRaises(HorusExchangeError):
             validate_adversarial_response(query, response)
 
     def test_not_gathered_keeps_typed_disconfirmation_gap_visible(self):
-        query = build_adversarial_query(provisional()); response = adversarial_response(query)
+        query = build_adversarial_query(provisional(), investigative_query()); response = adversarial_response(query)
         response["status"] = "NOT_GATHERED"
+        response["acquisition"] = acquisition(query, result="NO_MATCH")
+        response["sources_searched"] = []
         response["sources_used"] = []
         response["records_returned"] = []
         response["unfilled_requests"] = [{
             "information_need": query["information_needed"][0],
-            "reason": "No qualifying contradictory record was found in the searched source.",
+            "reason": "No qualifying contradictory record was found in the executed search.",
             "evidence_state": "SEARCHED_NOT_FOUND",
-            "searched_source_refs": ["SRC-ADV-1"],
+            "searched_source_refs": [],
+            "searched_attempt_refs": ["ATT-ADV-1"],
             "absence_claim": False,
         }]
         self.assertEqual(validate_adversarial_response(query, response)["status"], "NOT_GATHERED")
 
     def test_not_gathered_cannot_confirm_provisional_judgment(self):
-        query = build_adversarial_query(provisional()); response = adversarial_response(query)
+        query = build_adversarial_query(provisional(), investigative_query()); response = adversarial_response(query)
         response["status"] = "NOT_GATHERED"
+        response["acquisition"] = acquisition(query, result="NO_MATCH")
+        response["sources_searched"] = []
         response["sources_used"] = []
         response["records_returned"] = []
         response["unfilled_requests"] = [{
             "information_need": query["information_needed"][0],
             "reason": "No qualifying contradictory record was found.",
             "evidence_state": "SEARCHED_NOT_FOUND",
-            "searched_source_refs": ["SRC-ADV-1"],
+            "searched_source_refs": [],
+            "searched_attempt_refs": ["ATT-ADV-1"],
             "absence_claim": True,
         }]
         with self.assertRaises(HorusExchangeError):

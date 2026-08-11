@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:sanctum:minister-horus-adversarial-query:1.2.0",
+  "$id": "urn:sanctum:minister-horus-adversarial-query:1.1.0",
   "title": "Mandatory Minister to Horus Adversarial Query",
   "type": "object",
   "additionalProperties": false,
@@ -14,8 +14,6 @@
     "information_needed": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
     "source_requirements": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["proposition_id", "requirement", "rationale"], "properties": {"proposition_id": {"type": "string", "pattern": "^P-[A-Z0-9_-]+$"}, "requirement": {"type": "string", "minLength": 1}, "rationale": {"type": "string", "minLength": 1}, "acceptable_tiers": {"type": "array", "items": {"enum": ["T1", "T2", "T3", "T4", "T5"]}, "uniqueItems": true}, "original_language_required": {"type": "boolean"}}}},
     "specific_document_requests": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["document", "why_material"], "properties": {"document": {"type": "string", "minLength": 1}, "why_material": {"type": "string", "minLength": 1}}}, "default": []},
-    "principal_scope": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true, "default": []},
-    "time_scope": {"type": "object", "additionalProperties": false, "properties": {"start": {"type": ["string", "null"], "format": "date"}, "end": {"type": ["string", "null"], "format": "date"}}},
     "reason_for_request": {"type": "string", "minLength": 1},
     "source_selection_rule": {"const": "HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS"},
     "source_absence_taxonomy": {"const": "HORUS-SOURCE-STATE-1.0"},

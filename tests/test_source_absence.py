@@ -7,8 +7,38 @@ def source(ref="SRC-1"):
     return {"source_ref": ref}
 
 
+def acquisition(satisfied=True):
+    return {
+        "protocol": "HORUS-ACQUISITION-1.0",
+        "plan_sha256": "a" * 64,
+        "principal_profiles": [],
+        "date_normalizations": [],
+        "search_attempts": [{
+            "attempt_id": "ATT-1",
+            "information_need": "Need",
+            "result": "NO_MATCH",
+        }],
+        "requirements": [{
+            "information_need": "Need",
+            "principal_id": "example",
+            "target_tier": "T1",
+            "original_language_required": True,
+            "required_steps": [],
+            "completed_steps": [],
+            "minimum_protocol_attempted": satisfied,
+            "minimum_protocol_satisfied": satisfied,
+        }],
+        "runtime": {
+            "engine": "HORUS_CANONICAL_ACQUISITION_ENGINE",
+            "engine_path": "runtime/gather.py",
+            "mode": "FIXTURE",
+        },
+    }
+
+
 def base_response():
     return {
+        "acquisition": acquisition(),
         "sources_searched": [source()],
         "sources_used": [source()],
         "records_returned": [{
@@ -24,6 +54,11 @@ def base_response():
 class SourceAbsenceTaxonomy(unittest.TestCase):
     def test_supported_record_passes(self):
         self.assertEqual(validate_source_states(base_response())["records_returned"][0]["evidence_state"], "SUPPORTED")
+
+    def test_acquisition_receipt_is_required(self):
+        item = base_response(); del item["acquisition"]
+        with self.assertRaises(SourceStateError):
+            validate_source_states(item)
 
     def test_documented_absence_requires_scope_and_basis(self):
         item = base_response()
@@ -49,12 +84,28 @@ class SourceAbsenceTaxonomy(unittest.TestCase):
             "reason": "Not searched",
             "evidence_state": "NOT_SEARCHED",
             "searched_source_refs": ["SRC-1"],
+            "searched_attempt_refs": [],
             "absence_claim": False,
         }]
         with self.assertRaises(SourceStateError):
             validate_source_states(item)
 
-    def test_searched_not_found_requires_search_ref(self):
+    def test_not_searched_may_not_fake_attempt_refs(self):
+        item = base_response()
+        item["records_returned"] = []
+        item["sources_used"] = []
+        item["unfilled_requests"] = [{
+            "information_need": "Need",
+            "reason": "Not searched",
+            "evidence_state": "NOT_SEARCHED",
+            "searched_source_refs": [],
+            "searched_attempt_refs": ["ATT-1"],
+            "absence_claim": False,
+        }]
+        with self.assertRaises(SourceStateError):
+            validate_source_states(item)
+
+    def test_searched_not_found_requires_attempt_ref(self):
         item = base_response()
         item["records_returned"] = []
         item["sources_used"] = []
@@ -63,6 +114,23 @@ class SourceAbsenceTaxonomy(unittest.TestCase):
             "reason": "No qualifying record found",
             "evidence_state": "SEARCHED_NOT_FOUND",
             "searched_source_refs": [],
+            "searched_attempt_refs": [],
+            "absence_claim": False,
+        }]
+        with self.assertRaises(SourceStateError):
+            validate_source_states(item)
+
+    def test_t1_searched_not_found_requires_satisfied_protocol(self):
+        item = base_response()
+        item["acquisition"] = acquisition(satisfied=False)
+        item["records_returned"] = []
+        item["sources_used"] = []
+        item["unfilled_requests"] = [{
+            "information_need": "Need",
+            "reason": "No qualifying record found",
+            "evidence_state": "SEARCHED_NOT_FOUND",
+            "searched_source_refs": [],
+            "searched_attempt_refs": ["ATT-1"],
             "absence_claim": False,
         }]
         with self.assertRaises(SourceStateError):
@@ -76,7 +144,8 @@ class SourceAbsenceTaxonomy(unittest.TestCase):
             "information_need": "Need",
             "reason": "No qualifying record found",
             "evidence_state": "SEARCHED_NOT_FOUND",
-            "searched_source_refs": ["SRC-1"],
+            "searched_source_refs": [],
+            "searched_attempt_refs": ["ATT-1"],
             "absence_claim": True,
         }]
         with self.assertRaises(SourceStateError):
@@ -91,6 +160,7 @@ class SourceAbsenceTaxonomy(unittest.TestCase):
             "reason": "Bad encoding",
             "evidence_state": "DOCUMENTED_ABSENCE",
             "searched_source_refs": ["SRC-1"],
+            "searched_attempt_refs": ["ATT-1"],
             "absence_claim": False,
         }]
         with self.assertRaises(SourceStateError):

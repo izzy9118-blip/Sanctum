@@ -14,6 +14,9 @@ RESPONSE_RECORD_TYPE = "horus_query_response"
 SOURCE_SELECTION_RULE = "HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS"
 RESPONSE_STATUSES = {"GATHERED", "PARTIALLY_GATHERED", "NOT_GATHERED"}
 TIERS = {"T1", "T2", "T3", "T4", "T5"}
+ACQUISITION_PROTOCOL = "HORUS-ACQUISITION-1.0"
+CANONICAL_ACQUISITION_ENGINE = "HORUS_CANONICAL_ACQUISITION_ENGINE"
+CANONICAL_ACQUISITION_PATH = "runtime/gather.py"
 
 class HorusExchangeError(ValueError):
     pass
@@ -52,15 +55,31 @@ def validate_query(query: Dict[str, Any]) -> Dict[str, Any]:
     _require(isinstance(commit, str) and len(commit) == 40 and all(c in "0123456789abcdef" for c in commit), "provenance.repository_commit must be a 40-character lowercase git SHA")
     return query
 
+def _validate_acquisition(response: Dict[str, Any]) -> None:
+    acquisition = response.get("acquisition")
+    _require(isinstance(acquisition, dict), "Horus response requires acquisition receipt")
+    _require(acquisition.get("protocol") == ACQUISITION_PROTOCOL, f"acquisition.protocol must be {ACQUISITION_PROTOCOL}")
+    digest = acquisition.get("plan_sha256", "")
+    _require(isinstance(digest, str) and len(digest) == 64 and all(c in "0123456789abcdef" for c in digest), "acquisition.plan_sha256 must be a lowercase sha256")
+    for field in ("principal_profiles", "date_normalizations", "search_attempts", "requirements"):
+        _require(isinstance(acquisition.get(field), list), f"acquisition.{field} must be a list")
+    runtime = acquisition.get("runtime")
+    _require(isinstance(runtime, dict), "acquisition.runtime is required")
+    _require(runtime.get("engine") == CANONICAL_ACQUISITION_ENGINE, "Horus response was not produced by the canonical acquisition engine")
+    _require(runtime.get("engine_path") == CANONICAL_ACQUISITION_PATH, "Horus response acquisition engine path is not canonical")
+    _require(runtime.get("mode") in {"LIVE", "FIXTURE"}, "acquisition.runtime.mode must be LIVE or FIXTURE")
+
 def validate_response(query: Dict[str, Any], response: Dict[str, Any]) -> Dict[str, Any]:
     validate_query(query)
     _require(isinstance(response, dict), "Horus response must be an object")
     _require(response.get("record_type") == RESPONSE_RECORD_TYPE, f"response.record_type must be {RESPONSE_RECORD_TYPE}")
     _require(response.get("query_id") == query["query_id"], "Horus response query_id does not match the minister request")
     _require(response.get("requesting_minister") == query["minister_id"], "Horus response requesting_minister does not match the request")
+    _require(response.get("request_as_received") == query, "Horus response must preserve the minister request exactly as received")
     _require(response.get("status") in RESPONSE_STATUSES, "Horus response status is invalid")
     _require(response.get("source_absence_taxonomy") == "HORUS-SOURCE-STATE-1.0", "Horus response must declare source-absence taxonomy HORUS-SOURCE-STATE-1.0")
     _require(response.get("completeness") == "PENDING_PROBE", "Horus may not self-certify completeness")
+    _validate_acquisition(response)
 
     searched, used, rejected = (response.get("sources_searched"), response.get("sources_used"), response.get("sources_rejected"))
     _require(isinstance(searched, list), "sources_searched must be a list")

@@ -13,10 +13,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: estate/Sanctum
-      - name: Check out Horus canonical main
+      - name: Check out Horus at canonical acquisition pin
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Horus
+          ref: ec82d22f1cb6d7d944b8347f8c7516b1fd38affc
           path: estate/Horus
       - name: Check out Strauss at registry pin
         uses: actions/checkout@v4
@@ -40,9 +41,27 @@ jobs:
           cat > estate/config.yaml <<EOF
           estate: $GITHUB_WORKSPACE/estate
           EOF
-      - name: Compile environment runtime
+      - name: Compile environment and Horus boundary runtime
         working-directory: estate/Sanctum
-        run: python -m py_compile constitutional_environment.py
+        run: |
+          python -m py_compile constitutional_environment.py sovereign_round.py minister_horus.py adversarial_horus.py source_absence.py
+          python -m py_compile ../Horus/runtime/calendars.py ../Horus/runtime/source_registry.py ../Horus/runtime/acquisition.py ../Horus/runtime/gather.py
+      - name: Verify exact Horus acquisition pin and protocol
+        working-directory: estate/Sanctum
+        run: |
+          python - <<'PY'
+          import subprocess, yaml
+          from pathlib import Path
+          horus = Path('../Horus').resolve()
+          head = subprocess.run(['git', '-C', str(horus), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip()
+          assert head == 'ec82d22f1cb6d7d944b8347f8c7516b1fd38affc'
+          manifest = yaml.safe_load((horus / 'manifest.yaml').read_text(encoding='utf-8'))
+          assert manifest['query_contract']['response_schema_version'] == '1.3.0'
+          assert manifest['acquisition_contract']['protocol'] == 'HORUS-ACQUISITION-1.0'
+          assert manifest['acquisition_contract']['canonical_engine'] == 'runtime/gather.py'
+          assert manifest['charter_amendments'][-1]['id'] == 'HORUS-AMD-005'
+          assert manifest['charter_amendments'][-1]['status'] == 'RATIFIED_BY_OWNER'
+          PY
       - name: Parse constitutional environment contracts
         working-directory: estate/Sanctum
         run: |
@@ -98,6 +117,6 @@ jobs:
           else:
               raise SystemExit('standard hash tampering was not rejected')
           PY
-      - name: Re-run current synthesis and Secretary safeguards
+      - name: Re-run current Horus, synthesis and Secretary safeguards
         working-directory: estate/Sanctum
-        run: python -m pytest -q tests/test_proposition_matrix.py tests/test_ministerial_silence.py tests/test_secretary_audit.py
+        run: python -m pytest -q tests/test_minister_horus.py tests/test_adversarial_horus.py tests/test_source_absence.py tests/test_canonical_horus_runtime.py tests/test_proposition_matrix.py tests/test_ministerial_silence.py tests/test_secretary_audit.py
