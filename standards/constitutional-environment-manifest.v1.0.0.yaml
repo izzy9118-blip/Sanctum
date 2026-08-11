@@ -1,0 +1,57 @@
+---
+record_type: sanctum_constitutional_environment_manifest_standard
+id: CONSTITUTIONAL-ENVIRONMENT-001
+version: 1.0.0
+status: RATIFIED_BY_OWNER
+ratification:
+  date: 2026-08-08
+  authority: REPOSITORY_OWNER_DIRECTIVE
+  directive: "Let’s ratify everything"
+  record: governance/ratifications/2026-08-08-forward-standards.yaml
+date: 2026-08-08
+purpose: >-
+  Bind every forward Assembly inquiry to the exact constitutional and repository
+  environment under which it was executed, so the inquiry can later be reconstructed
+  without relying on floating branches, mutable version labels, or memory.
+required_bindings:
+  sanctum:
+    - repository_commit
+    - assembly_spec_path
+    - assembly_spec_sha256
+    - registry_path
+    - registry_version
+    - registry_sha256
+    - final_judgment_contract_path
+    - final_judgment_contract_sha256
+    - proposition_matrix_standard_path
+    - proposition_matrix_standard_sha256
+    - ministerial_silence_standard_path
+    - ministerial_silence_standard_sha256
+    - source_absence_standard_path
+    - source_absence_standard_sha256
+  horus:
+    - repository_commit
+    - response_contract_path
+    - response_contract_sha256
+  ministers:
+    - minister_id
+    - repository
+    - pinned_commit
+    - manifest_path
+    - manifest_sha256
+  runtime:
+    - python_version
+    - platform
+    - manifest_builder_sha256
+hard_rules:
+  - Every established minister in the live registry must appear exactly once.
+  - A checked-out sovereign minister repository must match the registry pinned_commit.
+  - The Horus repository commit must be recorded from the checked-out estate.
+  - Every governing file is bound by path and SHA-256, not by version label alone.
+  - The Sanctum commit is recorded from the checked-out repository and may not be replaced by a branch name.
+  - A manifest with a missing required repository, file, hash, or pin mismatch fails closed.
+  - Historical manifests are immutable records of the environment that actually governed that inquiry.
+  - Manifest validation certifies identity and reproducibility only; it never certifies truth or completeness.
+output:
+  path: inquiries/<inquiry-id>/constitutional-environment.json
+  certification: NONE_SELF_CERTIFICATION_PROHIBITED
