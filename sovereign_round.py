@@ -15,6 +15,12 @@ A direct one-shot reasoned call, a run that substitutes an arbitrary Horus comma
 or a run that forms a provisional judgment but skips its adversarial test is
 non-conforming under ASSEMBLY-SPEC-001 v1.3.0. This runner does not gather for
 Horus and does not judge for the minister.
+
+Since SECRETARY-CHARTER-001 the sequence is not merely described here: the round
+opens the Secretary's pre-run gate before the first call, takes a stage receipt at
+every boundary, checks the minister's formed query against the frozen roster, and
+submits the finished dispatch to the post-run audit. A dispatch that fails is
+marked NON_CONFORMING_VOID and never reaches reports/.
 """
 from __future__ import annotations
 
@@ -28,6 +34,8 @@ import sys
 from pathlib import Path
 
 import harness
+import secretary_audit
+import secretary_gate
 from adversarial_horus import (
     adversarial_exchange_digest,
     required_adversarial_horus_call,
@@ -48,6 +56,10 @@ PROVISIONAL_CONTRACT_PATH = "contracts/provisional-judgment.schema.json"
 ADVERSARIAL_QUERY_CONTRACT_PATH = "contracts/minister-horus-adversarial-query.schema.json"
 CANONICAL_HORUS_RUNTIME = "runtime/gather.py"
 ACQUISITION_PROTOCOL = "HORUS-ACQUISITION-1.0"
+
+# The sequence this runner declares to the Secretary before it calls anything. The
+# genealogical wrapper appends its own stage the same way it swaps the spec path.
+DECLARED_SEQUENCE = list(secretary_gate.REQUIRED_SEQUENCE)
 
 
 class RoundError(RuntimeError):
@@ -162,8 +174,41 @@ def _provisional_prompt(common_context: str, query: dict, response: dict,
     )
 
 
+def _audit_marker_instructions(checklist: dict) -> str:
+    """The seam between the voices, stated as a requirement the dispatch must carry."""
+    roster = []
+    for entry in checklist["roster"]:
+        line = (f"  - {entry['name']} [{entry['principal_id']}] — type {entry['type']}, language "
+                f"{entry['language']}, flag on the frozen board: {entry['provenance_flag']}")
+        if entry["roster_state"] == "ABSENT_DECLARED":
+            line += f" (ABSENT, declared: {entry.get('absence_reason', '')})"
+        roster.append(line)
+    return (
+        "=" * 72
+        + "\nREQUIRED DISPATCH MARKERS — SECRETARY-CHARTER-001\n"
+        + "=" * 72
+        + "\n\nThe Secretary audits this dispatch on procedure and voids it if the markers are "
+          "absent. It reads no sentence for its merit.\n\n"
+          "For EVERY principal on the frozen roster below, before your judgment, in exactly "
+          "this form:\n\n"
+          "    ### POSITION — <name> [<principal-id>]\n"
+          "    PROVENANCE: <HEARD_IN_OWN_WORDS|FILLED_FROM_ELSEWHERE|NOT_GATHERED> — <language>\n"
+          "    SILENCE: <MINISTERIAL-SILENCE-001 state>   (required when the flag is NOT_GATHERED)\n\n"
+          "The position is that principal's, in that principal's own voice and interest. You do "
+          "not write a party's position as a summary of the situation, and you never merge two "
+          "principals into one. You may not raise a principal's flag above the flag the frozen "
+          "board records for that principal.\n\n"
+          "Then, AFTER every position block, your own judgment, marked:\n\n"
+        + f"    ## MINISTERIAL JUDGMENT — {checklist['minister_id']}\n\n"
+        + "The judgment is yours and is labelled as yours. It stands after the parties, not "
+          "woven through them.\n\nTHE FROZEN ROSTER:\n"
+        + "\n".join(roster)
+    )
+
+
 def _final_prompt(common_context: str, investigative_query: dict, investigative_response: dict,
-                  provisional: dict, adversarial_query: dict, adversarial_response: dict) -> str:
+                  provisional: dict, adversarial_query: dict, adversarial_response: dict,
+                  checklist: dict) -> str:
     record = json.dumps(
         {
             "investigative_exchange": {
@@ -197,7 +242,8 @@ def _final_prompt(common_context: str, investigative_query: dict, investigative_
           "State whether each provisional proposition was retained, qualified, withdrawn, "
           "or left unresolved, and explain the evidentiary reason. Every material unfilled "
           "Horus request remains a limitation. NOT_GATHERED never means that the thing does "
-          "not exist. Do not conceal a change from provisional to final judgment."
+          "not exist. Do not conceal a change from provisional to final judgment.\n\n"
+        + _audit_marker_instructions(checklist)
     )
 
 
@@ -260,14 +306,65 @@ def run(args) -> int:
     common_context = ctx.text()
     inquiry_id = args.inquiry_id or f"{args.board}-{stamp}"
 
+    print("\nSECRETARY PRE-RUN GATE")
+    board_path = horus / "boards" / f"{args.board}.yaml"
+    report_dir = hub / "reports" / args.board
+    void_dir = hub / "voided" / args.board
+    checklist = secretary_gate.checklist_from_board(
+        board=board,
+        parity_record=parity_record,
+        inquiry_id=inquiry_id,
+        minister_id=args.minister,
+        room="harness",
+        board_manifest_path=str(board_path.relative_to(estate)),
+        board_manifest_sha256=hashlib.sha256(board_path.read_bytes()).hexdigest(),
+        sequence=DECLARED_SEQUENCE,
+    )
+    try:
+        pass_token = secretary_gate.open_gate(checklist)
+    except secretary_gate.SecretaryGateError as exc:
+        secretary_gate.write_json(
+            void_dir / f"{args.minister}-{stamp}.void.json",
+            secretary_gate.void_record(
+                inquiry_id=inquiry_id, board=args.board, minister_id=args.minister, room="harness",
+                stage="pre_run_gate", reason=str(exc)),
+        )
+        raise RoundError(f"Secretary pre-run gate refused this run: {exc}") from exc
+    ledger = secretary_gate.StageLedger(pass_token)
+    checklist_path = secretary_gate.write_json(report_dir / f"{args.minister}-{stamp}.checklist.json", checklist)
+    token_path = secretary_gate.write_json(report_dir / f"{args.minister}-{stamp}.pass-token.json", pass_token)
+    print(f"  roster enumerated before the first query: {len(checklist['roster'])} principals")
+    print(f"  sequence declared: {' -> '.join(checklist['sequence'])}")
+    print(f"  {checklist_path}")
+    print(f"  {token_path}")
+
     call_config = dict(config["model"])
     if args.provider:
         call_config["provider"] = args.provider
 
     print("\nCALL 1 — MINISTER INVESTIGATIVE QUERY")
-    first = harness.call(call_config, _query_prompt(common_context, inquiry_id, args.minister, minister_commit))
+    first = harness.call(
+        call_config,
+        _query_prompt(common_context, inquiry_id, args.minister, minister_commit),
+        pass_token=pass_token,
+        stage_receipt=ledger.enter("investigative_query"),
+    )
     investigative_query = _json_object(first["text"], "minister query call")
     validate_query(investigative_query)
+    try:
+        coverage = secretary_gate.require_roster_coverage(
+            checklist, investigative_query.get("principal_scope") or [])
+    except secretary_gate.SecretaryGateError as exc:
+        secretary_gate.write_json(
+            void_dir / f"{args.minister}-{stamp}.void.json",
+            secretary_gate.void_record(
+                inquiry_id=inquiry_id, board=args.board, minister_id=args.minister, room="harness",
+                stage="investigative_query", reason=str(exc),
+                checklist_sha256=pass_token["checklist_sha256"]),
+        )
+        raise RoundError(f"the formed query does not follow the frozen roster: {exc}") from exc
+    print(f"  roster coverage: {len(coverage['covered'])} queried, "
+          f"{len(coverage['declared_absent'])} declared absent")
 
     print("\nCALL 2 — HORUS INVESTIGATIVE GATHER")
     try:
@@ -290,6 +387,8 @@ def run(args) -> int:
             args.minister,
             minister_commit,
         ),
+        pass_token=pass_token,
+        stage_receipt=ledger.enter("provisional_judgment"),
     )
     provisional = _json_object(provisional_call["text"], "minister provisional judgment call")
     validate_provisional_judgment(provisional)
@@ -299,6 +398,7 @@ def run(args) -> int:
         raise RoundError("provisional judgment repository commit does not match the pinned minister")
 
     print("\nCALL 4 — HORUS ADVERSARIAL GATHER")
+    ledger.enter("adversarial_pass")
     try:
         adversarial_query, adversarial_response = required_adversarial_horus_call(
             provisional,
@@ -317,19 +417,54 @@ def run(args) -> int:
         provisional,
         adversarial_query,
         adversarial_response,
+        checklist,
     )
-    final = harness.call(call_config, final_context)
+    final = harness.call(
+        call_config,
+        final_context,
+        pass_token=pass_token,
+        stage_receipt=ledger.enter("final_judgment"),
+    )
+    dispatch_text = final["text"].rstrip() + "\n"
+
+    print("\nSECRETARY POST-RUN AUDIT")
+    dispatch_audit = secretary_audit.audit_dispatch(checklist, dispatch_text)
+    for key, value in sorted(dispatch_audit["checks"].items()):
+        print(f"  {key}: {value}")
+    if dispatch_audit["failures"]:
+        # The Secretary voids. It does not edit the dispatch, and it does not grade a
+        # word of it. The run is preserved as history and goes no further.
+        preserved = void_dir / f"{args.minister}-{stamp}.dispatch.md"
+        preserved.parent.mkdir(parents=True, exist_ok=True)
+        preserved.write_text(dispatch_text, encoding="utf-8")
+        secretary_gate.write_json(void_dir / f"{args.minister}-{stamp}.dispatch-audit.json", dispatch_audit)
+        void = secretary_gate.void_record(
+            inquiry_id=inquiry_id, board=args.board, minister_id=args.minister, room="harness",
+            stage="post_run_audit", reason="; ".join(dispatch_audit["failures"]),
+            checklist_sha256=pass_token["checklist_sha256"], preserved_at=str(preserved))
+        secretary_gate.write_json(void_dir / f"{args.minister}-{stamp}.void.json", void)
+        print(f"\n  {secretary_gate.VOID_STATUS}")
+        for failure in dispatch_audit["failures"]:
+            print(f"    - {failure}")
+        for counterfeit in dispatch_audit["counterfeits_triggered"]:
+            print(f"    counterfeit: {counterfeit}")
+        print(f"  preserved as history: {preserved}")
+        print("  This run may not enter reports/, the ledger, or synthesis. Escalation is to the owner only.")
+        return 6
 
     print("\nWRITE")
     exchange_root = hub / "exchanges"
     investigative_paths = write_exchange(exchange_root, investigative_query, investigative_response)
     adversarial_paths = write_adversarial_exchange(exchange_root, adversarial_query, adversarial_response)
-    report_dir = hub / "reports" / args.board
     report_dir.mkdir(parents=True, exist_ok=True)
     report_path = report_dir / f"{args.minister}-{stamp}.md"
     manifest_path = report_dir / f"{args.minister}-{stamp}.round.json"
     provisional_path = report_dir / f"{args.minister}-{stamp}.provisional.json"
-    report_path.write_text(final["text"].rstrip() + "\n", encoding="utf-8")
+    report_path.write_text(dispatch_text, encoding="utf-8")
+    # The audited dispatch is kept as its own artifact: a later stage may re-render the
+    # readable report from the structured package, and the Secretary re-audits from disk.
+    dispatch_path = report_dir / f"{args.minister}-{stamp}.dispatch.md"
+    dispatch_path.write_text(dispatch_text, encoding="utf-8")
     provisional_path.write_text(json.dumps(provisional, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     round_record = {
@@ -342,6 +477,19 @@ def run(args) -> int:
         "horus_repository_commit": horus_commit,
         "horus_runtime": CANONICAL_HORUS_RUNTIME if not args.horus_command else "TEST_OVERRIDE",
         "horus_acquisition_protocol": ACQUISITION_PROTOCOL,
+        "secretary_gate": {
+            "gate_standard": secretary_gate.GATE_STANDARD,
+            "charter": secretary_gate.CHARTER_PATH,
+            "checklist_path": str(checklist_path),
+            "checklist_sha256": pass_token["checklist_sha256"],
+            "token_path": str(token_path),
+            "token_sha256": pass_token["token_sha256"],
+            "stages_completed": ledger.stages_completed(),
+            "roster_coverage": coverage,
+            "dispatch_path": str(dispatch_path),
+            "dispatch_sha256": hashlib.sha256(dispatch_text.encode("utf-8")).hexdigest(),
+            "dispatch_audit": dispatch_audit,
+        },
         "common_context_sha256": hashlib.sha256(common_context.encode("utf-8")).hexdigest(),
         "final_context_sha256": hashlib.sha256(final_context.encode("utf-8")).hexdigest(),
         "parity": {
@@ -396,7 +544,8 @@ def run(args) -> int:
     print(f"  {manifest_path}")
     print(f"  investigative exchange sha256: {round_record['horus_exchanges'][0]['exchange_sha256']}")
     print(f"  adversarial exchange sha256: {round_record['horus_exchanges'][1]['exchange_sha256']}")
-    print("\nNothing was certified. Final judgment followed a recorded adversarial evidence call.")
+    print("\nNothing was certified. Final judgment followed a recorded adversarial evidence call,")
+    print("and the Secretary's gate and audit checked the procedure, never the substance.")
     return 0
 
 
@@ -428,6 +577,10 @@ def main(argv=None) -> int:
     except (RoundError, HorusExchangeError) as exc:
         print(f"ROUND ABORTED: {exc}", file=sys.stderr)
         return 3
+    except (secretary_gate.SecretaryGateError, secretary_audit.SecretaryAuditError) as exc:
+        print(f"ROUND ABORTED BY THE SECRETARY: {exc}", file=sys.stderr)
+        print("Procedure only. Nothing about the substance of this run was judged.", file=sys.stderr)
+        return 7
 
 
 if __name__ == "__main__":
