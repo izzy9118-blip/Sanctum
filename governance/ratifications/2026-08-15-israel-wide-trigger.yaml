@@ -1,0 +1,23 @@
+---
+record_type: owner_ratification
+id: RATIFICATION-2026-08-15-ISRAEL-WIDE-TRIGGER
+date: 2026-08-15
+authority: REPOSITORY_OWNER_DIRECTIVE
+directive: >-
+  Do not limit the safeguard to Gaza. Anytime Israel is involved, assume the bias risk exists
+  and activate the Israel-specific information-environment controls.
+scope:
+  - id: ISRAEL-WIDE-TRIGGER-001
+    version: 1.0.0
+    path: standards/israel-wide-trigger.yaml
+  - id: ISRAEL-AI-INFLUENCE-RISK-001
+    path: standards/israel-ai-influence-risk.yaml
+finding: >-
+  The Israel-specific defensive posture is universal across Israel-related inquiries. Gaza is
+  one documented application and evidentiary trigger, not the jurisdictional boundary.
+effect: >-
+  Whenever Israel is materially involved in an Assembly inquiry, the Israel information-
+  environment safeguards activate automatically without requiring a Gaza nexus or fresh proof
+  that a particular inquiry has already been contaminated. Proposition-level truth and causal
+  attribution remain evidence-bound.
+self_certification: PROHIBITED
