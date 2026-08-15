@@ -18,6 +18,7 @@ import sys
 from pathlib import Path
 
 import harness
+import secretary_gate
 import sovereign_round
 from evidence_genealogy import GenealogyError, render_report, validate_genealogy_package, write_genealogy_record
 from minister_ground_files import validate_minister_ground_files
@@ -111,13 +112,20 @@ def _genealogy_prompt(draft: str, round_record: dict, exchanges: list[dict],
 
 
 def _run_predecessor(args) -> int:
-    """Execute v1.3 only as an internal stage of the governing v1.4 runner."""
-    previous = sovereign_round.SPEC_PATH
+    """Execute v1.3 only as an internal stage of the governing v1.4 runner.
+
+    The declared sequence is swapped the same way the spec path is: this wrapper
+    makes a sixth call, so the Secretary is told about it before the first one.
+    """
+    previous_spec = sovereign_round.SPEC_PATH
+    previous_sequence = sovereign_round.DECLARED_SEQUENCE
     sovereign_round.SPEC_PATH = PREDECESSOR_SPEC_PATH
+    sovereign_round.DECLARED_SEQUENCE = list(secretary_gate.REQUIRED_SEQUENCE) + ["genealogy_finalization"]
     try:
         return sovereign_round.run(args)
     finally:
-        sovereign_round.SPEC_PATH = previous
+        sovereign_round.SPEC_PATH = previous_spec
+        sovereign_round.DECLARED_SEQUENCE = previous_sequence
 
 
 def run(args) -> int:
@@ -151,6 +159,15 @@ def run(args) -> int:
     if args.provider:
         call_config["provider"] = args.provider
 
+    gate_binding = round_record.get("secretary_gate") or {}
+    try:
+        pass_token = _load_json(gate_binding["token_path"])
+        ledger = secretary_gate.StageLedger.resume(pass_token, gate_binding.get("stages_completed") or [])
+        stage_receipt = ledger.enter("genealogy_finalization")
+    except (KeyError, OSError, secretary_gate.SecretaryGateError) as exc:
+        raise GenealogicalRoundError(
+            f"the genealogy call has no Secretary stage receipt to make it under: {exc}") from exc
+
     print("\nCALL 6 — FINAL PROPOSITION GENEALOGY")
     final_call = harness.call(
         call_config,
@@ -163,6 +180,8 @@ def run(args) -> int:
             repository_name,
             repository_commit,
         ),
+        pass_token=pass_token,
+        stage_receipt=stage_receipt,
     )
     package = _json_object(final_call["text"], "final genealogy call")
     if package.get("inquiry_id") != inquiry_id or package.get("minister_id") != args.minister:
@@ -200,6 +219,7 @@ def run(args) -> int:
         "minister_repository_files_resolved": True,
     }
     round_record["model"]["genealogy_model_returned"] = final_call.get("model")
+    round_record["secretary_gate"]["stages_completed"] = ledger.stages_completed()
     round_record["outputs"]["final_judgment_package"] = str(package_path)
     round_record["outputs"]["proposition_evidence_genealogy"] = str(genealogy_path)
     round_record["certification"] = "NONE_SELF_CERTIFICATION_PROHIBITED"

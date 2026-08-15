@@ -34,6 +34,16 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+try:
+    import secretary_gate
+except ImportError:  # the gate travels with the harness, wherever the harness is loaded from
+    import importlib.util as _importlib_util
+
+    _gate_spec = _importlib_util.spec_from_file_location(
+        "secretary_gate", Path(__file__).resolve().parent / "secretary_gate.py")
+    secretary_gate = _importlib_util.module_from_spec(_gate_spec)
+    _gate_spec.loader.exec_module(secretary_gate)
+
 SPEC_PATH = "standards/assembly-spec.yaml"
 TIERS = ("T1", "T2", "T3", "T4", "T5")
 GATE_TIERS = ("T1", "T2", "T4")
@@ -525,7 +535,23 @@ def assemble(estate: Path, spec: dict, house: str, minister: str, board: dict,
 # CALL — the endpoint is a config line
 # --------------------------------------------------------------------------
 
-def call(config: dict, context: str):
+def call(config: dict, context: str, *, pass_token=None, stage_receipt=None):
+    """CALL an endpoint. Refused without the Secretary's pass token and stage receipt.
+
+    The gate is not advice to the caller. A run that cannot show which declared
+    stage this call is, and that the stages before it were performed, does not
+    reach an endpoint at all — under SECRETARY-GATE-001 and the charter at
+    offices/secretary/charter.md. The refusal is procedural: nothing here reads
+    the context or grades what the call would have said.
+    """
+    if pass_token is None or stage_receipt is None:
+        raise secretary_gate.SecretaryGateError(
+            "CALL REFUSED: no Secretary pass token and stage receipt. No ministerial run — harness, "
+            "agent, or chat — is lawful until the pre-run checklist is satisfied and recorded "
+            f"({secretary_gate.CHARTER_PATH})."
+        )
+    secretary_gate.verify_stage_receipt(pass_token, stage_receipt)
+
     provider = config["provider"]
     if provider == "stub":
         return {
@@ -676,13 +702,31 @@ def run(args, config):
             print("  context written to %s" % args.emit_context)
         return 0
 
+    print("\nSECRETARY PRE-RUN GATE")
+    # This path makes one call and arrives at judgment. It declares that truthfully,
+    # and the Secretary refuses it: the refusal belongs to the office, not to a
+    # hand-written check inside the caller.
+    one_shot = secretary_gate.one_shot_checklist(
+        board=args.board, board_type=board.get("board_type", "unspecified"),
+        minister_id=args.minister, inquiry_id="%s-%s" % (args.board, stamp), room="harness")
+    try:
+        pass_token = secretary_gate.open_gate(one_shot)
+        stage_receipt = secretary_gate.StageLedger(pass_token).enter("final_judgment")
+    except secretary_gate.SecretaryGateError as exc:
+        print("  CALL REFUSED — %s" % exc)
+        print("  A one-shot reasoned dispatch is NON-CONFORMING under "
+              "%s. The parity manifest was written; nothing was called." % secretary_gate.CHARTER_PATH)
+        print("  Run the declared sequence instead:")
+        print("    python3 sovereign_round.py --board %s --minister %s" % (args.board, args.minister))
+        return 4
+
     print("\nCALL")
     call_config = dict(config["model"])
     if args.provider:
         call_config["provider"] = args.provider
     print("  provider: %s   model: %s" % (call_config["provider"], call_config.get("model", "-")))
     started = dt.datetime.now(dt.timezone.utc)
-    answer = call(call_config, context)
+    answer = call(call_config, context, pass_token=pass_token, stage_receipt=stage_receipt)
     finished = dt.datetime.now(dt.timezone.utc)
     print("  returned %d bytes in %.1fs" % (len(answer["text"].encode()),
                                             (finished - started).total_seconds()))
