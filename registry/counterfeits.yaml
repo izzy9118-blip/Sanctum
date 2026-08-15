@@ -1,0 +1,88 @@
+record_type: sanctum_counterfeit_registry
+id: REG-COUNTERFEITS-000000001
+version: 1.0.0
+status: LIVING
+authority: offices/secretary/charter.md, power 2 (post-run audit)
+completeness: PENDING_PROBE
+
+principle: >-
+  A counterfeit is entered when a run produces it, not when it is imagined.
+  Entries are never deleted; the registry grows by failed run. A registered
+  counterfeit carries its cure, and where the cure is machine-checkable it
+  carries the check that performs it. The registry names failure modes of the
+  procedure. It grades no judgment and certifies nothing.
+
+counterfeits:
+  - id: FRAME_CAPTURE_VIA_SUBJECT_SELF_DESCRIPTION
+    name: FRAME CAPTURE VIA SUBJECT SELF-DESCRIPTION
+    entered: "2026-08-11"
+    entered_by: owner ruling on the Israeli-polis proving run
+    record: memory_sanctum/2026-08-11-israeli-polis-procedure-failures.md
+    what_it_is: >-
+      The subject's own account of its situation is taken as the frame of the
+      inquiry rather than as one party's position. The account then sets the
+      boundary of the board, and a principal it does not mention never enters
+      the gathering query at all. The failure is upstream of judgment: the
+      missing principal was not weighed and found less important, and was not
+      declared absent with a reason. He was never a term in the question.
+    the_tell: >-
+      The roster cannot be shown to have been written before the first query,
+      and no principal is recorded as declared-absent. A board whose principals
+      are exactly the ones the subject mentions is a board the subject drew.
+    why_it_survives: >-
+      The strongest self-description is the one that reads least like a
+      position. Nothing in it announces itself as a claim, so the reader's
+      guard, which is trained on the language of advocacy, never rises.
+    cure: >-
+      ENUMERATION BEFORE QUERY. The full roster of the board's principals is
+      written before the first gathering query is formed — for a polity board
+      including the resident publics and the populations under its control —
+      and any absence is declared under the principal's own name with a reason.
+      The query plan is then made to the whole roster, not to a thesis.
+    enforced_by:
+      standard: SECRETARY-GATE-001
+      gate: secretary_gate.validate_checklist, secretary_gate.require_roster_coverage
+      audit: secretary_audit.audit_dispatch, counterfeit scan
+      contract: contracts/secretary-checklist.schema.json
+
+  - id: CONDENSED_VOICES_ONE_NARRATOR
+    name: CONDENSED VOICES — ONE NARRATOR
+    entered: "2026-08-11"
+    entered_by: owner ruling on the Israeli-polis proving run
+    record: memory_sanctum/2026-08-11-israeli-polis-procedure-failures.md
+    relation: >-
+      The delivery mechanism of FRAME_CAPTURE_VIA_SUBJECT_SELF_DESCRIPTION on
+      the same run, and a counterfeit in its own right.
+    what_it_is: >-
+      The parties and the synthesis are fused into a single narrating voice.
+      Positions are not attributed, and the President writes what a party is
+      taken to hold.
+    the_tell: >-
+      Fewer distinct attributed positions than there are principals on the
+      frozen roster; a synthesis that states a party's view in its own voice.
+    why_it_survives: >-
+      A dispatch with a position block per principal has a shape that shows an
+      empty chair. A single narrating voice has no chairs, so it reads as
+      complete at every length and an omission inside it is invisible.
+    cure: >-
+      VOICES HELD DISTINCT. One attributed position block per principal, with
+      the provenance flag named and ministerial silence typed, and the
+      minister's own judgment labelled as his and placed after the parties.
+    enforced_by:
+      standard: SECRETARY-CHARTER-001
+      audit: secretary_audit.audit_dispatch
+      markers: offices/secretary/charter.md, power 2
+
+federation:
+  - house: Talleyrand
+    registry: counterfeits/registry.md
+    proposed_entry: FRAME CAPTURE VIA SUBJECT SELF-DESCRIPTION
+    proposal: federation/proposals/talleyrand-counterfeit-frame-capture.md
+    status: PROPOSED_PENDING_OWNER_RATIFICATION
+    note: >-
+      Proposed to the Talleyrand house, whose counterfeit registry is a living
+      keel principle and is ratified there, not here. Sanctum proposes; it does
+      not write into another house's registry, and this entry has no force in
+      that house until the owner ratifies it there.
+
+certification: NONE_SELF_CERTIFICATION_PROHIBITED
