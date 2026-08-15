@@ -1,0 +1,36 @@
+---
+record_type: owner_ratification
+id: RATIFICATION-2026-08-15-CONTESTED-INFORMATION-ENVIRONMENT
+date: 2026-08-15
+authority: REPOSITORY_OWNER_DIRECTIVE
+directive: >-
+  My experience has verified its success. This is one of dozens of instances I have
+  come across this issue. This is a foundational finding for the Sanctum as a whole.
+
+scope:
+  - id: CONTESTED-INFORMATION-ENVIRONMENT-001
+    version: 1.0.0
+    path: standards/contested-information-environment.yaml
+
+finding_class: FOUNDATIONAL_OPERATIONAL_FINDING
+
+ratified_effect: >-
+  Sanctum shall treat the public information environment, including the web and
+  AI-facing retrieval/training environment, as potentially contested and deliberately
+  engineered. Search prevalence, repeated formulations, multiple URLs, source counts,
+  and AI-generated consensus do not establish independent corroboration. Provenance,
+  genealogy, direct documentary ground, and source independence must be tested before
+  evidentiary weight is assigned.
+
+owner_observation_boundary: >-
+  The owner's repeated direct experience establishes the need for this defensive
+  constitutional rule within Sanctum. It does not replace case-specific documentary
+  proof when Sanctum attributes a particular answer, article, source network, or
+  political effect to a named influence campaign.
+
+preservation:
+  - Existing historical inquiry artifacts are not silently rewritten.
+  - Existing source judgments remain governed by the standards under which they were produced unless explicitly re-audited.
+  - The standard applies forward across Sanctum, Horus, ministers, President, Secretary, briefing construction, and evidence genealogy.
+
+self_certification: PROHIBITED
