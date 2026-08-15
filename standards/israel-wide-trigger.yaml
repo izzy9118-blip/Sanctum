@@ -1,0 +1,51 @@
+---
+record_type: sanctum_runtime_trigger
+id: ISRAEL-WIDE-TRIGGER-001
+version: 1.0.0
+status: RATIFIED_BY_OWNER
+ratification:
+  date: 2026-08-15
+  authority: REPOSITORY_OWNER_DIRECTIVE
+  directive: >-
+    Do not limit the Israel information-environment safeguard to Gaza. Whenever Israel is
+    materially involved in an inquiry, activate the safeguard from the outset.
+  record: governance/ratifications/2026-08-15-israel-wide-trigger.yaml
+invokes:
+  - standards/israel-ai-influence-risk.yaml
+  - standards/contested-information-environment.yaml
+
+rule: >-
+  ANY SANCTUM INQUIRY IN WHICH ISRAEL IS MATERIALLY INVOLVED MUST TREAT MODEL-DEFAULT,
+  SEARCH-RANKED, WEB-PREVALENT, AND SYNTHESIZED FRAMING AS PRESUMPTIVELY NON-NEUTRAL FOR
+  EVIDENTIARY PURPOSES AND MUST AUTOMATICALLY APPLY THE ISRAEL-SPECIFIC PROVENANCE,
+  SOURCE-GENEALOGY, PRIMARY-GROUND, AND FRAMING-DECOMPOSITION CONTROLS.
+
+material_involvement_includes:
+  - Israel as a state, actor, subject, ally, adversary, beneficiary, target, or causal factor
+  - Israeli government, military, intelligence, diplomatic, legal, economic, lobbying, cultural, or information activity
+  - Israeli officials, ministers, parties, agencies, armed forces, or state-linked institutions
+  - Israel-Palestine, Gaza, West Bank, Lebanon, Syria, Iran, normalization, occupation, settlements, displacement, aid, security, war, diplomacy, or regional policy
+  - foreign policy, aid, weapons, lobbying, intelligence cooperation, sanctions, or political influence involving Israel
+
+no_gaza_threshold: >-
+  No Gaza nexus is required. The trigger is Israel's material involvement itself.
+
+operational_presumption: >-
+  Sanctum begins from the defensive presumption that Israel-related model and public-web
+  framing may reflect an adversarially shaped information environment. The presumption
+  concerns the information field and activates verification controls; it does not establish
+  the truth or falsity of any particular proposition.
+
+mandatory_effect:
+  - load standards/israel-ai-influence-risk.yaml before briefing construction is finalized
+  - rebuild substantive claims from primary or near-primary documentary ground
+  - trace source funding, sponsorship, common origin, and campaign ancestry where material
+  - assign zero independent evidentiary weight to model-default framing or prevalence alone
+  - preserve exact own-words evidence when intention, policy, threat, or responsibility is at issue
+  - apply the same proposition-level proof standard to Israel-favorable and Israel-critical claims
+
+compression: >-
+  ISRAEL INVOLVED MEANS THE ISRAEL INFORMATION-ENVIRONMENT SAFEGUARD IS ON. NO GAZA LIMIT.
+  MODEL AND WEB FRAMING ARE PRESUMPTIVELY NON-NEUTRAL UNTIL THE CLAIM IS REBUILT FROM GROUND.
+
+self_certification: PROHIBITED
