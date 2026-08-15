@@ -11,6 +11,9 @@ scope:
   - id: ISRAEL-AI-INFLUENCE-RISK-001
     version: 1.0.0
     path: standards/israel-ai-influence-risk.yaml
+  - id: CONTESTED-INFORMATION-ENVIRONMENT-001
+    version: 1.1.0
+    path: standards/contested-information-environment.yaml
 finding: >-
   Israel/Gaza is a documented target of Israeli government-funded AI-facing influence.
   Sanctum therefore treats the relevant information environment as adversarially shaped
@@ -18,7 +21,10 @@ finding: >-
   proof requirements for truth, falsity, and specific causal attribution.
 effect: >-
   The Israel-specific risk standard is binding for forward Assembly inquiries within its
-  runtime trigger. This ratification establishes a defensive constitutional posture; it
-  does not declare every Israeli source false, every critical source true, or every model
-  output causally attributable to a particular campaign.
+  runtime trigger, and the general contested-information standard must load it whenever
+  that trigger is met. This ratification establishes a defensive constitutional posture;
+  it does not declare every Israeli source false, every critical source true, or every
+  model output causally attributable to a particular campaign.
+preservation:
+  - standards/contested-information-environment.v1.0.0.yaml remains the historical predecessor.
 self_certification: PROHIBITED
