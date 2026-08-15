@@ -1,10 +1,12 @@
 ---
 status: RATIFIED_BY_OWNER
-version: 1.1.0
+version: 1.2.0
 provenance: Settled in owner working sessions, 2026-07-29 and 2026-08-15
-ratification_record: governance/ratifications/2026-08-15-contested-information-environment.yaml
-predecessor: standards/briefing-standard.v1.0.0.md
-invokes: standards/contested-information-environment.yaml
+ratification_record: governance/ratifications/2026-08-15-israel-wide-trigger.yaml
+predecessor: standards/briefing-standard.v1.1.0.md
+invokes:
+  - standards/contested-information-environment.yaml
+  - standards/israel-wide-trigger.yaml
 ---
 
 # Sanctum Briefing Standard
@@ -94,6 +96,25 @@ Its compression is binding for forward briefing work:
 **PROVENANCE BEFORE PREVALENCE. GENEALOGY BEFORE SOURCE COUNT. INFLUENCE IS
 NOT RELIABILITY. MODEL CONSENSUS IS NOT INDEPENDENT CORROBORATION. THE
 INFORMATION ENVIRONMENT ITSELF MAY BE AN OBJECT OF POLITICAL ACTION.**
+
+## Israel-wide automatic trigger
+
+Whenever Israel is materially involved in an inquiry, the additional
+runtime standard `standards/israel-wide-trigger.yaml` is mandatory. No
+Gaza nexus is required and Horus does not wait for case-specific proof of
+contamination before activating the safeguard.
+
+For those inquiries, model-default, search-ranked, web-prevalent, and
+synthesized framing is treated as presumptively non-neutral for evidentiary
+purposes. Substantive claims are rebuilt from primary or near-primary
+records, source genealogy is checked before apparent corroboration is
+counted, and exact own-words evidence is preserved where intention, policy,
+threat, or responsibility is at issue.
+
+This is a defensive information-environment presumption, not a truth rule:
+it neither makes an Israel-favorable proposition false nor an Israel-critical
+proposition true. Each proposition still has to earn its conclusion from its
+documentary ground.
 
 ## Minister queries
 
