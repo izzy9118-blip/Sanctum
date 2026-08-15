@@ -1,0 +1,190 @@
+---
+record_type: sanctum_known_information_environment_risk
+id: ISRAEL-AI-INFLUENCE-RISK-001
+version: 1.0.0
+status: RATIFIED_BY_OWNER
+ratification:
+  date: 2026-08-15
+  authority: REPOSITORY_OWNER_DIRECTIVE
+  directive: >-
+    The issue regarding Israel must be specified explicitly as a foundational Sanctum
+    finding. The owner reports dozens of encountered instances in which model framing
+    on Israel/Gaza behaved consistently with the documented failure mode.
+  record: governance/ratifications/2026-08-15-israel-ai-influence-risk.yaml
+
+scope:
+  - Israel
+  - Gaza
+  - Israeli government policy and military conduct
+  - Palestinian political and humanitarian questions where Israeli state narratives are materially involved
+  - US-Israel political influence where the same information operation or descendants may bear on source framing
+  - AI-generated, search-ranked, or web-retrieved claims concerning the above
+
+title: Israel-Specific AI Influence and Information-Environment Risk
+
+issue_statement: >-
+  Sanctum has documentary ground that the Government of Israel has financed a deliberate
+  influence operation whose stated methods include creating websites and content intended
+  to shape GPT framing and AI-system outputs about Israel, including Gaza-related narratives.
+  Therefore the Israel/Gaza information environment is not treated as a neutral web sample.
+  It is a KNOWN TARGET OF STATE-SPONSORED AI-FACING INFLUENCE. Search prominence, repeated
+  framing, apparent source plurality, chatbot consensus, and model-default characterizations
+  concerning Israel/Gaza may reflect an engineered information environment and may not be
+  treated as independent corroboration without provenance and genealogy checks.
+
+documented_external_ground:
+  - id: ISR-AI-GROUND-001
+    proposition: >-
+      Clock Tower X, led by Brad Parscale, has worked on behalf of the Israeli government
+      under a multimillion-dollar influence contract registered under the Foreign Agents
+      Registration Act.
+    source:
+      publisher: Axios
+      date: 2025-09-30
+      title: Former Trump campaign manager registers to advocate for Israel
+      url: https://www.axios.com/2025/09/30/brad-parscale-israel-charlie-kirk-maga
+    evidentiary_status: DOCUMENTED
+
+  - id: ISR-AI-GROUND-002
+    proposition: >-
+      The contract explicitly contemplated creating "websites and content to deliver GPT
+      framing results on GPT conversations," establishing AI-chatbot framing as an intended
+      operational target rather than an incidental effect.
+    source:
+      publisher: Axios
+      date: 2025-09-30
+      title: Former Trump campaign manager registers to advocate for Israel
+      url: https://www.axios.com/2025/09/30/brad-parscale-israel-charlie-kirk-maga
+    evidentiary_status: DOCUMENTED
+
+  - id: ISR-AI-GROUND-003
+    proposition: >-
+      By April 2026, reporting described an expanded Israeli effort using Parscale-associated
+      Market Brew to create Israel-friendly content designed to be picked up by systems such
+      as ChatGPT, Claude, and Gemini, with a mock AI platform used to test likely uptake.
+    source:
+      publisher: Axios
+      date: 2026-04-25
+      title: Trump alum helps Israel mount AI influence campaign
+      url: https://www.axios.com/2026/04/25/israel-ai-influence-parscale
+    evidentiary_status: DOCUMENTED
+
+  - id: ISR-AI-GROUND-004
+    proposition: >-
+      Quincy Institute reporting in July 2026 identified the AI-facing campaign as part of
+      a much broader Israeli government influence effort and reported a Clock Tower X total
+      contract value of $46.5 million over one year, describing websites built to shape how
+      AI chatbots characterize Israel.
+    source:
+      publisher: Quincy Institute for Responsible Statecraft
+      date: 2026-07-24
+      title: The Eighth Front — Inside Israel's $1 Billion Influence Campaign
+      url: https://quincyinst.org/research/the-eighth-front-inside-israels-1-billion-influence-campaign/
+    evidentiary_status: DOCUMENTED_REPORTING
+
+  - id: ISR-AI-GROUND-005
+    proposition: >-
+      Quincy Institute reporting on July 28, 2026 described Gaza-related campaign sites,
+      reproduced the stated aim of obtaining GPT framing results, and reported that campaign
+      operators said they were seeing success; it further reported that disinformation
+      experts reviewing Drop Site testing judged the operation to be affecting chatbot output.
+    source:
+      publisher: Quincy Institute for Responsible Statecraft
+      date: 2026-07-28
+      title: Israel Is Paying Millions to Train AI Chatbots How to Talk About Gaza. It's Working.
+      url: https://quincyinst.org/2026/07/28/israel-is-paying-millions-to-train-ai-chatbots-how-to-talk-about-gaza-its-working/
+    evidentiary_status: DOCUMENTED_REPORTING_WITH_EFFECT_SIZE_UNRESOLVED
+
+owner_empirical_finding:
+  status: REPEATED_OWNER_OBSERVATION
+  statement: >-
+    The repository owner reports dozens of instances in which AI answers concerning Israel
+    or Gaza exhibited the kind of systematic framing distortion that the documented influence
+    operation was designed to produce. For Sanctum governance, recurrence across many observed
+    interactions is sufficient to establish that the risk is manifested in practice and must
+    be defended against operationally.
+  limit: >-
+    Owner observation does not by itself identify which campaign artifact, retrieval pathway,
+    training process, ranking system, or model component caused any single output. Specific
+    causal attribution remains evidence-bound.
+
+foundational_finding: >-
+  FOR ISRAEL/GAZA QUESTIONS, SANCTUM OPERATES IN A KNOWN ADVERSARIALLY SHAPED INFORMATION
+  ENVIRONMENT. THE ISRAELI GOVERNMENT HAS DOCUMENTEDLY PAID TO ALTER THE DIGITAL AND AI-FACING
+  INFORMATION FIELD, INCLUDING AN EXPRESS EFFORT TO AFFECT GPT FRAMING. THE OWNER HAS ALSO
+  OBSERVED THE FAILURE MODE REPEATEDLY IN ACTUAL MODEL INTERACTIONS. THEREFORE DEFAULT MODEL
+  FRAMING, WEB PREVALENCE, SEARCH RANK, AND APPARENTLY INDEPENDENT REPETITION MAY NOT BE TREATED
+  AS A NEUTRAL BASELINE FOR ISRAEL/GAZA ANALYSIS.
+
+mandatory_controls:
+  own_words_first: >-
+    For claims about Israeli or Palestinian political intention, policy, threat, strategy,
+    or justification, Horus must seek the actor's own words, orders, votes, official records,
+    court filings, military directives, transcripts, and directly attributable statements
+    before allowing narrative summaries to define the proposition.
+
+  genealogy_before_corroboration: >-
+    Multiple articles or websites are not independent corroboration until Sanctum checks
+    whether they descend from an Israeli government communication, contractor, paid influencer,
+    campaign website, wire report, coordinated content network, or common source.
+
+  sponsorship_visibility: >-
+    Where discoverable, Israeli government sponsorship, FARA registration, contractor identity,
+    campaign affiliation, paid influence, and AI/search optimization must be visible in the
+    source record rather than omitted as incidental metadata.
+
+  model_prior_suspension: >-
+    A model's pretrained or default characterization of Israel/Gaza carries zero independent
+    evidentiary weight. It may generate hypotheses or expose prevailing framing, but the claim
+    must be rebuilt from documentary ground.
+
+  framing_decomposition: >-
+    Terms such as "security operation," "voluntary migration," "humanitarian measure,"
+    "terror-linked," "self-defense," "ceasefire violation," "genocide," "ethnic cleansing,"
+    and comparable politically loaded characterizations must be decomposed into the underlying
+    acts, words, policies, dates, actors, and legal or analytical claims before adoption.
+
+  counter_source_requirement: >-
+    When an Israel/Gaza proposition materially relies on an Israeli-government or known aligned
+    narrative source, Horus must actively seek independent primary or near-primary ground capable
+    of falsifying, qualifying, or contextualizing it. The same rule applies in reverse to a
+    Palestinian, Iranian, US, NGO, activist, or other partisan source.
+
+  exact_intent_evidence: >-
+    Politically consequential claims about intent must preserve exact own-words passages and
+    their date, speaker, audience, office, and surrounding context. Euphemistic summaries must
+    not replace stronger direct evidence merely because they are more conventional.
+
+  uncertainty_without_sanitization: >-
+    Legal uncertainty, attribution uncertainty, or unresolved causal questions must be stated,
+    but uncertainty may not be used to soften, omit, or euphemize documentary evidence already
+    established. Conversely, severe evidence may not be enlarged beyond what its source proves.
+
+  symmetry: >-
+    These controls respond to a documented Israeli state influence operation; they do not imply
+    that Israeli sources are inherently false or that Israeli/Jewish identity is evidentiary
+    evidence of unreliability. The same provenance discipline governs all actors when comparable
+    influence, sponsorship, or common-source conditions exist.
+
+prohibited_shortcuts:
+  - treating an AI answer as an independent witness
+  - treating search-result frequency as truth probability
+  - counting campaign descendants as independent corroboration
+  - suppressing direct Israeli official statements because a secondary source uses milder language
+  - assuming every Israel-favorable claim is produced by the documented campaign
+  - assuming every Israel-critical claim is independent or reliable
+  - converting an established factual example into a hypothetical merely because the claim is politically severe
+  - foregrounding conventional framing before reconstructing the primary documentary record
+
+runtime_trigger: >-
+  Any Assembly inquiry materially concerning Israel, Gaza, Israeli military or government
+  conduct, Palestinian displacement, humanitarian policy, genocide or war-crimes allegations,
+  US-Israel influence, or related information operations MUST load this standard into the
+  briefing and Horus source-acquisition context.
+
+operational_compression: >-
+  ISRAEL/GAZA IS A KNOWN AI-INFLUENCE TARGET. REBUILD FROM PRIMARY GROUND. TRACE FUNDING AND
+  SOURCE GENEALOGY. DO NOT COUNT MODEL FRAMING OR WEB PREVALENCE AS CORROBORATION. PRESERVE
+  SEVERE OWN-WORDS EVIDENCE WITHOUT SANITIZATION, AND PRESERVE UNCERTAINTY WITHOUT DILUTION.
+
+self_certification: PROHIBITED
