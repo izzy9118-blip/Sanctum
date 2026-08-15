@@ -1,0 +1,24 @@
+---
+record_type: owner_ratification
+id: RATIFICATION-2026-08-15-ISRAEL-AI-INFLUENCE-RISK
+date: 2026-08-15
+authority: REPOSITORY_OWNER_DIRECTIVE
+directive: >-
+  Specify the issue regarding Israel. The owner's repeated experience verifies that the
+  documented AI-facing influence risk is operationally manifested and is a foundational
+  finding for Sanctum.
+scope:
+  - id: ISRAEL-AI-INFLUENCE-RISK-001
+    version: 1.0.0
+    path: standards/israel-ai-influence-risk.yaml
+finding: >-
+  Israel/Gaza is a documented target of Israeli government-funded AI-facing influence.
+  Sanctum therefore treats the relevant information environment as adversarially shaped
+  for purposes of source acquisition and evidentiary control, while preserving case-by-case
+  proof requirements for truth, falsity, and specific causal attribution.
+effect: >-
+  The Israel-specific risk standard is binding for forward Assembly inquiries within its
+  runtime trigger. This ratification establishes a defensive constitutional posture; it
+  does not declare every Israeli source false, every critical source true, or every model
+  output causally attributable to a particular campaign.
+self_certification: PROHIBITED
