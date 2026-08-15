@@ -1,0 +1,130 @@
+---
+record_type: sanctum_standard
+id: CONTESTED-INFORMATION-ENVIRONMENT-001
+version: 1.0.0
+status: RATIFIED_BY_OWNER
+ratification:
+  date: 2026-08-15
+  authority: REPOSITORY_OWNER_DIRECTIVE
+  directive: >-
+    My experience has verified its success. This is one of dozens of instances I have
+    come across this issue. This is a foundational finding for the Sanctum as a whole.
+  record: governance/ratifications/2026-08-15-contested-information-environment.yaml
+
+title: Contested Information Environment Standard
+
+scope:
+  - Sanctum
+  - Horus
+  - all ministerial repositories at runtime
+  - President
+  - Secretary
+  - briefing construction
+  - source acquisition
+  - search and retrieval
+  - model-assisted research
+  - proposition genealogy
+
+foundational_finding: >-
+  The public information environment is itself a political object and may be deliberately
+  engineered by states, parties, firms, campaigns, intelligence services, advocacy
+  networks, search-optimization systems, and AI-targeted influence operations. Apparent
+  prevalence, polished factual form, search prominence, repeated phrasing, source count,
+  and AI-generated consensus therefore do not establish source independence, truth, or
+  evidentiary weight.
+
+owner_observation_status: >-
+  The repository owner reports repeated first-hand encounters in which model framing
+  behaved consistently with this failure mode. This owner observation is sufficient to
+  ratify a defensive constitutional rule for Sanctum. It is not, by itself, used as
+  documentary proof that a particular external influence campaign caused any particular
+  model output; causal attribution remains evidence-bound case by case.
+
+external_case_trigger:
+  case: Israeli government AI-facing influence campaign
+  status: DOCUMENTED_TRIGGER_NOT_UNIVERSAL_CAUSAL_PROOF
+  documented_elements:
+    - A state-funded influence campaign was designed to create websites and content intended to affect GPT framing and AI-system outputs.
+    - Public reporting identifies deliberate use of AI/search optimization to increase uptake of preferred narratives.
+    - Campaign operators have claimed success; independent reporting has produced evidence consistent with impact while the exact magnitude remains contestable.
+  rule: >-
+    The case demonstrates that AI-facing information environments can be deliberate
+    targets of state influence. Sanctum therefore treats model-accessible web prevalence
+    as a potentially manufactured condition rather than a neutral evidentiary baseline.
+
+constitutional_laws:
+  provenance_before_prevalence: >-
+    SANCTUM MUST ASK WHO ORIGINATED, FUNDED, PRODUCED, DISTRIBUTED, AMPLIFIED, OR
+    OPTIMIZED A CLAIM BEFORE TREATING ITS FREQUENCY OR visibility as corroboration.
+
+  apparent_plurality_not_independence: >-
+    MULTIPLE URLS, OUTLETS, POSTS, OR MODEL CITATIONS DO NOT COUNT AS MULTIPLE
+    INDEPENDENT SOURCES UNTIL THEIR DOCUMENTARY AND FUNDING GENEALOGY HAS BEEN TESTED.
+
+  model_output_not_source: >-
+    AN AI ANSWER, SEARCH SUMMARY, RANKING, OR RETRIEVAL FREQUENCY IS NEVER PRIMARY
+    EVIDENCE OF THE UNDERLYING CLAIM. IT IS AT MOST EVIDENCE ABOUT THE INFORMATION
+    ENVIRONMENT OR THE MODEL'S CURRENT REPRESENTATION OF IT.
+
+  dual_pricing: >-
+    SOURCE INFLUENCE AND SOURCE RELIABILITY ARE SEPARATE QUESTIONS. A COMPROMISED
+    SOURCE MAY BE POLITICALLY IMPORTANT; A HIGHLY VISIBLE SOURCE MAY REMAIN EVIDENTIALLY
+    WEAK; A LOW-VISIBILITY PRIMARY SOURCE MAY CARRY GREATER DOCUMENTARY WEIGHT.
+
+  genealogy_over_counting: >-
+    WHEN SEVERAL SOURCES DESCEND FROM ONE PRESS RELEASE, GOVERNMENT BRIEFING, WIRE
+    REPORT, CONTRACTOR, CAMPAIGN, OR CONTENT NETWORK, SANCTUM COUNTS THE GENEALOGY
+    BEFORE IT COUNTS THE SOURCES.
+
+  framing_audit: >-
+    BEFORE ACCEPTING A CHARACTERIZATION AS THE GIVEN, SANCTUM MUST DISTINGUISH THE
+    UNDERLYING DATED ACTS, DOCUMENTS, NUMBERS, AND OWN-WORDS STATEMENTS FROM THE
+    CHARACTERIZATION PLACED AROUND THEM.
+
+  primary_source_priority: >-
+    WHERE AVAILABLE, OWN-WORDS STATEMENTS, OFFICIAL DOCUMENTS, PRIMARY RECORDS, AND
+    DIRECT EVIDENCE MUST BE ACQUIRED BEFORE NARRATIVE SUMMARIES OR MODEL-SYNTHESIZED
+    DESCRIPTIONS ARE ALLOWED TO GOVERN THE BOARD.
+
+  adversarial_symmetry: >-
+    THESE CONTROLS APPLY TO ALL ACTORS AND ALL ALIGNMENTS. SANCTUM MUST NOT RELAX THE
+    STANDARD FOR FRIENDLY ACTORS OR INTENSIFY IT ONLY FOR HOSTILE ONES.
+
+  no_paranoid_inversion: >-
+    THE POSSIBILITY OF INFORMATION OPERATIONS DOES NOT AUTHORIZE AUTOMATIC DISBELIEF.
+    MANIPULATION, COMMON ORIGIN, FUNDING, AND CAUSAL EFFECT MUST BE ESTABLISHED WHERE
+    THEY ARE ASSERTED. THE DEFENSE IS GENEALOGY AND SOURCE DISCIPLINE, NOT UNIVERSAL
+    SUSPICION.
+
+briefing_requirements:
+  - Separate fact records from narrative characterization.
+  - Record source origin and, where material, ownership, sponsorship, funding, or state affiliation.
+  - Detect common-source descendants before counting corroboration.
+  - Flag content networks, coordinated campaigns, SEO/GEO/LLM-targeted material, bot amplification, and unattributed syndication when evidence supports the flag.
+  - Preserve own-words quotations for politically consequential intent claims whenever available.
+  - Record unresolved provenance instead of treating uncertainty as independence.
+  - Treat prevalence and ranking as facts about reach, not facts about truth.
+
+ministerial_rule: >-
+  Ministers receive the same candid briefing but remain free to price influence,
+  reliability, motive, audience, and political effect according to their sovereign
+  reconstructed judgment. No minister may treat the briefing's source count or the
+  model's prior framing as independent proof of a proposition.
+
+secretary_rule: >-
+  The Secretary audits whether provenance claims, source identities, genealogical
+  links, and independence classifications are structurally supported. Secretary PASS
+  does not certify truth or prove the absence of undiscovered influence operations.
+
+horus_rule: >-
+  Horus gathers and discloses. Where a source's sponsorship, funding, common origin,
+  campaign role, or AI/search optimization is discoverable and relevant, Horus records
+  it as source-state information without converting that metadata into a substantive
+  political verdict.
+
+operational_compression: >-
+  PROVENANCE BEFORE PREVALENCE. GENEALOGY BEFORE SOURCE COUNT. INFLUENCE IS NOT
+  RELIABILITY. MODEL CONSENSUS IS NOT INDEPENDENT CORROBORATION. THE INFORMATION
+  ENVIRONMENT ITSELF MAY BE AN OBJECT OF POLITICAL ACTION.
+
+self_certification: PROHIBITED
