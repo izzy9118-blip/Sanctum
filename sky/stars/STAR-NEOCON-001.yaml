@@ -1,0 +1,47 @@
+star_id: STAR-NEOCON-001
+status: FACT
+
+fact: >-
+  Albert James Wohlstetter was an independent intellectual and strategic source
+  feeding the formation of American neoconservatism, especially through his
+  influence on Paul Wolfowitz and Richard Perle and their subsequent connection
+  to Senator Henry M. "Scoop" Jackson's foreign-policy network.
+
+connections:
+  - Albert James Wohlstetter
+  - Paul Wolfowitz
+  - Richard Perle
+  - RAND Corporation
+  - Henry M. "Scoop" Jackson
+  - American neoconservatism
+
+sources:
+  - source_id: SRC-SCOTT-HORTON-2010-05-21
+    type: source_origin
+    title: "05/21/10 - Scott Horton - The Scott Horton Show"
+    publisher: The Scott Horton Show
+    url: https://scotthorton.org/interviews/antiwar-radio-scott-horton-24/
+    note: >-
+      Horton lays out the Wohlstetter to Wolfowitz/Perle to Scoop Jackson line as
+      part of his account of the formation of the neoconservative network.
+
+  - source_id: SRC-PERLE-PBS-THINK-TANK
+    type: documentary_ground
+    title: "Richard Perle: The Making of a Neoconservative"
+    publisher: PBS Think Tank
+    url: https://www.pbs.org/thinktank/transcript1017.html
+    note: >-
+      Richard Perle describes Wohlstetter as his intellectual mentor, identifies
+      Paul Wolfowitz as a Wohlstetter protege and doctoral student, and recounts
+      Wohlstetter sending Perle and Wolfowitz to Washington in 1969, where they
+      met Scoop Jackson.
+
+notes:
+  - >-
+    Wohlstetter is not a branch of Leo Strauss. His line is independent, although
+    it intersects with other intellectual streams through shared later figures.
+  - >-
+    A person may carry multiple independent influences. This star does not assign
+    Wolfowitz, Perle, or neoconservatism to a single exclusive lineage.
+
+completeness: PENDING_PROBE
