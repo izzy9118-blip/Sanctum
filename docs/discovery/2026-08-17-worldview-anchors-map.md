@@ -129,6 +129,98 @@ The constellation governs orientation and attention across the voyage.
 
 A minister remains sovereign and may contradict the constellation. A worldview anchor must not silently rewrite the minister's corpus, method, findings, or voice.
 
+## Settled correction: stars are facts; works are the documentary sky-ground
+
+A prior conversational mapping step incorrectly moved the star one level too high by treating a work, or a foundational thesis abstracted from a work, as the star itself. That interpretation is superseded.
+
+**Settled mapping rule:** a star is a fact or carefully bounded historical finding established in the documentary record. A work is documentary ground from which one or more stars may be established. Related factual stars form a constellation.
+
+The structure is therefore:
+
+```text
+WORK / SOURCE
+      ↓
+documentary evidence
+      ↓
+STAR — FACT OR BOUNDED HISTORICAL FINDING
+      ↓
+related factual stars
+      ↓
+CONSTELLATION
+      ↓
+orientation / navigational attention
+```
+
+The constellation's worldview should emerge from the relationship among documented facts rather than from an abstract doctrine imposed on the facts beforehand.
+
+### Example: Curtis / Strauss / neoconservatism
+
+A permissible star would be a bounded historical proposition of this kind:
+
+```text
+SOURCE WORK:
+Adam Curtis, The Power of Nightmares
+
+STAR / FACT:
+Individuals influenced by Leo Strauss became involved in the development of
+American neoconservatism and attempted to bring ideas they associated with
+Strauss into political practice.
+
+QUALIFICATION:
+Whether those individuals correctly understood Strauss is a separate and
+contestable question.
+```
+
+The factual distinction must be preserved:
+
+```text
+ESTABLISHABLE FACT:
+They believed, claimed, received, transmitted, or acted upon ideas they
+understood as derived from Strauss.
+
+NOT ESTABLISHED MERELY BY THAT FACT:
+Their understanding accurately represented Strauss's teaching.
+```
+
+The same discipline applies across every constellation. Reception of a thinker is not automatically identical with the thinker; an institution's claim is not automatically the material outcome; a historical relationship is not automatically a causal totalization.
+
+### Provisional star-record shape
+
+The corrected mapping suggests that a future star record would need fields such as:
+
+```text
+STAR ID
+FACT / BOUNDED HISTORICAL FINDING
+SOURCE WORK(S)
+UNDERLYING DOCUMENTARY GROUND
+DATE / PERIOD
+PERSONS / INSTITUTIONS / EVENTS INVOLVED
+FACT TYPE
+QUALIFICATIONS
+DISPUTED ELEMENTS
+WHAT THIS STAR DOES NOT ESTABLISH
+PROVENANCE
+```
+
+This is a mapping proposal only, not an adopted schema.
+
+### Consequence for navigation
+
+The works do not issue runtime commands merely by existing, and Horus is not instructed to "think like" an author. Navigation must arise transparently from the factual constellation and remain distinguishable from the documentary facts that compose it.
+
+The exact transformation from factual constellation to inquiry-specific navigation remains to be mapped. No hidden runtime interpreter is authorized by this record.
+
+### Consequence for reefs
+
+Earlier reef language assumed that an anchor thesis might be contradicted by later findings. Because stars are now mapped as facts or bounded historical findings, the reef model requires a further pass. A later record may:
+
+- contradict the factual status of a star;
+- qualify its scope;
+- reveal that a relationship was overstated;
+- challenge a navigational inference drawn from a constellation without challenging the constituent facts themselves.
+
+These cases must not be collapsed. The existing reef concept remains provisional until this distinction is mapped explicitly.
+
 ## Existing binding seam
 
 `constitutional_environment.py` already records and validates the committed constitutional environment for a forward inquiry. It binds, among other things:
@@ -196,20 +288,20 @@ Operational compression:
 
 ## Reef concept
 
-A future contradiction between an anchor and documentary findings should be represented as metadata about the relation between the finding and the anchor, not as an alteration of the evidence itself.
+A future contradiction between a star, a constellation-derived navigation inference, and documentary findings must be represented without altering the evidence itself. The corrected star ontology requires this relation to be typed rather than treated as one generic contradiction.
 
 Conceptual form only:
 
 ```text
 finding
   evidence: unchanged
-  anchor_relation:
-      anchor: <anchor-id>
-      relation: CONTRADICTS
+  sky_relation:
+      target: <star-id or navigation-derivation-id>
+      relation: <CONTRADICTS | QUALIFIES | LIMITS | ORTHOGONAL>
       reef: true
 ```
 
-A reef is therefore a possible grading signal for the worldview constellation, not a license to downgrade, suppress, reinterpret, or relabel contrary evidence.
+A reef is therefore a possible signal for examining the factual star, its scope, or an inference drawn from its constellation. It is never a license to downgrade, suppress, reinterpret, or relabel contrary evidence.
 
 ## President boundary
 
@@ -258,13 +350,13 @@ For a future worldview constellation, a final Secretary audit may eventually nee
 - was the required constellation loaded;
 - was its exact version/hash recorded;
 - was it loaded at the constitutionally required stage;
-- were anchor-navigation records preserved;
+- were navigation records preserved;
 - were reef records preserved where produced;
-- did Horus evidence remain documentary rather than anchor-edited;
+- did Horus evidence remain documentary rather than sky-edited;
 - did ministerial contradiction remain visible;
 - was any Presidential tilt explicit rather than disguised as consensus.
 
-The Secretary does not decide whether an anchor is substantively true or whether a minister's contradiction is correct.
+The Secretary does not decide whether a star is substantively true or whether a minister's contradiction is correct. A challenge to a star's factual status must remain a documentary dispute for owner-visible review, not a Secretary truth judgment.
 
 ## Relationship to existing epistemic safeguards
 
@@ -272,7 +364,7 @@ The worldview constellation and the existing contested-information safeguards ar
 
 ```text
 WORLDVIEW CONSTELLATION
-"What deserves attention? What risks or questions should remain visible?"
+"What documented relationships orient attention?"
 
 EPISTEMIC / DEFENSIVE STANDARDS
 "How must evidence be gathered, classified, genealogized, and preserved?"
@@ -284,10 +376,10 @@ The worldview constellation should not absorb or replace them.
 
 ## Current map in one sentence
 
-The constellation governs attention, not evidence; Sanctum owns it; the constitutional environment binds it; the Secretary guards the lawful sequence and later audits it independently; Horus navigates under it without altering the coastline; ministers remain sovereign enough to contradict it; the President may explicitly tilt by it without manufacturing consensus; reefs grade the stars; and the owner alone changes the sky.
+The sky is composed of constellations of factual stars grounded in documentary works and sources; Sanctum owns the constitutional sky; the constitutional environment binds its exact version; the Secretary guards the lawful sequence and later audits it independently; Horus may navigate under the factual relationships the sky makes visible without altering the coastline; ministers remain sovereign enough to dispute either the facts or their significance; the President may explicitly orient by the sky without manufacturing consensus; and the owner alone admits, amends, or removes stars and constellations.
 
 ## Next mapping question
 
 The next mapping step is intentionally narrow:
 
-**Trace one inquiry from raw submission through common-ground construction and identify every Secretary custody point, every artifact transition, and the exact first point at which the worldview constellation should enter the common context.**
+**Map how a factual constellation can generate transparent inquiry-specific navigation for Horus without inserting a hidden interpreter between the documented stars and the gathering organ.**
