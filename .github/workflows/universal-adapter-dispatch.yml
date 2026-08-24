@@ -1,0 +1,99 @@
+name: Universal Adapter Dispatch Candidate Proof
+
+on:
+  pull_request:
+  push:
+    branches:
+      - agent/universal-adapter-dispatch-v1
+
+jobs:
+  prove-universal-adapters:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Sanctum candidate branch
+        uses: actions/checkout@v4
+        with:
+          path: estate/Sanctum
+
+      - name: Check out Strauss candidate adapter commit
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Strauss
+          ref: ace5a15dce7cc70eaf2034b283fde4912eaa25d2
+          path: estate/Strauss
+          fetch-depth: 0
+
+      - name: Check out Xenophon candidate adapter commit
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Xenophon
+          ref: d9d192aab5babf618e49a16c507ade718d4607a9
+          path: estate/Xenophon
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: python -m pip install PyYAML jsonschema pytest
+
+      - name: Run Sanctum protocol tests
+        working-directory: estate/Sanctum
+        run: python -m pytest -q tests/test_universal_dispatch.py
+
+      - name: Run sovereign adapter-local tests
+        run: |
+          cd estate/Strauss
+          python -m unittest tests.test_sanctum_adapter
+          cd ../Xenophon
+          python -m pytest -q tests/test_sanctum_adapter.py
+
+      - name: Probe all established ministers through one generic dispatcher
+        working-directory: estate/Sanctum
+        run: python universal_dispatch.py --estate .. probe > universal-adapter-probe.json
+
+      - name: Prepare the same inquiry and immutable briefing for every established minister
+        working-directory: estate/Sanctum
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          inquiry = {
+              "inquiry_id": "CI-UNIVERSAL-ADAPTER-001",
+              "question": "What is the governing problem presented by this bounded proving inquiry?",
+              "common_briefing": {
+                  "sha256": "a" * 64,
+                  "record_type": "ci_common_briefing",
+                  "identical_for_all_ministers": True,
+              },
+          }
+          Path("ci-universal-inquiry.json").write_text(json.dumps(inquiry), encoding="utf-8")
+          PY
+          python universal_dispatch.py --estate .. prepare --inquiry ci-universal-inquiry.json > universal-prepared.json
+
+      - name: Assert universal fan-out properties
+        working-directory: estate/Sanctum
+        run: |
+          python - <<'PY'
+          import json
+          probe = json.load(open("universal-adapter-probe.json"))
+          prepared = json.load(open("universal-prepared.json"))
+          assert probe["status"] == "ALL_ESTABLISHED_MINISTERS_INTEROPERABLE_AS_CANDIDATES_NOT_ADOPTED"
+          assert probe["established_minister_count"] == 2
+          assert {x["minister_id"] for x in probe["results"]} == {"leo-strauss", "xenophon"}
+          assert prepared["prepared_count"] == 2
+          assert {x["minister_id"] for x in prepared["prepared"]} == {"leo-strauss", "xenophon"}
+          assert {x["common_briefing"]["sha256"] for x in prepared["prepared"]} == {"a" * 64}
+          assert prepared["certification"] == "NONE_SELF_CERTIFICATION_PROHIBITED"
+          PY
+
+      - name: Upload candidate proof artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: universal-adapter-candidate-proof
+          path: |
+            estate/Sanctum/universal-adapter-probe.json
+            estate/Sanctum/universal-prepared.json
+          if-no-files-found: ignore
