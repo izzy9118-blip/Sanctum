@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sanctum:adapter:1.0.0",
+  "title": "Sanctum Universal Minister Adapter Protocol v1",
+  "description": "Forward-only transport contract. Sanctum owns dispatch and exact pins; sovereign repositories own minister-local context assembly and validation. Conformance certifies neither truth nor doctrine.",
+  "oneOf": [
+    {"$ref": "#/$defs/descriptor"},
+    {"$ref": "#/$defs/request"},
+    {"$ref": "#/$defs/prepared_request"},
+    {"$ref": "#/$defs/interface_validation"},
+    {"$ref": "#/$defs/report_validation"}
+  ],
+  "$defs": {
+    "sha40": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "descriptor": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["record_type", "protocol", "minister_id", "repository", "repository_commit", "manifest_path", "commands", "capabilities", "authority"],
+      "properties": {
+        "record_type": {"const": "sanctum_adapter_descriptor"},
+        "protocol": {"const": "sanctum.adapter.v1"},
+        "minister_id": {"type": "string", "minLength": 1},
+        "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
+        "repository_commit": {"$ref": "#/$defs/sha40"},
+        "manifest_path": {"type": "string", "minLength": 1},
+        "manifest_version": {"type": "string"},
+        "commands": {
+          "type": "array",
+          "items": {"type": "string"},
+          "allOf": [
+            {"contains": {"const": "describe"}},
+            {"contains": {"const": "validate-interface"}},
+            {"contains": {"const": "prepare-request"}},
+            {"contains": {"const": "validate-report"}}
+          ]
+        },
+        "capabilities": {"type": "array", "items": {"type": "string"}},
+        "authority": {"const": "CANDIDATE_FORWARD_INTERFACE_NOT_OWNER_CERTIFICATION"}
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["record_type", "protocol", "inquiry_id", "minister_id", "question", "common_briefing", "repository_pin"],
+      "properties": {
+        "record_type": {"const": "sanctum_adapter_request"},
+        "protocol": {"const": "sanctum.adapter.v1"},
+        "inquiry_id": {"type": "string", "minLength": 1},
+        "minister_id": {"type": "string", "minLength": 1},
+        "question": {"type": "string", "minLength": 1},
+        "common_briefing": {
+          "type": "object",
+          "required": ["sha256"],
+          "properties": {"sha256": {"$ref": "#/$defs/sha256"}}
+        },
+        "repository_pin": {
+          "type": "object",
+          "required": ["repository", "commit"],
+          "properties": {
+            "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
+            "commit": {"$ref": "#/$defs/sha40"}
+          }
+        }
+      }
+    },
+    "prepared_request": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["record_type", "protocol", "minister_id", "repository", "repository_commit", "inquiry_id", "question", "common_briefing", "context", "certification"],
+      "properties": {
+        "record_type": {"const": "sanctum_adapter_prepared_request"},
+        "protocol": {"const": "sanctum.adapter.v1"},
+        "minister_id": {"type": "string", "minLength": 1},
+        "repository": {"type": "string", "pattern": "^[^/]+/[^/]+$"},
+        "repository_commit": {"$ref": "#/$defs/sha40"},
+        "inquiry_id": {"type": ["string", "null"]},
+        "question": {"type": "string", "minLength": 1},
+        "common_briefing": {"type": "object"},
+        "context": {"type": "object"},
+        "certification": {"const": "NONE_SELF_CERTIFICATION_PROHIBITED"}
+      }
+    },
+    "interface_validation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["record_type", "protocol", "minister_id", "repository_commit", "status"],
+      "properties": {
+        "record_type": {"const": "sanctum_adapter_validation"},
+        "protocol": {"const": "sanctum.adapter.v1"},
+        "repository_commit": {"$ref": "#/$defs/sha40"},
+        "status": {"const": "VALIDATED_INTERFACE_NOT_TRUTH_CERTIFIED"}
+      }
+    },
+    "report_validation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["record_type", "protocol", "minister_id", "repository_commit", "status"],
+      "properties": {
+        "record_type": {"const": "sanctum_adapter_report_validation"},
+        "protocol": {"const": "sanctum.adapter.v1"},
+        "repository_commit": {"$ref": "#/$defs/sha40"},
+        "status": {"const": "MINISTER_LOCAL_STRUCTURE_VALIDATED_NOT_OWNER_CERTIFIED"}
+      }
+    }
+  }
+}
