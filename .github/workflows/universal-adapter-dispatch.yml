@@ -19,7 +19,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Strauss
-          ref: ace5a15dce7cc70eaf2034b283fde4912eaa25d2
+          ref: b8bcbfe3acbd927f029b9c778644cbc388511299
           path: estate/Strauss
           fetch-depth: 0
 
@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Xenophon
-          ref: d9d192aab5babf618e49a16c507ade718d4607a9
+          ref: 5651629620a234af9a82f300ad41ec2454ba0443
           path: estate/Xenophon
           fetch-depth: 0
 
@@ -45,7 +45,7 @@ jobs:
       - name: Run sovereign adapter-local tests
         run: |
           cd estate/Strauss
-          python -m unittest tests.test_sanctum_adapter
+          python -m unittest discover -s tests -p 'test_sanctum_adapter.py'
           cd ../Xenophon
           python -m pytest -q tests/test_sanctum_adapter.py
 
