@@ -1,0 +1,24 @@
+record_type: sanctum_adapter_candidate_registry
+version: 1.0.0
+protocol: sanctum.adapter.v1
+status: CANDIDATE_PENDING_OWNER_ADOPTION
+authority: NONE
+rule: >-
+  This forward-only registry does not alter registry/ministers.yaml, minister membership,
+  owner-certified pins, or Assembly dispatch authority. It binds exact candidate commits
+  solely for interoperability proving. Adoption requires separate owner action.
+bindings:
+  - minister_id: leo-strauss
+    repository: izzy9118-blip/Strauss
+    candidate_commit: b8bcbfe3acbd927f029b9c778644cbc388511299
+    entrypoint: sanctum_adapter.py
+    protocol: sanctum.adapter.v1
+    branch: agent/sanctum-adapter-v1
+    authoritative_registry_pin_unchanged: fb417d1d4ab7b5d349e801544c0c703d8998a93f
+  - minister_id: xenophon
+    repository: izzy9118-blip/Xenophon
+    candidate_commit: 5651629620a234af9a82f300ad41ec2454ba0443
+    entrypoint: sanctum_adapter.py
+    protocol: sanctum.adapter.v1
+    branch: agent/sanctum-adapter-v1
+    authoritative_registry_pin_unchanged: b665e323d0780431764b565616e629b2e2aec00f
