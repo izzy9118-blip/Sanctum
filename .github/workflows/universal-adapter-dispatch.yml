@@ -1,33 +1,35 @@
-name: Universal Adapter Dispatch Candidate Proof
+name: Universal Adapter Overlay Proof
 
 on:
   pull_request:
   push:
     branches:
-      - agent/universal-adapter-dispatch-v1
+      - main
+      - agent/end-to-end-proving-inquiry
 
 jobs:
   prove-universal-adapters:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out Sanctum candidate branch
+      - name: Check out Sanctum
         uses: actions/checkout@v4
         with:
           path: estate/Sanctum
+          fetch-depth: 0
 
-      - name: Check out Strauss candidate adapter commit
+      - name: Check out Strauss adapter-only runtime overlay
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Strauss
-          ref: b8bcbfe3acbd927f029b9c778644cbc388511299
+          ref: 38880f5560b9691e6f7d1c834eb1e53cf2ca75a1
           path: estate/Strauss
           fetch-depth: 0
 
-      - name: Check out Xenophon candidate adapter commit
+      - name: Check out Xenophon adapter-only runtime overlay
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Xenophon
-          ref: 5651629620a234af9a82f300ad41ec2454ba0443
+          ref: 827fb49bff91aa19487b62bc42ec0987d4a2d905
           path: estate/Xenophon
           fetch-depth: 0
 
@@ -38,16 +40,23 @@ jobs:
       - name: Install validation dependencies
         run: python -m pip install PyYAML jsonschema pytest
 
+      - name: Prove overlays descend from certified minister pins and change transport only
+        run: |
+          git -C estate/Strauss merge-base --is-ancestor fb417d1d4ab7b5d349e801544c0c703d8998a93f 38880f5560b9691e6f7d1c834eb1e53cf2ca75a1
+          test "$(git -C estate/Strauss diff --name-only fb417d1d4ab7b5d349e801544c0c703d8998a93f..38880f5560b9691e6f7d1c834eb1e53cf2ca75a1)" = "sanctum_adapter.py"
+          git -C estate/Xenophon merge-base --is-ancestor b665e323d0780431764b565616e629b2e2aec00f 827fb49bff91aa19487b62bc42ec0987d4a2d905
+          test "$(git -C estate/Xenophon diff --name-only b665e323d0780431764b565616e629b2e2aec00f..827fb49bff91aa19487b62bc42ec0987d4a2d905)" = "sanctum_adapter.py"
+
       - name: Run Sanctum protocol tests
         working-directory: estate/Sanctum
         run: python -m pytest -q tests/test_universal_dispatch.py
 
-      - name: Run sovereign adapter-local tests
+      - name: Validate sovereign interfaces through the overlay wrappers
         run: |
           cd estate/Strauss
-          python -m unittest discover -s tests -p 'test_sanctum_adapter.py'
+          python sanctum_adapter.py validate-interface
           cd ../Xenophon
-          python -m pytest -q tests/test_sanctum_adapter.py
+          python sanctum_adapter.py validate-interface
 
       - name: Probe all established ministers through one generic dispatcher
         working-directory: estate/Sanctum
@@ -72,27 +81,32 @@ jobs:
           PY
           python universal_dispatch.py --estate .. prepare --inquiry ci-universal-inquiry.json > universal-prepared.json
 
-      - name: Assert universal fan-out properties
+      - name: Assert adopted overlay fan-out properties
         working-directory: estate/Sanctum
         run: |
           python - <<'PY'
           import json
           probe = json.load(open("universal-adapter-probe.json"))
           prepared = json.load(open("universal-prepared.json"))
-          assert probe["status"] == "ALL_ESTABLISHED_MINISTERS_INTEROPERABLE_AS_CANDIDATES_NOT_ADOPTED"
+          assert probe["status"] == "ALL_ESTABLISHED_MINISTERS_INTEROPERABLE_THROUGH_ADOPTED_OVERLAYS"
           assert probe["established_minister_count"] == 2
           assert {x["minister_id"] for x in probe["results"]} == {"leo-strauss", "xenophon"}
           assert prepared["prepared_count"] == 2
+          assert prepared["authority"] == "OWNER_AUTHORIZED_OPERATIONAL_OVERLAYS"
           assert {x["minister_id"] for x in prepared["prepared"]} == {"leo-strauss", "xenophon"}
           assert {x["common_briefing"]["sha256"] for x in prepared["prepared"]} == {"a" * 64}
+          assert {x["certified_base_commit"] for x in prepared["prepared"]} == {
+              "fb417d1d4ab7b5d349e801544c0c703d8998a93f",
+              "b665e323d0780431764b565616e629b2e2aec00f",
+          }
           assert prepared["certification"] == "NONE_SELF_CERTIFICATION_PROHIBITED"
           PY
 
-      - name: Upload candidate proof artifacts
+      - name: Upload adapter overlay proof artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: universal-adapter-candidate-proof
+          name: universal-adapter-overlay-proof
           path: |
             estate/Sanctum/universal-adapter-probe.json
             estate/Sanctum/universal-prepared.json
