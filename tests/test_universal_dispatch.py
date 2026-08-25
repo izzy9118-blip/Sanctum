@@ -10,23 +10,25 @@ import universal_dispatch
 BASE = Path(__file__).resolve().parents[1]
 
 
-def test_candidate_bindings_cover_every_established_minister_without_repinning():
-    authoritative, candidates = universal_dispatch._registries()
+def test_adopted_overlays_cover_every_established_minister_without_repinning_corpus():
+    authoritative, adapters = universal_dispatch._registries()
     established = {
         item["minister_id"]: item
         for item in authoritative["ministers"]
         if item.get("membership_status") == "established"
     }
-    bindings = {item["minister_id"]: item for item in candidates["bindings"]}
+    bindings = {item["minister_id"]: item for item in adapters["bindings"]}
     assert set(bindings) == set(established) == {"leo-strauss", "xenophon"}
     for minister_id, minister in established.items():
         binding = bindings[minister_id]
         assert binding["repository"] == minister["repository"]
-        assert binding["authoritative_registry_pin_unchanged"] == minister["pinned_commit"]
-        assert binding["candidate_commit"] != "0" * 40
+        assert binding["certified_base_commit"] == minister["pinned_commit"]
+        assert binding["runtime_overlay_commit"] != minister["pinned_commit"]
+        assert binding["runtime_overlay_commit"] != "0" * 40
+        assert binding["allowed_overlay_paths"] == ["sanctum_adapter.py"]
         assert binding["protocol"] == "sanctum.adapter.v1"
-    assert candidates["status"] == "CANDIDATE_PENDING_OWNER_ADOPTION"
-    assert candidates["authority"] == "NONE"
+    assert adapters["status"] == "OWNER_AUTHORIZED_OPERATIONAL_OVERLAYS"
+    assert adapters["authority"] == "REPOSITORY_OWNER_DIRECTIVE"
 
 
 def test_universal_request_contract_accepts_common_transport():
