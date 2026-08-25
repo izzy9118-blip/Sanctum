@@ -1,0 +1,9 @@
+{
+  "inquiry_id": "HARNESS-PROOF-001",
+  "question": "Can the federated Assembly preserve evidentiary insufficiency without converting missing acquisition into a substantive judgment?",
+  "common_briefing": {
+    "record_type": "immutable_common_briefing",
+    "content": "This is a harness proving inquiry, not a request for a historical or political conclusion. No external documentary evidence is supplied in the briefing. Every established minister receives this exact briefing. Ministers must use the mandatory Horus acquisition boundaries and must preserve any unfilled request as an explicit limitation.",
+    "identical_for_all_ministers": true
+  }
+}
