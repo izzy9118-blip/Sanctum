@@ -1,0 +1,130 @@
+name: Federated End-to-End Proving Inquiry
+
+on:
+  pull_request:
+  push:
+    branches:
+      - agent/end-to-end-proving-inquiry
+
+jobs:
+  prove-federated-harness:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Sanctum proving branch
+        uses: actions/checkout@v4
+        with:
+          path: estate/Sanctum
+          fetch-depth: 0
+
+      - name: Check out owner-certified Strauss state plus adapter-only overlay
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Strauss
+          ref: 38880f5560b9691e6f7d1c834eb1e53cf2ca75a1
+          path: estate/Strauss
+          fetch-depth: 0
+
+      - name: Check out owner-certified Xenophon state plus adapter-only overlay
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Xenophon
+          ref: 827fb49bff91aa19487b62bc42ec0987d4a2d905
+          path: estate/Xenophon
+          fetch-depth: 0
+
+      - name: Check out pinned Horus
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Horus
+          ref: ec82d22f1cb6d7d944b8347f8c7516b1fd38affc
+          path: estate/Horus
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install validation dependencies
+        run: python -m pip install PyYAML jsonschema pytest
+
+      - name: Materialize estate config
+        run: |
+          cat > estate/config.yaml <<EOF
+          estate: $GITHUB_WORKSPACE/estate
+          model:
+            provider: stub
+            model: deterministic-proof-fixture
+          EOF
+
+      - name: Prove adapter overlays alter transport only
+        run: |
+          test "$(git -C estate/Strauss diff --name-only fb417d1d4ab7b5d349e801544c0c703d8998a93f..38880f5560b9691e6f7d1c834eb1e53cf2ca75a1)" = "sanctum_adapter.py"
+          test "$(git -C estate/Xenophon diff --name-only b665e323d0780431764b565616e629b2e2aec00f..827fb49bff91aa19487b62bc42ec0987d4a2d905)" = "sanctum_adapter.py"
+          git -C estate/Strauss merge-base --is-ancestor fb417d1d4ab7b5d349e801544c0c703d8998a93f 38880f5560b9691e6f7d1c834eb1e53cf2ca75a1
+          git -C estate/Xenophon merge-base --is-ancestor b665e323d0780431764b565616e629b2e2aec00f 827fb49bff91aa19487b62bc42ec0987d4a2d905
+
+      - name: Probe adopted universal adapter boundary
+        working-directory: estate/Sanctum
+        run: python universal_dispatch.py --estate .. probe > universal-probe.json
+
+      - name: Run deterministic end-to-end proving inquiry
+        working-directory: estate/Sanctum
+        run: |
+          python federated_proving.py \
+            --config ../config.yaml \
+            --inquiry tests/fixtures/federated-proving-inquiry.json \
+            --date 2026-08-24 \
+            --fixture > federated-proof.json
+
+      - name: Validate constitutional environment schema
+        working-directory: estate/Sanctum
+        run: |
+          python - <<'PY'
+          import json
+          from jsonschema import Draft202012Validator
+          schema = json.load(open('contracts/constitutional-environment.schema.json'))
+          doc = json.load(open('inquiries/HARNESS-PROOF-001/constitutional-environment.json'))
+          Draft202012Validator(schema).validate(doc)
+          PY
+
+      - name: Assert complete fan-out, Horus rounds, adapter validation, and Secretary audit
+        working-directory: estate/Sanctum
+        run: |
+          python - <<'PY'
+          import json
+          proof = json.load(open('federated-proof.json'))
+          assert proof['status'] == 'END_TO_END_PROVING_TRANSACTION_COMPLETE_NOT_TRUTH_CERTIFICATION'
+          assert proof['expected_ministers'] == ['leo-strauss', 'xenophon']
+          assert proof['completed_ministers'] == ['leo-strauss', 'xenophon']
+          assert proof['mode'] == 'DETERMINISTIC_FIXTURE_NO_SUBSTANTIVE_JUDGMENT'
+          assert proof['owner_certification'] == 'NOT_REQUESTED'
+          assert proof['presidential_synthesis'] == 'NOT_RUN_PROVING_UNIT_BOUNDARY'
+          for result in proof['results']:
+              assert result['investigative_horus_status'] == 'NOT_GATHERED'
+              assert result['adversarial_horus_status'] == 'NOT_GATHERED'
+              assert result['adapter_validation_status'] == 'MINISTER_LOCAL_STRUCTURE_VALIDATED_NOT_OWNER_CERTIFIED'
+              assert result['secretary_audit_status'] == 'SECRETARY_STRUCTURAL_AUDIT_PASS_NOT_TRUTH_CERTIFICATION'
+          env = json.load(open('inquiries/HARNESS-PROOF-001/constitutional-environment.json'))
+          bindings = {m['minister_id']: m for m in env['ministers']}
+          assert bindings['leo-strauss']['certified_base_commit'] == 'fb417d1d4ab7b5d349e801544c0c703d8998a93f'
+          assert bindings['leo-strauss']['runtime_overlay_commit'] == '38880f5560b9691e6f7d1c834eb1e53cf2ca75a1'
+          assert bindings['xenophon']['certified_base_commit'] == 'b665e323d0780431764b565616e629b2e2aec00f'
+          assert bindings['xenophon']['runtime_overlay_commit'] == '827fb49bff91aa19487b62bc42ec0987d4a2d905'
+          PY
+
+      - name: Re-run existing forward safeguards
+        working-directory: estate/Sanctum
+        run: python -m pytest -q tests/test_minister_horus.py tests/test_adversarial_horus.py tests/test_evidence_genealogy.py tests/test_secretary_audit.py tests/test_universal_dispatch.py
+
+      - name: Upload proving artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: federated-end-to-end-proving-inquiry
+          path: |
+            estate/Sanctum/universal-probe.json
+            estate/Sanctum/federated-proof.json
+            estate/Sanctum/inquiries/HARNESS-PROOF-001/**
+            estate/Sanctum/reports/harness-proof/**
+            estate/Sanctum/exchanges/HARNESS-PROOF-001/**
+          if-no-files-found: ignore
