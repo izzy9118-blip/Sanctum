@@ -13,24 +13,28 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: estate/Sanctum
+          fetch-depth: 0
       - name: Check out Horus at canonical acquisition pin
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Horus
           ref: ec82d22f1cb6d7d944b8347f8c7516b1fd38affc
           path: estate/Horus
-      - name: Check out Strauss at registry pin
+          fetch-depth: 0
+      - name: Check out Strauss at adapter-only runtime overlay
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Strauss
-          ref: fb417d1d4ab7b5d349e801544c0c703d8998a93f
+          ref: 38880f5560b9691e6f7d1c834eb1e53cf2ca75a1
           path: estate/Strauss
-      - name: Check out Xenophon at registry pin
+          fetch-depth: 0
+      - name: Check out Xenophon at adapter-only runtime overlay
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Xenophon
-          ref: b665e323d0780431764b565616e629b2e2aec00f
+          ref: 827fb49bff91aa19487b62bc42ec0987d4a2d905
           path: estate/Xenophon
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -44,7 +48,7 @@ jobs:
       - name: Compile environment and Horus boundary runtime
         working-directory: estate/Sanctum
         run: |
-          python -m py_compile constitutional_environment.py sovereign_round.py minister_horus.py adversarial_horus.py source_absence.py
+          python -m py_compile constitutional_environment.py universal_dispatch.py federated_proving.py sovereign_round.py minister_horus.py adversarial_horus.py source_absence.py
           python -m py_compile ../Horus/runtime/calendars.py ../Horus/runtime/source_registry.py ../Horus/runtime/acquisition.py ../Horus/runtime/gather.py
       - name: Verify exact Horus acquisition pin and protocol
         working-directory: estate/Sanctum
@@ -62,6 +66,12 @@ jobs:
           assert manifest['charter_amendments'][-1]['id'] == 'HORUS-AMD-005'
           assert manifest['charter_amendments'][-1]['status'] == 'RATIFIED_BY_OWNER'
           PY
+      - name: Verify minister runtime overlays preserve certified corpora
+        run: |
+          git -C estate/Strauss merge-base --is-ancestor fb417d1d4ab7b5d349e801544c0c703d8998a93f 38880f5560b9691e6f7d1c834eb1e53cf2ca75a1
+          test "$(git -C estate/Strauss diff --name-only fb417d1d4ab7b5d349e801544c0c703d8998a93f..38880f5560b9691e6f7d1c834eb1e53cf2ca75a1)" = "sanctum_adapter.py"
+          git -C estate/Xenophon merge-base --is-ancestor b665e323d0780431764b565616e629b2e2aec00f 827fb49bff91aa19487b62bc42ec0987d4a2d905
+          test "$(git -C estate/Xenophon diff --name-only b665e323d0780431764b565616e629b2e2aec00f..827fb49bff91aa19487b62bc42ec0987d4a2d905)" = "sanctum_adapter.py"
       - name: Parse constitutional environment contracts
         working-directory: estate/Sanctum
         run: |
@@ -69,8 +79,9 @@ jobs:
           import json, yaml
           json.load(open('contracts/constitutional-environment.schema.json'))
           yaml.safe_load(open('standards/constitutional-environment-manifest.yaml'))
+          yaml.safe_load(open('registry/adapters.v1.yaml'))
           PY
-      - name: Build manifest against exact live estate pins
+      - name: Build manifest against exact live estate pins and overlays
         working-directory: estate/Sanctum
         run: python constitutional_environment.py --config ../config.yaml --inquiry-id CI-CONSTITUTIONAL-ENVIRONMENT
       - name: Validate generated manifest schema and hard bindings
@@ -87,9 +98,14 @@ jobs:
           Draft202012Validator(schema).validate(doc)
           validate_manifest(doc, estate=estate)
           assert doc['sanctum']['registry']['version'] == '3.2.0'
+          assert doc['sanctum']['adapter_registry']['version'] == '1.0.0'
           assert {m['minister_id'] for m in doc['ministers']} == {'leo-strauss', 'xenophon'}
+          strauss = next(m for m in doc['ministers'] if m['minister_id'] == 'leo-strauss')
           xenophon = next(m for m in doc['ministers'] if m['minister_id'] == 'xenophon')
-          assert xenophon['pinned_commit'] == 'b665e323d0780431764b565616e629b2e2aec00f'
+          assert strauss['certified_base_commit'] == 'fb417d1d4ab7b5d349e801544c0c703d8998a93f'
+          assert strauss['runtime_overlay_commit'] == '38880f5560b9691e6f7d1c834eb1e53cf2ca75a1'
+          assert xenophon['certified_base_commit'] == 'b665e323d0780431764b565616e629b2e2aec00f'
+          assert xenophon['runtime_overlay_commit'] == '827fb49bff91aa19487b62bc42ec0987d4a2d905'
           PY
       - name: Prove tampering fails closed
         working-directory: estate/Sanctum
@@ -101,13 +117,13 @@ jobs:
           estate = Path('..').resolve()
           doc = json.load(open('inquiries/CI-CONSTITUTIONAL-ENVIRONMENT/constitutional-environment.json'))
           bad = copy.deepcopy(doc)
-          bad['ministers'][0]['pinned_commit'] = '0' * 40
+          bad['ministers'][0]['runtime_overlay_commit'] = '0' * 40
           try:
               validate_manifest(bad, estate=estate)
           except ConstitutionalEnvironmentError:
               pass
           else:
-              raise SystemExit('pin tampering was not rejected')
+              raise SystemExit('overlay pin tampering was not rejected')
           bad = copy.deepcopy(doc)
           bad['sanctum']['assembly_spec']['sha256'] = '0' * 64
           try:
@@ -119,4 +135,4 @@ jobs:
           PY
       - name: Re-run current Horus, synthesis and Secretary safeguards
         working-directory: estate/Sanctum
-        run: python -m pytest -q tests/test_minister_horus.py tests/test_adversarial_horus.py tests/test_source_absence.py tests/test_canonical_horus_runtime.py tests/test_proposition_matrix.py tests/test_ministerial_silence.py tests/test_secretary_audit.py
+        run: python -m pytest -q tests/test_minister_horus.py tests/test_adversarial_horus.py tests/test_source_absence.py tests/test_canonical_horus_runtime.py tests/test_proposition_matrix.py tests/test_ministerial_silence.py tests/test_secretary_audit.py tests/test_universal_dispatch.py

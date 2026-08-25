@@ -1,20 +1,18 @@
 ---
 record_type: sanctum_constitutional_environment_manifest_standard
 id: CONSTITUTIONAL-ENVIRONMENT-001
-version: 1.2.0
+version: 1.1.0
 status: RATIFIED_BY_OWNER
 ratification:
-  date: 2026-08-24
+  date: 2026-08-10
   authority: REPOSITORY_OWNER_DIRECTIVE
-  directive: "Do it"
-  predecessor: standards/constitutional-environment-manifest.v1.1.0.yaml
-date: 2026-08-24
+  directive: "Let's do it"
+  predecessor: standards/constitutional-environment-manifest.v1.0.0.yaml
+date: 2026-08-10
 purpose: >-
   Bind every forward Assembly inquiry to the exact constitutional and repository
   environment under which it was executed, including a Sanctum-owned immutable
-  Horus pin, the exact acquisition runtime, each owner-certified minister corpus pin,
-  and the separately pinned adapter overlay used to expose that sovereign repository
-  to the universal harness.
+  Horus pin and the exact acquisition contracts/runtime that produced the ground.
 required_bindings:
   sanctum:
     - repository_commit
@@ -23,9 +21,6 @@ required_bindings:
     - registry_path
     - registry_version
     - registry_sha256
-    - adapter_registry_path
-    - adapter_registry_version
-    - adapter_registry_sha256
     - final_judgment_contract_path
     - final_judgment_contract_sha256
     - proposition_matrix_standard_path
@@ -56,9 +51,6 @@ required_bindings:
     - minister_id
     - repository
     - pinned_commit
-    - certified_base_commit
-    - runtime_overlay_commit
-    - adapter_entrypoint
     - manifest_path
     - manifest_sha256
   runtime:
@@ -67,16 +59,14 @@ required_bindings:
     - manifest_builder_sha256
 hard_rules:
   - Every established minister in the live registry must appear exactly once.
-  - The owner-certified minister pin remains the sovereign corpus authority.
-  - A runtime adapter overlay must descend from that certified pin and may alter only the adapter entrypoint explicitly allowed by registry/adapters.v1.yaml.
-  - A minister checkout used by a forward harness run must match the exact runtime_overlay_commit; the manifest and all minister documentary files remain those of the certified base unless separately repinned by owner action.
+  - A checked-out sovereign minister repository must match the registry pinned_commit.
   - Horus must be registered by Sanctum at an exact immutable commit before a forward reasoned inquiry may run.
   - The checked-out Horus repository must equal registry/horus.yaml pinned_commit; recording a floating checkout is insufficient.
   - The Horus response contract, acquisition receipt contract, principal source profile contract and canonical runtime are bound by path and SHA-256.
   - Production reasoned rounds invoke the canonical runtime from the pinned Horus checkout; arbitrary Horus commands are test-only overrides.
   - Every governing file is bound by path and SHA-256, not by version label alone.
   - The Sanctum commit is recorded from the checked-out repository and may not be replaced by a branch name.
-  - A manifest with a missing required repository, file, hash, protocol, base pin, overlay pin, or overlay-diff mismatch fails closed.
+  - A manifest with a missing required repository, file, hash, protocol, or pin mismatch fails closed.
   - Historical manifests are immutable records of the environment that actually governed that inquiry.
   - Manifest validation certifies identity and reproducibility only; it never certifies truth or completeness.
 output:

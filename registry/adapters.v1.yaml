@@ -1,0 +1,38 @@
+record_type: sanctum_adapter_registry
+version: 1.0.0
+protocol: sanctum.adapter.v1
+status: OWNER_AUTHORIZED_OPERATIONAL_OVERLAYS
+authority: REPOSITORY_OWNER_DIRECTIVE
+ratification:
+  date: "2026-08-24"
+  directive: "Do it"
+  scope: >-
+    Adopt the universal adapter transport as a runtime overlay only. The certified
+    minister corpora remain pinned to their prior owner-certified commits. Each runtime
+    overlay must descend directly from that certified base and may differ only by the
+    addition of sanctum_adapter.py.
+rule: >-
+  Adapter overlays are transport code, not ministerial doctrine. An overlay commit is
+  admissible only when the authoritative minister pin is its ancestor and the diff from
+  that certified pin contains exactly sanctum_adapter.py. Any other changed path fails
+  closed and requires a separate minister repin decision.
+bindings:
+  - minister_id: leo-strauss
+    repository: izzy9118-blip/Strauss
+    certified_base_commit: fb417d1d4ab7b5d349e801544c0c703d8998a93f
+    runtime_overlay_commit: 38880f5560b9691e6f7d1c834eb1e53cf2ca75a1
+    entrypoint: sanctum_adapter.py
+    protocol: sanctum.adapter.v1
+    overlay_branch: agent/certified-pin-adapter-overlay
+    allowed_overlay_paths:
+      - sanctum_adapter.py
+  - minister_id: xenophon
+    repository: izzy9118-blip/Xenophon
+    certified_base_commit: b665e323d0780431764b565616e629b2e2aec00f
+    runtime_overlay_commit: 827fb49bff91aa19487b62bc42ec0987d4a2d905
+    entrypoint: sanctum_adapter.py
+    protocol: sanctum.adapter.v1
+    overlay_branch: agent/certified-pin-adapter-overlay
+    allowed_overlay_paths:
+      - sanctum_adapter.py
+certification: NONE_SELF_CERTIFICATION_PROHIBITED
