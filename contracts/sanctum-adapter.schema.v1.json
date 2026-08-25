@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:sanctum:adapter:1.0.0",
+  "$id": "urn:sanctum:adapter:1.0.1",
   "title": "Sanctum Universal Minister Adapter Protocol v1",
-  "description": "Forward-only transport contract. Sanctum owns dispatch and exact pins; sovereign repositories own minister-local context assembly and validation. Conformance certifies neither truth nor doctrine.",
+  "description": "Transport contract. Sanctum owns dispatch and exact pins; sovereign repositories own minister-local context assembly and validation. Conformance certifies neither truth nor doctrine.",
   "oneOf": [
     {"$ref": "#/$defs/descriptor"},
     {"$ref": "#/$defs/request"},
@@ -36,7 +36,12 @@
           ]
         },
         "capabilities": {"type": "array", "items": {"type": "string"}},
-        "authority": {"const": "CANDIDATE_FORWARD_INTERFACE_NOT_OWNER_CERTIFICATION"}
+        "authority": {
+          "enum": [
+            "CANDIDATE_FORWARD_INTERFACE_NOT_OWNER_CERTIFICATION",
+            "OWNER_AUTHORIZED_ADAPTER_OVERLAY_NO_DOCTRINAL_CHANGE"
+          ]
+        }
       }
     },
     "request": {
