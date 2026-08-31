@@ -30,6 +30,7 @@ import os
 import re
 import subprocess
 import sys
+import tempfile
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -566,6 +567,36 @@ def call(config: dict, context: str, *, pass_token=None, stage_receipt=None):
             "model": "stub",
             "usage": {},
         }
+
+    if provider == "codex_cli":
+        command = config.get("command", "codex")
+        workdir = str(Path(config.get("workdir", os.getcwd())).expanduser().resolve())
+        with tempfile.TemporaryDirectory(prefix="sanctum-codex-") as temp_dir:
+            output_path = Path(temp_dir) / "last-message.json"
+            argv = [command]
+            if config.get("model"):
+                argv.extend(["-m", str(config["model"])])
+            if config.get("search") is True:
+                argv.append("--search")
+            argv.extend([
+                "exec", "--ephemeral", "--ignore-rules",
+                "-s", "read-only", "-C", workdir, "--color", "never",
+                "-o", str(output_path), "-",
+            ])
+            proc = subprocess.run(
+                argv, input=context, text=True, capture_output=True, check=False,
+                shell=False, timeout=int(config.get("timeout_seconds", 1200)),
+            )
+            if proc.returncode != 0:
+                detail = (proc.stderr or proc.stdout or "no detail").strip()
+                raise SystemExit("CALL: codex_cli failed: %s" % detail[-2000:])
+            if not output_path.is_file():
+                raise SystemExit("CALL: codex_cli returned no final-message artifact")
+            return {
+                "text": output_path.read_text(encoding="utf-8").strip(),
+                "model": config.get("model", "codex-cli-configured-model"),
+                "usage": {},
+            }
 
     key = os.environ.get(config.get("key_env", ""), "")
     if not key:

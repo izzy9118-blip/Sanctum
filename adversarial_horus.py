@@ -64,7 +64,19 @@ def validate_provisional_judgment(record: Dict[str, Any]) -> Dict[str, Any]:
 def build_adversarial_query(provisional: Dict[str, Any], investigative_query: Dict[str, Any] | None = None) -> Dict[str, Any]:
     validate_provisional_judgment(provisional)
     propositions = provisional["propositions"]
-    seed = json.dumps({"inquiry_id": provisional["inquiry_id"], "minister_id": provisional["minister_id"], "propositions": propositions}, sort_keys=True, separators=(",", ":")).encode()
+    investigative_original_t1 = any(
+        item.get("original_language_required") is True
+        and (not item.get("acceptable_tiers") or "T1" in item.get("acceptable_tiers", []))
+        for item in (investigative_query or {}).get("source_requirements", [])
+        if isinstance(item, dict)
+    )
+    seed = json.dumps({
+        "inquiry_id": provisional["inquiry_id"],
+        "minister_id": provisional["minister_id"],
+        "propositions": propositions,
+        "principal_scope": list((investigative_query or {}).get("principal_scope") or []),
+        "time_scope": dict((investigative_query or {}).get("time_scope") or {}),
+    }, sort_keys=True, separators=(",", ":")).encode()
     short = hashlib.sha256(seed).hexdigest()[:12].upper()
     query = {
         "record_type": ADVERSARIAL_QUERY_RECORD_TYPE,
@@ -73,7 +85,7 @@ def build_adversarial_query(provisional: Dict[str, Any], investigative_query: Di
         "minister_id": provisional["minister_id"],
         "provisional_propositions": [{"proposition_id": p["proposition_id"], "claim": p["claim"], "kind": p["kind"]} for p in propositions],
         "information_needed": [p["disconfirmation_need"] for p in propositions],
-        "source_requirements": [{"proposition_id": p["proposition_id"], "requirement": p["disconfirmation_need"], "rationale": p["why_it_matters"], "acceptable_tiers": p.get("acceptable_tiers", []), "original_language_required": bool(p.get("original_language_required", False))} for p in propositions],
+        "source_requirements": [{"proposition_id": p["proposition_id"], "requirement": p["disconfirmation_need"], "rationale": p["why_it_matters"], "acceptable_tiers": p.get("acceptable_tiers", []), "original_language_required": bool(p.get("original_language_required", False) or investigative_original_t1)} for p in propositions],
         "specific_document_requests": [],
         "principal_scope": list((investigative_query or {}).get("principal_scope") or []),
         "time_scope": dict((investigative_query or {}).get("time_scope") or {}),

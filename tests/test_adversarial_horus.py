@@ -132,6 +132,26 @@ class AdversarialHorusCall(unittest.TestCase):
         self.assertEqual(item["principal_scope"], ["Ukraine"])
         self.assertEqual(item["time_scope"], {"start": "2026-07-22", "end": "2026-08-08"})
 
+    def test_adversarial_query_identity_binds_scope_and_time(self):
+        first = build_adversarial_query(provisional(), {
+            "principal_scope": ["iran"],
+            "time_scope": {"start": "2026-08-10", "end": "2026-08-10"},
+        })
+        second = build_adversarial_query(provisional(), {
+            "principal_scope": ["united-states"],
+            "time_scope": {"start": "2026-08-11", "end": "2026-08-11"},
+        })
+        self.assertNotEqual(first["query_id"], second["query_id"])
+
+    def test_adversarial_query_inherits_investigative_original_language_floor(self):
+        investigative = investigative_query()
+        investigative["source_requirements"] = [{
+            "acceptable_tiers": ["T1"],
+            "original_language_required": True,
+        }]
+        item = build_adversarial_query(provisional(), investigative)
+        self.assertTrue(all(req["original_language_required"] for req in item["source_requirements"]))
+
     def test_original_language_adversarial_request_requires_inherited_principal_scope(self):
         item = provisional()
         item["propositions"][0]["acceptable_tiers"] = ["T1"]

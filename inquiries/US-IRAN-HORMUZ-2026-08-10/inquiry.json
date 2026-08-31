@@ -1,0 +1,85 @@
+{
+  "record_type": "immutable_live_proving_inquiry",
+  "version": "1.0.0-reconstruction",
+  "inquiry_id": "US-IRAN-HORMUZ-2026-08-10",
+  "status": "FROZEN_RECONSTRUCTION_NOT_VERBATIM",
+  "question": "As of 10 August 2026, what do the United States and Iran each officially maintain about the immediate safe-passage function attributed to the 17 June U.S.-Iran memorandum and the later Omani/IMO corridor, and what, if anything, does authenticated documentary and operational evidence permit the ministers to conclude about the continuity and character of the United States' assent?",
+  "reconstruction": {
+    "high_level_question_status": "NOT_PRESERVED_RECONSTRUCTED",
+    "surviving_query_id": "MHQ-US-IRAN-20260810",
+    "surviving_minister_id": "xenophon",
+    "surviving_information_need": "Current official positions of the United States and Iran regarding the dispute.",
+    "surviving_requirement": "Hear both principals in their own current words before judgment."
+  },
+  "time_scope": {
+    "start": "2026-08-10",
+    "end": "2026-08-10",
+    "as_of": "2026-08-10",
+    "iran_local_end_date": "1405-05-19"
+  },
+  "event_window": {
+    "start": "2026-06-17",
+    "end": "2026-08-10"
+  },
+  "lookahead_policy": {
+    "post_cutoff_substantive_evidence": "PROHIBITED",
+    "later_retrieval_metadata": "PERMITTED",
+    "archived_pre_cutoff_material_retrieved_later": "PERMITTED_IF_PUBLICATION_AND_EVENT_DATE_ARE_VERIFIED"
+  },
+  "principal_scope": ["united-states", "iran"],
+  "board": {
+    "board_id": "us-iran-hormuz-2026-08-10",
+    "board_type": "international_dispute",
+    "frozen_at": "2026-08-31T19:35:48Z",
+    "roster": [
+      {
+        "principal_id": "united-states",
+        "name": "United States",
+        "type": "body",
+        "roster_state": "ENUMERATED",
+        "language": "English",
+        "language_state": "UNRECORDED",
+        "provenance_flag": "NOT_GATHERED"
+      },
+      {
+        "principal_id": "iran",
+        "name": "Islamic Republic of Iran",
+        "type": "body",
+        "roster_state": "ENUMERATED",
+        "language": "Persian",
+        "language_state": "UNRECORDED",
+        "provenance_flag": "NOT_GATHERED"
+      }
+    ]
+  },
+  "contextual_actors": [
+    {"actor_id": "oman", "name": "Oman", "type": "body", "role": "intermediary and reported corridor channel", "principal": false},
+    {"actor_id": "international-maritime-organization", "name": "International Maritime Organization", "type": "body", "role": "reported corridor channel", "principal": false},
+    {"actor_id": "unidentified-us-decision-maker", "name": "Relevant United States decision-maker", "type": "person", "role": "dated conduct-file subject", "identity_state": "NOT_PRESERVED_IN_SURVIVING_INQUIRY_RECORD", "principal": false}
+  ],
+  "framing_dangers": [
+    "Do not treat the memorandum as self-interpreting or authoritative merely because it was written or signed.",
+    "Do not presuppose bad faith or repudiation rather than discriminating among live alternatives.",
+    "Do not treat formal Omani authorship as autonomous judgment or assume United States control without proof.",
+    "Do not promote an unofficial transcript or press description into the authenticated memorandum.",
+    "Do not hear Iran only through English translations, foreign reporting, or original-language commentary.",
+    "Do not convert a blocked or unsuccessful search into evidence of absence.",
+    "Do not use post-10-August events to resolve the historically frozen inquiry."
+  ],
+  "common_briefing": {
+    "record_type": "immutable_common_briefing",
+    "content": "This is a bounded historical proving inquiry reconstructed from surviving repository records; it is not a preserved verbatim inquiry manifest and supplies no substantive conclusion. The evidentiary cutoff is 10 August 2026. The surviving Horus need is to obtain the current official positions of the United States and Iran regarding the dispute. The contextual record identifies that dispute as the safe-passage function associated with the 17 June 2026 U.S.-Iran memorandum and the subsequent Omani/IMO corridor, including reported U.S. oversight, Iranian objection, interests served by the alternative route, and a relevant U.S. decision-maker's dated conduct. None of those contextual propositions is established merely by being stated here. The frozen documentary intake is inquiries/US-IRAN-HORMUZ-2026-08-10/source-packet.md. It preserves earlier official legal frames, contemporaneous secondary reports, and explicit gaps; post-cutoff publications are controls only and may not resolve the inquiry. The correct Iranian local date for 10 August 2026 is 19 Mordad 1405 (1405-05-19), not 20 Mordad. Every established minister receives this exact record. All facts must be acquired, source-bound, and adversarially tested; Horus must preserve blocked or unfilled first-party requests.",
+    "source_packet": "inquiries/US-IRAN-HORMUZ-2026-08-10/source-packet.md",
+    "identical_for_all_ministers": true,
+    "presidential_synthesis": "NOT_AUTHORIZED_FOR_PROVING_RUN",
+    "owner_certification": "NOT_REQUESTED"
+  },
+  "execution_constraints": {
+    "same_inquiry_and_briefing_for_all_established_ministers": true,
+    "current_established_ministers": ["leo-strauss", "xenophon"],
+    "presidential_synthesis": "PROHIBITED_FOR_FIRST_LIVE_PROOF",
+    "source_absence_taxonomy": "HORUS-SOURCE-STATE-1.0",
+    "acquisition_protocol": "HORUS-ACQUISITION-1.0",
+    "completeness": "PENDING_PROBE"
+  }
+}
