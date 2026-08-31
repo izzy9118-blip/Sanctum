@@ -55,7 +55,8 @@ def test_xenophon_registry_entry_matches_federation_contract():
     assert scope["greek_dependent_claims"] == "PROHIBITED"
     assert scope["unresolved_question_count"] == 37
     assert scope["final_teaching_authorized"] is False
-    assert scope["assembly_dispatch_status"] == "PENDING_END_TO_END_PROVING_INQUIRY"
+    assert scope["assembly_dispatch_status"] == \
+        "DETERMINISTIC_END_TO_END_PROVING_PATH_ESTABLISHED_LIVE_PROOF_PENDING"
     summary = xenophon["current_manifest_summary"]
     assert summary["manifest_blob_sha"] == "8f9e0bf4143dc40436f8df4ad683cc7b0b367f4b"
     inventory = summary["operational_inventory"]
@@ -73,11 +74,22 @@ def test_xenophon_registry_entry_matches_federation_contract():
 def test_registry_contains_two_established_sovereign_ministers():
     registry, _ = registry_and_schema()
     established = [item for item in registry["ministers"] if item.get("membership_status") == "established"]
-    assert registry["version"] == "3.2.0"
-    assert registry["revision"]["predecessor_version"] == "3.1.0"
-    assert registry["revision"]["predecessor_commit"] == "23078c3abc1b72ecec0a280ddea70631a37d3e7c"
+    assert registry["version"] == "3.3.0"
+    assert registry["revision"]["predecessor_version"] == "3.2.0"
+    assert registry["revision"]["predecessor_commit"] == "2b22b3cbb2caf809c6ad9638cdfb6e69c334a285"
     assert [item["minister_id"] for item in established] == ["leo-strauss", "xenophon"]
     assert len({item["repository"] for item in established}) == 2
+
+
+def test_xenophon_dispatch_summary_distinguishes_fixture_from_live_proof():
+    registry, _ = registry_and_schema()
+    xenophon = next(item for item in registry["ministers"] if item["minister_id"] == "xenophon")
+    scope = xenophon["authorization_scope"]
+    assert scope["assembly_dispatch_status"] == \
+        "DETERMINISTIC_END_TO_END_PROVING_PATH_ESTABLISHED_LIVE_PROOF_PENDING"
+    limits = xenophon["current_manifest_summary"]["evidentiary_limits_preserved"]
+    assert "deterministic end-to-end Assembly dispatch has been proved" in limits
+    assert "live evidence-bearing Assembly proving inquiry remains pending" in limits
 
 
 def test_registry_policy_forbids_upstream_selection():

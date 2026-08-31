@@ -27,6 +27,7 @@ from typing import Any
 from jsonschema import Draft202012Validator
 
 import harness
+import secretary_gate
 import universal_dispatch
 from adversarial_horus import required_adversarial_horus_call, validate_provisional_judgment
 from constitutional_environment import write_manifest
@@ -88,14 +89,18 @@ def _briefing(inquiry: dict[str, Any]) -> dict[str, Any]:
 
 def _call_model(config: dict[str, Any], prompt: str, *, fixture: bool, stage: str,
                 minister: dict[str, Any], inquiry: dict[str, Any],
-                prepared: dict[str, Any], exchanges: list[dict[str, Any]]) -> dict[str, Any]:
+                prepared: dict[str, Any], exchanges: list[dict[str, Any]],
+                pass_token: dict[str, Any], stage_receipt: dict[str, Any]) -> dict[str, Any]:
+    # The deterministic fixture exercises the same constitutional boundary as a
+    # live provider. A fixture may replace a model; it may not replace procedure.
+    secretary_gate.verify_stage_receipt(pass_token, stage_receipt)
     if fixture:
         return {
             "text": json.dumps(_fixture_output(stage, minister, inquiry, prepared, exchanges), sort_keys=True),
             "model": "sanctum-deterministic-proving-fixture",
             "usage": {},
         }
-    return harness.call(config, prompt)
+    return harness.call(config, prompt, pass_token=pass_token, stage_receipt=stage_receipt)
 
 
 def _fixture_output(stage: str, minister: dict[str, Any], inquiry: dict[str, Any],
@@ -105,6 +110,10 @@ def _fixture_output(stage: str, minister: dict[str, Any], inquiry: dict[str, Any
     inquiry_id = inquiry["inquiry_id"]
     suffix = minister_id.upper().replace("-", "_")
     if stage == "investigative_query":
+        principal_scope = [
+            item["principal_id"] for item in inquiry["board"]["roster"]
+            if item.get("roster_state", "ENUMERATED") == "ENUMERATED"
+        ]
         return {
             "record_type": "minister_horus_query",
             "query_id": f"MHQ-PROOF-{suffix}",
@@ -118,7 +127,7 @@ def _fixture_output(stage: str, minister: dict[str, Any], inquiry: dict[str, Any
                 "original_language_required": False,
             }],
             "specific_document_requests": [],
-            "principal_scope": [],
+            "principal_scope": principal_scope,
             "disallowed_substitutions": ["Do not convert NOT_SEARCHED or NOT_GATHERED into evidence of absence."],
             "reason_for_request": "Exercise the mandatory investigative Horus boundary before provisional judgment.",
             "source_selection_rule": "HORUS_RETAINS_SOURCE_SELECTION_INDEPENDENCE_EXCEPT_EXPLICIT_DOCUMENT_REQUESTS",
@@ -229,7 +238,9 @@ def _prompt(stage: str, prepared: dict[str, Any], inquiry: dict[str, Any], excha
     )
 
 
-def _run_horus(horus: Path, query: dict[str, Any], *, fixture: bool) -> dict[str, Any]:
+def _run_horus(horus: Path, query: dict[str, Any], *, fixture: bool,
+               pass_token: dict[str, Any], stage_receipt: dict[str, Any]) -> dict[str, Any]:
+    secretary_gate.verify_stage_receipt(pass_token, stage_receipt)
     runtime = horus / HORUS_RUNTIME
     _require(runtime.is_file(), f"canonical Horus runtime missing: {runtime}")
     env = os.environ.copy()
@@ -274,39 +285,150 @@ def _adapter_validate(repo: Path, entrypoint: str, report: dict[str, Any]) -> di
     return universal_dispatch._invoke(repo, entrypoint, "validate-report", report)
 
 
+def _secretary_gate_for_minister(*, hub: Path, inquiry: dict[str, Any], inquiry_path: Path,
+                                 minister_id: str) -> tuple[dict[str, Any], dict[str, Any], secretary_gate.StageLedger, Path, Path]:
+    """Materialize the minister-specific pre-run gate from the immutable inquiry.
+
+    The inquiry owns the roster and language/provenance declarations. The runner
+    merely records them and binds the gate to the exact inquiry bytes; it does not
+    add principals or grade their documentary standing.
+    """
+    board = inquiry.get("board")
+    _require(isinstance(board, dict), "inquiry.board is required by the Secretary pre-run gate")
+    roster = board.get("roster")
+    _require(isinstance(roster, list) and roster, "inquiry.board.roster must enumerate the principals")
+    frozen_at = board.get("frozen_at")
+    _require(isinstance(frozen_at, str) and frozen_at, "inquiry.board.frozen_at is required")
+
+    gate_roster = []
+    query_plan = []
+    for item in roster:
+        _require(isinstance(item, dict), "every inquiry.board.roster entry must be an object")
+        principal_id = item.get("principal_id")
+        state = item.get("roster_state", "ENUMERATED")
+        entry = {
+            "principal_id": principal_id,
+            "name": item.get("name"),
+            "type": item.get("type"),
+            "roster_state": state,
+            "language": item.get("language"),
+            "language_state": item.get("language_state"),
+            "provenance_flag": item.get("provenance_flag"),
+        }
+        if state == "ABSENT_DECLARED":
+            entry["absence_reason"] = item.get("absence_reason")
+        else:
+            query_plan.append({
+                "plan_id": f"QP-{principal_id}",
+                "principals": [principal_id],
+                "information_sought": "Documentary ground bearing on the immutable inquiry for this principal.",
+                "language": item.get("language"),
+            })
+        gate_roster.append(entry)
+
+    checklist = {
+        "record_type": secretary_gate.CHECKLIST_RECORD_TYPE,
+        "gate_standard": secretary_gate.GATE_STANDARD,
+        "checklist_id": f"SPC-{inquiry['inquiry_id']}-{minister_id}",
+        "inquiry_id": inquiry["inquiry_id"],
+        "board": board.get("board_id"),
+        "board_type": board.get("board_type"),
+        "minister_id": minister_id,
+        "room": "harness",
+        "board_manifest": {
+            "path": str(inquiry_path),
+            "sha256": hashlib.sha256(inquiry_path.read_bytes()).hexdigest(),
+            "frozen": True,
+            "frozen_at": frozen_at,
+        },
+        "roster": gate_roster,
+        "query_plan": query_plan,
+        "query_plan_rule": secretary_gate.QUERY_PLAN_RULE,
+        "sequence": list(secretary_gate.REQUIRED_SEQUENCE + secretary_gate.OPTIONAL_TRAILING_STAGES),
+        "one_shot_dispatch": "NON_CONFORMING",
+        "enumeration_precedes_gathering": True,
+        "timestamps": {
+            "enumerated_at": frozen_at,
+            "query_plan_recorded_at": frozen_at,
+            "board_frozen_at": frozen_at,
+            "submitted_at": secretary_gate.utc_now(),
+        },
+        "certification": secretary_gate.CERTIFICATION,
+    }
+    token = secretary_gate.open_gate(checklist)
+    gate_dir = hub / "inquiries" / inquiry["inquiry_id"] / "secretary-gate" / minister_id
+    checklist_path = gate_dir / "checklist.json"
+    token_path = gate_dir / "pass-token.json"
+    secretary_gate.write_json(checklist_path, checklist)
+    secretary_gate.write_json(token_path, token)
+    return checklist, token, secretary_gate.StageLedger(token), checklist_path, token_path
+
+
+def _render_auditable_dispatch(checklist: dict[str, Any], package: dict[str, Any], minister_id: str) -> str:
+    """Render structural seams the Secretary can audit without reading substance."""
+    lines = ["# Documentary positions", ""]
+    for principal in checklist["roster"]:
+        if principal["roster_state"] != "ENUMERATED":
+            continue
+        lines.extend([
+            f"## POSITION — {principal['name']} [{principal['principal_id']}]",
+            f"PROVENANCE: {principal['provenance_flag']} — {principal['language']}",
+        ])
+        if principal["provenance_flag"] == "NOT_GATHERED":
+            lines.append("SILENCE: UNCERTAIN")
+        lines.extend(["", "The documentary position is preserved at the frozen board's recorded provenance state.", ""])
+    lines.extend([f"# MINISTERIAL JUDGMENT — {minister_id}", "", render_report(package)])
+    return "\n".join(lines)
+
+
 def _run_minister(*, estate: Path, hub: Path, horus: Path, inquiry: dict[str, Any],
                   prepared: dict[str, Any], minister: dict[str, Any], binding: dict[str, Any],
-                  repo: Path, model_config: dict[str, Any], fixture: bool, date: str) -> dict[str, Any]:
+                  repo: Path, model_config: dict[str, Any], fixture: bool, date: str,
+                  inquiry_path: Path) -> dict[str, Any]:
     minister_id = minister["minister_id"]
     runtime_commit = binding["runtime_overlay_commit"]
     _require(prepared["repository_commit"] == runtime_commit, f"{minister_id} prepared runtime commit mismatch")
     exchanges: list[dict[str, Any]] = []
+    checklist, pass_token, ledger, checklist_path, token_path = _secretary_gate_for_minister(
+        hub=hub, inquiry=inquiry, inquiry_path=inquiry_path, minister_id=minister_id
+    )
 
+    investigative_receipt = ledger.enter("investigative_query")
     first = _call_model(model_config, _prompt("investigative_query", prepared, inquiry, exchanges), fixture=fixture,
-                        stage="investigative_query", minister=minister, inquiry=inquiry, prepared=prepared, exchanges=exchanges)
+                        stage="investigative_query", minister=minister, inquiry=inquiry, prepared=prepared, exchanges=exchanges,
+                        pass_token=pass_token, stage_receipt=investigative_receipt)
     query = _json_object(first["text"], f"{minister_id} investigative query")
     validate_query(query)
+    secretary_gate.require_roster_coverage(checklist, query.get("principal_scope"))
     _require(query["inquiry_id"] == inquiry["inquiry_id"] and query["minister_id"] == minister_id, "investigative query identity mismatch")
     _require(query["provenance"]["repository_commit"] == runtime_commit, "investigative query runtime commit mismatch")
-    response = required_horus_call(query, lambda q: _run_horus(horus, q, fixture=fixture))
+    response = required_horus_call(query, lambda q: _run_horus(
+        horus, q, fixture=fixture, pass_token=pass_token, stage_receipt=investigative_receipt))
     _require(response.get("provenance", {}).get("horus_repository_commit") == _git_head(horus), "investigative Horus provenance mismatch")
     exchanges.append(_write_exchange(hub, inquiry["inquiry_id"], minister_id, "investigative", query, response))
 
+    provisional_receipt = ledger.enter("provisional_judgment")
     provisional_call = _call_model(model_config, _prompt("provisional", prepared, inquiry, exchanges), fixture=fixture,
-                                   stage="provisional", minister=minister, inquiry=inquiry, prepared=prepared, exchanges=exchanges)
+                                   stage="provisional", minister=minister, inquiry=inquiry, prepared=prepared, exchanges=exchanges,
+                                   pass_token=pass_token, stage_receipt=provisional_receipt)
     provisional = _json_object(provisional_call["text"], f"{minister_id} provisional judgment")
     validate_provisional_judgment(provisional)
     _require(provisional["inquiry_id"] == inquiry["inquiry_id"] and provisional["minister_id"] == minister_id, "provisional identity mismatch")
     _require(provisional["provenance"]["repository_commit"] == runtime_commit, "provisional runtime commit mismatch")
 
+    adversarial_receipt = ledger.enter("adversarial_pass")
     adversarial_query, adversarial_response = required_adversarial_horus_call(
-        provisional, lambda q: _run_horus(horus, q, fixture=fixture), investigative_query=query
+        provisional, lambda q: _run_horus(
+            horus, q, fixture=fixture, pass_token=pass_token, stage_receipt=adversarial_receipt),
+        investigative_query=query
     )
     _require(adversarial_response.get("provenance", {}).get("horus_repository_commit") == _git_head(horus), "adversarial Horus provenance mismatch")
     exchanges.append(_write_exchange(hub, inquiry["inquiry_id"], minister_id, "adversarial", adversarial_query, adversarial_response))
 
+    final_receipt = ledger.enter("final_judgment")
     final_call = _call_model(model_config, _prompt("final_package", prepared, inquiry, exchanges), fixture=fixture,
-                             stage="final_package", minister=minister, inquiry=inquiry, prepared=prepared, exchanges=exchanges)
+                             stage="final_package", minister=minister, inquiry=inquiry, prepared=prepared, exchanges=exchanges,
+                             pass_token=pass_token, stage_receipt=final_receipt)
     package = _json_object(final_call["text"], f"{minister_id} final package")
     _validate_final_package(package)
     _require(package["inquiry_id"] == inquiry["inquiry_id"] and package["minister_id"] == minister_id, "final package identity mismatch")
@@ -322,8 +444,10 @@ def _run_minister(*, estate: Path, hub: Path, horus: Path, inquiry: dict[str, An
     validation = validate_genealogy_package(package, genealogy_exchanges)
     validate_minister_ground_files(package, estate)
 
+    genealogy_receipt = ledger.enter("genealogy_finalization")
     native_call = _call_model(model_config, _prompt("native_report", prepared, inquiry, exchanges), fixture=fixture,
-                              stage="native_report", minister=minister, inquiry=inquiry, prepared=prepared, exchanges=exchanges)
+                              stage="native_report", minister=minister, inquiry=inquiry, prepared=prepared, exchanges=exchanges,
+                              pass_token=pass_token, stage_receipt=genealogy_receipt)
     native_report = _json_object(native_call["text"], f"{minister_id} native report")
     adapter_validation = _adapter_validate(repo, binding["entrypoint"], native_report)
     universal_dispatch._validate_contract(adapter_validation)
@@ -341,7 +465,7 @@ def _run_minister(*, estate: Path, hub: Path, horus: Path, inquiry: dict[str, An
 
     package_path.write_text(json.dumps(package, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     write_genealogy_record(genealogy_path, package, validation)
-    report_path.write_text(render_report(package), encoding="utf-8")
+    report_path.write_text(_render_auditable_dispatch(checklist, package, minister_id), encoding="utf-8")
     native_path.write_text(json.dumps(native_report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     provisional_path.write_text(json.dumps(provisional, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -379,6 +503,15 @@ def _run_minister(*, estate: Path, hub: Path, horus: Path, inquiry: dict[str, An
             "final_model_returned": final_call.get("model"),
             "native_report_model_returned": native_call.get("model"),
         },
+        "secretary_gate": {
+            "checklist_path": str(checklist_path.relative_to(hub)),
+            "checklist_sha256": secretary_gate.checklist_digest(checklist),
+            "token_path": str(token_path.relative_to(hub)),
+            "token_sha256": pass_token["token_sha256"],
+            "stages_completed": ledger.stages_completed(),
+            "dispatch_path": str(report_path.relative_to(hub)),
+            "dispatch_sha256": hashlib.sha256(report_path.read_bytes()).hexdigest(),
+        },
         "outputs": {
             "final_judgment_package": str(package_path.relative_to(hub)),
             "proposition_evidence_genealogy": str(genealogy_path.relative_to(hub)),
@@ -412,7 +545,8 @@ def run(args) -> int:
     config = harness.load_config(Path(args.config).expanduser())
     estate = Path(config["estate"]).expanduser().resolve()
     hub, horus = estate / "Sanctum", estate / "Horus"
-    inquiry = json.loads(Path(args.inquiry).read_text(encoding="utf-8"))
+    inquiry_path = Path(args.inquiry).expanduser().resolve()
+    inquiry = json.loads(inquiry_path.read_text(encoding="utf-8"))
     _require(isinstance(inquiry, dict), "inquiry must be one JSON object")
     _require(isinstance(inquiry.get("inquiry_id"), str) and inquiry["inquiry_id"], "inquiry_id is required")
     _require(isinstance(inquiry.get("question"), str) and inquiry["question"].strip(), "question is required")
@@ -438,7 +572,7 @@ def run(args) -> int:
             estate=estate, hub=hub, horus=horus, inquiry=inquiry,
             prepared=prepared_by_id[minister["minister_id"]], minister=minister,
             binding=binding, repo=repo, model_config=model_config,
-            fixture=args.fixture, date=date,
+            fixture=args.fixture, date=date, inquiry_path=inquiry_path,
         ))
 
     expected = {minister["minister_id"] for minister, _, _ in plan}

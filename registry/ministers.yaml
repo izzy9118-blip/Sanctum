@@ -1,16 +1,18 @@
 record_type: assembly_registry
 id: REG-MINISTERS-000000001
-version: 3.2.0
+version: 3.3.0
 canonical_repository: izzy9118-blip/Sanctum
 revision:
-  predecessor_version: 3.1.0
-  predecessor_commit: 23078c3abc1b72ecec0a280ddea70631a37d3e7c
+  predecessor_version: 3.2.0
+  predecessor_commit: 2b22b3cbb2caf809c6ad9638cdfb6e69c334a285
   reason: >-
-    Register Xenophon's exact validated R2 multi-work sovereign state after completion
-    and owner authorization of the Hieron / On Tyranny operational incorporation. The
-    established minister set, universal participation, ministerial sovereignty, Greek
-    deferral, semantic incompletion, and report-certification boundaries remain unchanged.
-    Registry 3.1.0 remains preserved in Git history.
+    Correct Xenophon's stale dispatch summary after the canonical deterministic
+    end-to-end proving path was established. This records only that the proving
+    transaction now exists and completed its bounded fixture; it does not claim that
+    a live evidence-bearing inquiry has passed. The established minister set,
+    universal participation, ministerial sovereignty, Greek deferral, semantic
+    incompletion, and report-certification boundaries remain unchanged. Registry
+    3.2.0 remains preserved in Git history.
 participation_policy:
   mode: universal
   no_upstream_selection: true
@@ -127,7 +129,7 @@ ministers:
       greek_language_review: DEFERRED_BY_OWNER
       greek_dependent_claims: PROHIBITED
       final_teaching_authorized: false
-      assembly_dispatch_status: PENDING_END_TO_END_PROVING_INQUIRY
+      assembly_dispatch_status: DETERMINISTIC_END_TO_END_PROVING_PATH_ESTABLISHED_LIVE_PROOF_PENDING
     adapter_ref: adapter.py
     speech_ref: speech/speech-mechanism-r2.yaml
     corpus_ref: corpus/index.yaml
@@ -165,7 +167,8 @@ ministers:
         - operational authority does not certify a final teaching
         - wider Xenophontic corpus reconstruction remains incomplete
         - report certification and presidential synthesis remain separate
-        - Assembly dispatch remains pending the end-to-end proving inquiry
+        - deterministic end-to-end Assembly dispatch has been proved
+        - live evidence-bearing Assembly proving inquiry remains pending
     membership_status: established
     provenance:
       produced_by:
