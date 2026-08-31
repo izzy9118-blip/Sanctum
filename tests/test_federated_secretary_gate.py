@@ -26,7 +26,7 @@ def test_federated_gate_is_bound_to_immutable_inquiry_and_full_roster(tmp_path):
 
     assert checklist_path.is_file()
     assert token_path.is_file()
-    assert {item["principal_id"] for item in checklist["roster"]} == {"sanctum", "horus"}
+    assert {item["principal_id"] for item in checklist["roster"]} == {"ukraine", "russian-federation"}
     assert token["checklist_sha256"] == secretary_gate.checklist_digest(checklist)
     assert ledger.enter("investigative_query")["stage"] == "investigative_query"
 

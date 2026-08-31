@@ -7,22 +7,22 @@
     "frozen_at": "2026-08-24T00:00:00+00:00",
     "roster": [
       {
-        "principal_id": "sanctum",
-        "name": "Sanctum",
-        "type": "institution",
+        "principal_id": "ukraine",
+        "name": "Ukraine",
+        "type": "body",
         "roster_state": "ENUMERATED",
-        "language": "English",
-        "language_state": "ORIGINAL",
-        "provenance_flag": "HEARD_IN_OWN_WORDS"
+        "language": "Ukrainian",
+        "language_state": "UNRECORDED",
+        "provenance_flag": "NOT_GATHERED"
       },
       {
-        "principal_id": "horus",
-        "name": "Horus",
-        "type": "institution",
+        "principal_id": "russian-federation",
+        "name": "Russian Federation",
+        "type": "body",
         "roster_state": "ENUMERATED",
-        "language": "English",
-        "language_state": "ORIGINAL",
-        "provenance_flag": "HEARD_IN_OWN_WORDS"
+        "language": "Russian",
+        "language_state": "UNRECORDED",
+        "provenance_flag": "NOT_GATHERED"
       }
     ]
   },
