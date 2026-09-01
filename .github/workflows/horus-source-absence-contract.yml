@@ -32,9 +32,9 @@ jobs:
           path: Horus
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.14'
       - name: Install validation dependencies
-        run: python -m pip install jsonschema pytest
+        run: python -m pip install -r Sanctum/requirements-test.txt
       - name: Run Horus response-contract tests
         working-directory: Horus
         run: python -m pytest -q tests/test_query_response_schema.py

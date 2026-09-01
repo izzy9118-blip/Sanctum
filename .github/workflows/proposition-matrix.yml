@@ -12,9 +12,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.14'
       - name: Install validation dependencies
-        run: python -m pip install pyyaml jsonschema pytest
+        run: python -m pip install -r requirements-test.txt
       - name: Compile proposition-aware synthesis runtime
         run: python -m py_compile proposition_matrix.py presidential_synthesis.py
       - name: Parse matrix contracts

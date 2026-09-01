@@ -115,6 +115,7 @@ The human may inspect, challenge, amend, or override through visible records. No
 ```text
 Sanctum/
 ├── README.md
+├── requirements-test.txt
 ├── assembly.py
 ├── schemas/
 ├── registry/
@@ -126,6 +127,31 @@ Sanctum/
 ```
 
 Ministerial corpora and reasoning systems remain in their own repositories. Sanctum is the Assembly, not a container for the ministers.
+
+## Development Test Environment
+
+Sanctum's validation and test runtime is Python 3.12.14. The interpreter version
+is recorded in `.python-version`, and the exact test packages are
+locked in `requirements-test.txt`; local development and GitHub Actions install
+from that same file.
+
+A virtual environment is machine-local and disposable. It contains no canonical
+Assembly records and must never be committed. On this estate it lives outside the
+repositories at `/Users/onepiece/sanctum/.venv-harness`.
+
+It can be rebuilt with:
+
+```sh
+python3.12 -m venv /Users/onepiece/sanctum/.venv-harness
+/Users/onepiece/sanctum/.venv-harness/bin/python -m pip install -r requirements-test.txt
+```
+
+Use the environment explicitly, without changing the system Python:
+
+```sh
+/Users/onepiece/sanctum/.venv-harness/bin/python -m pip check
+/Users/onepiece/sanctum/.venv-harness/bin/python -m pytest -q
+```
 
 ## Ratified constitutional standards
 

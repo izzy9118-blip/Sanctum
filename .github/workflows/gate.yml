@@ -51,7 +51,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.14'
 
       - name: Materialize estate-local runtime config
         shell: bash
@@ -69,7 +69,7 @@ jobs:
 
       - name: Install validation dependencies
         working-directory: estate/Sanctum
-        run: python -m pip install pyyaml jsonschema pytest
+        run: python -m pip install -r requirements-test.txt
 
       - name: Compile the constitutional runtime
         working-directory: estate/Sanctum

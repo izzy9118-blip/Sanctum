@@ -27,9 +27,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.14'
       - name: Install validation dependencies
-        run: python -m pip install jsonschema pytest
+        run: python -m pip install -r requirements-test.txt
       - name: Compile safeguard runtime
         run: python -m py_compile minister_horus.py adversarial_horus.py sovereign_round.py
       - name: Run investigative boundary regression tests

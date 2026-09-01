@@ -23,9 +23,9 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.12.14'
       - name: Install validation dependencies
-        run: python -m pip install pyyaml jsonschema pytest
+        run: python -m pip install -r requirements-test.txt
       - name: Compile genealogy runtime
         run: python -m py_compile minister_horus.py adversarial_horus.py sovereign_round.py evidence_genealogy.py minister_ground_files.py genealogical_round.py
       - name: Run proposition genealogy regression tests
