@@ -1,0 +1,19 @@
+record_type: sanctum_stars_registry
+version: 1.0.0
+status: OWNER_AUTHORIZED_READ_ONLY_RESEARCH_CORPUS
+repository: izzy9118-blip/Stars
+pinned_commit: 44d05c09aa75a043497930863abf82364dd8ab6a
+role: READ_ONLY_RESEARCH_PROVENANCE_CORPUS
+consumption_mode: EXPLICIT_CONTEXT_ONLY_REQUIRES_SEPARATE_EVIDENCE_ADMISSION
+governing_method: sources/SOURCE-WITNESS-METHOD.md
+artifact_roots:
+  - stars
+  - narratives
+  - sources
+admission_policy:
+  structured_star_status: SOURCE_REPOSITORY_INTERNAL_STATE_NOT_SANCTUM_TRUTH_CERTIFICATION
+  contextual_use: ALLOWED_ONLY_WHEN_EXPLICITLY_SELECTED_AND_PIN_BOUND
+  live_evidence_use: PROHIBITED_WITHOUT_SEPARATE_HORUS_ACQUISITION_AND_INQUIRY_ADMISSION
+  local_source_paths: LOCATOR_METADATA_NOT_PORTABLE_ACQUIRED_EVIDENCE
+  automatic_prompt_injection: PROHIBITED
+certification: NONE_SELF_CERTIFICATION_PROHIBITED

@@ -1,10 +1,10 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:sanctum:constitutional-environment:1.3.0",
+  "$id": "urn:sanctum:constitutional-environment:1.2.0",
   "title": "Sanctum Constitutional Environment Manifest",
   "type": "object",
   "additionalProperties": false,
-  "required": ["record_type", "standard", "inquiry_id", "sanctum", "horus", "stars", "ministers", "runtime", "certification"],
+  "required": ["record_type", "standard", "inquiry_id", "sanctum", "horus", "ministers", "runtime", "certification"],
   "properties": {
     "record_type": {"const": "constitutional_environment_manifest"},
     "standard": {"const": "CONSTITUTIONAL-ENVIRONMENT-001"},
@@ -12,14 +12,13 @@
     "certification": {"const": "NONE_SELF_CERTIFICATION_PROHIBITED"},
     "sanctum": {
       "type": "object", "additionalProperties": false,
-      "required": ["repository", "repository_commit", "assembly_spec", "registry", "adapter_registry", "stars_repository_boundary", "final_judgment_contract", "proposition_matrix_standard", "ministerial_silence_standard", "source_absence_standard"],
+      "required": ["repository", "repository_commit", "assembly_spec", "registry", "adapter_registry", "final_judgment_contract", "proposition_matrix_standard", "ministerial_silence_standard", "source_absence_standard"],
       "properties": {
         "repository": {"const": "izzy9118-blip/Sanctum"},
         "repository_commit": {"$ref": "#/$defs/commit"},
         "assembly_spec": {"$ref": "#/$defs/file_binding"},
         "registry": {"$ref": "#/$defs/registry_binding"},
         "adapter_registry": {"$ref": "#/$defs/registry_binding"},
-        "stars_repository_boundary": {"$ref": "#/$defs/file_binding"},
         "final_judgment_contract": {"$ref": "#/$defs/file_binding"},
         "proposition_matrix_standard": {"$ref": "#/$defs/file_binding"},
         "ministerial_silence_standard": {"$ref": "#/$defs/file_binding"},
@@ -40,47 +39,6 @@
         "principal_source_profile_contract": {"$ref": "#/$defs/file_binding"},
         "canonical_runtime": {"$ref": "#/$defs/file_binding"},
         "acquisition_protocol": {"const": "HORUS-ACQUISITION-1.0"}
-      }
-    },
-    "stars": {
-      "type": "object", "additionalProperties": false,
-      "required": ["repository", "repository_commit", "pinned_commit", "registry", "role", "consumption_mode", "governing_method", "artifact_roots", "tracked_file_count", "tracked_inventory_sha256", "catalog", "certification"],
-      "properties": {
-        "repository": {"const": "izzy9118-blip/Stars"},
-        "repository_commit": {"$ref": "#/$defs/commit"},
-        "pinned_commit": {"$ref": "#/$defs/commit"},
-        "registry": {"$ref": "#/$defs/registry_binding"},
-        "role": {"const": "READ_ONLY_RESEARCH_PROVENANCE_CORPUS"},
-        "consumption_mode": {"const": "EXPLICIT_CONTEXT_ONLY_REQUIRES_SEPARATE_EVIDENCE_ADMISSION"},
-        "governing_method": {"$ref": "#/$defs/file_binding"},
-        "artifact_roots": {
-          "type": "array",
-          "prefixItems": [
-            {"const": "stars"},
-            {"const": "narratives"},
-            {"const": "sources"}
-          ],
-          "items": false,
-          "minItems": 3,
-          "maxItems": 3
-        },
-        "tracked_file_count": {"type": "integer", "minimum": 1},
-        "tracked_inventory_sha256": {"$ref": "#/$defs/sha256"},
-        "catalog": {
-          "type": "array", "minItems": 1,
-          "items": {
-            "type": "object", "additionalProperties": false,
-            "required": ["star_id", "name", "status", "path", "sha256"],
-            "properties": {
-              "star_id": {"type": "string", "pattern": "^STAR-[A-Z0-9-]+$"},
-              "name": {"type": "string", "minLength": 1},
-              "status": {"type": "string", "minLength": 1},
-              "path": {"type": "string", "pattern": "^stars/STAR-[A-Z0-9-]+\\.yaml$"},
-              "sha256": {"$ref": "#/$defs/sha256"}
-            }
-          }
-        },
-        "certification": {"const": "NONE_SELF_CERTIFICATION_PROHIBITED"}
       }
     },
     "ministers": {

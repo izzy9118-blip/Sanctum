@@ -1,20 +1,20 @@
 ---
 record_type: sanctum_constitutional_environment_manifest_standard
 id: CONSTITUTIONAL-ENVIRONMENT-001
-version: 1.3.0
+version: 1.2.0
 status: RATIFIED_BY_OWNER
 ratification:
-  date: 2026-09-01
+  date: 2026-08-24
   authority: REPOSITORY_OWNER_DIRECTIVE
-  directive: "Yes. Let's do it"
-  predecessor: standards/constitutional-environment-manifest.v1.2.0.yaml
-date: 2026-09-01
+  directive: "Do it"
+  predecessor: standards/constitutional-environment-manifest.v1.1.0.yaml
+date: 2026-08-24
 purpose: >-
   Bind every forward Assembly inquiry to the exact constitutional and repository
   environment under which it was executed, including a Sanctum-owned immutable
-  Horus pin, the exact acquisition runtime, the read-only Stars research corpus,
-  each owner-certified minister corpus pin, and the separately pinned adapter overlay
-  used to expose that sovereign repository to the universal harness.
+  Horus pin, the exact acquisition runtime, each owner-certified minister corpus pin,
+  and the separately pinned adapter overlay used to expose that sovereign repository
+  to the universal harness.
 required_bindings:
   sanctum:
     - repository_commit
@@ -26,8 +26,6 @@ required_bindings:
     - adapter_registry_path
     - adapter_registry_version
     - adapter_registry_sha256
-    - stars_repository_boundary_path
-    - stars_repository_boundary_sha256
     - final_judgment_contract_path
     - final_judgment_contract_sha256
     - proposition_matrix_standard_path
@@ -54,21 +52,6 @@ required_bindings:
     - canonical_runtime_path
     - canonical_runtime_sha256
     - acquisition_protocol
-  stars:
-    - registry_path
-    - registry_version
-    - registry_sha256
-    - repository
-    - repository_commit
-    - pinned_commit
-    - role
-    - consumption_mode
-    - governing_method_path
-    - governing_method_sha256
-    - artifact_roots
-    - tracked_file_count
-    - tracked_inventory_sha256
-    - structured_star_catalog
   ministers:
     - minister_id
     - repository
@@ -91,12 +74,6 @@ hard_rules:
   - The checked-out Horus repository must equal registry/horus.yaml pinned_commit; recording a floating checkout is insufficient.
   - The Horus response contract, acquisition receipt contract, principal source profile contract and canonical runtime are bound by path and SHA-256.
   - Production reasoned rounds invoke the canonical runtime from the pinned Horus checkout; arbitrary Horus commands are test-only overrides.
-  - Stars is a read-only research and provenance corpus, not a minister and not a live acquisition organ.
-  - The checked-out Stars repository must equal registry/stars.yaml pinned_commit and have no uncommitted or untracked files.
-  - Every tracked file under Stars' structured-star, narrative, and source roots contributes to one deterministic inventory digest.
-  - A Stars record marked FACT retains that repository's internal status only; it is not thereby certified as truth by Sanctum.
-  - Stars content may enter an inquiry only through explicit pin-bound selection and separate evidence admission; automatic prompt injection is prohibited.
-  - Stars records may not satisfy Horus live acquisition, original-language, current-source, principal-coverage, or source-absence requirements.
   - Every governing file is bound by path and SHA-256, not by version label alone.
   - The Sanctum commit is recorded from the checked-out repository and may not be replaced by a branch name.
   - A manifest with a missing required repository, file, hash, protocol, base pin, overlay pin, or overlay-diff mismatch fails closed.

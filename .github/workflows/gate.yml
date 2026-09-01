@@ -35,6 +35,14 @@ jobs:
           repository: izzy9118-blip/Horus
           path: estate/Horus
 
+      - name: Check out pinned Stars research corpus
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Stars
+          ref: 44d05c09aa75a043497930863abf82364dd8ab6a
+          path: estate/Stars
+          fetch-depth: 0
+
       - name: Check out Talleyrand estate fixture
         uses: actions/checkout@v4
         with:
@@ -53,6 +61,8 @@ jobs:
           EOF
           test -f estate/Horus/boards/ukraine.yaml
           test -f estate/Horus/boards/ukraine-2026-08.yaml
+          test -f estate/Stars/stars/STAR-ANCIENT-GREECE-001.yaml
+          test -f estate/Stars/sources/SOURCE-WITNESS-METHOD.md
           test -f estate/Talleyrand/manifest.yaml
           test -f estate/Talleyrand/deeds/index.yaml
           test -f estate/config.yaml

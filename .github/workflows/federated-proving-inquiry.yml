@@ -40,6 +40,14 @@ jobs:
           path: estate/Horus
           fetch-depth: 0
 
+      - name: Check out pinned Stars research corpus
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Stars
+          ref: 44d05c09aa75a043497930863abf82364dd8ab6a
+          path: estate/Stars
+          fetch-depth: 0
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -118,6 +126,9 @@ jobs:
               }
           env = json.load(open('inquiries/HARNESS-PROOF-001/constitutional-environment.json'))
           bindings = {m['minister_id']: m for m in env['ministers']}
+          assert env['stars']['repository_commit'] == '44d05c09aa75a043497930863abf82364dd8ab6a'
+          assert env['stars']['repository_commit'] == env['stars']['pinned_commit']
+          assert env['stars']['consumption_mode'] == 'EXPLICIT_CONTEXT_ONLY_REQUIRES_SEPARATE_EVIDENCE_ADMISSION'
           assert bindings['leo-strauss']['certified_base_commit'] == 'fb417d1d4ab7b5d349e801544c0c703d8998a93f'
           assert bindings['leo-strauss']['runtime_overlay_commit'] == '38880f5560b9691e6f7d1c834eb1e53cf2ca75a1'
           assert bindings['xenophon']['certified_base_commit'] == 'b665e323d0780431764b565616e629b2e2aec00f'

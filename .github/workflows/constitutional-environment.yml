@@ -21,6 +21,13 @@ jobs:
           ref: ec82d22f1cb6d7d944b8347f8c7516b1fd38affc
           path: estate/Horus
           fetch-depth: 0
+      - name: Check out Stars at the authorized research-corpus pin
+        uses: actions/checkout@v4
+        with:
+          repository: izzy9118-blip/Stars
+          ref: 44d05c09aa75a043497930863abf82364dd8ab6a
+          path: estate/Stars
+          fetch-depth: 0
       - name: Check out Strauss at adapter-only runtime overlay
         uses: actions/checkout@v4
         with:
@@ -48,9 +55,9 @@ jobs:
       - name: Compile environment and Horus boundary runtime
         working-directory: estate/Sanctum
         run: |
-          python -m py_compile constitutional_environment.py universal_dispatch.py federated_proving.py sovereign_round.py minister_horus.py adversarial_horus.py source_absence.py
+          python -m py_compile constitutional_environment.py stars_repository.py universal_dispatch.py federated_proving.py sovereign_round.py minister_horus.py adversarial_horus.py source_absence.py
           python -m py_compile ../Horus/runtime/calendars.py ../Horus/runtime/source_registry.py ../Horus/runtime/acquisition.py ../Horus/runtime/gather.py
-      - name: Verify exact Horus acquisition pin and protocol
+      - name: Verify exact Horus and Stars pins and protocols
         working-directory: estate/Sanctum
         run: |
           python - <<'PY'
@@ -65,6 +72,11 @@ jobs:
           assert manifest['acquisition_contract']['canonical_engine'] == 'runtime/gather.py'
           assert manifest['charter_amendments'][-1]['id'] == 'HORUS-AMD-005'
           assert manifest['charter_amendments'][-1]['status'] == 'RATIFIED_BY_OWNER'
+          stars = Path('../Stars').resolve()
+          stars_head = subprocess.run(['git', '-C', str(stars), 'rev-parse', 'HEAD'], check=True, capture_output=True, text=True).stdout.strip()
+          assert stars_head == '44d05c09aa75a043497930863abf82364dd8ab6a'
+          assert (stars / 'stars/STAR-ANCIENT-GREECE-001.yaml').is_file()
+          assert (stars / 'sources/SOURCE-WITNESS-METHOD.md').is_file()
           PY
       - name: Verify minister runtime overlays preserve certified corpora
         run: |
@@ -80,6 +92,7 @@ jobs:
           json.load(open('contracts/constitutional-environment.schema.json'))
           yaml.safe_load(open('standards/constitutional-environment-manifest.yaml'))
           yaml.safe_load(open('registry/adapters.v1.yaml'))
+          yaml.safe_load(open('registry/stars.yaml'))
           PY
       - name: Build manifest against exact live estate pins and overlays
         working-directory: estate/Sanctum
@@ -97,8 +110,14 @@ jobs:
           schema = json.load(open('contracts/constitutional-environment.schema.json'))
           Draft202012Validator(schema).validate(doc)
           validate_manifest(doc, estate=estate)
-          assert doc['sanctum']['registry']['version'] == '3.2.0'
+          assert doc['sanctum']['registry']['version'] == '3.3.0'
           assert doc['sanctum']['adapter_registry']['version'] == '1.0.0'
+          assert doc['stars']['repository_commit'] == '44d05c09aa75a043497930863abf82364dd8ab6a'
+          assert doc['stars']['repository_commit'] == doc['stars']['pinned_commit']
+          assert doc['stars']['role'] == 'READ_ONLY_RESEARCH_PROVENANCE_CORPUS'
+          assert doc['stars']['consumption_mode'] == 'EXPLICIT_CONTEXT_ONLY_REQUIRES_SEPARATE_EVIDENCE_ADMISSION'
+          assert doc['stars']['tracked_file_count'] > 0
+          assert {item['star_id'] for item in doc['stars']['catalog']} >= {'STAR-ANCIENT-GREECE-001', 'STAR-ANCIENT-IRAN-001'}
           assert {m['minister_id'] for m in doc['ministers']} == {'leo-strauss', 'xenophon'}
           strauss = next(m for m in doc['ministers'] if m['minister_id'] == 'leo-strauss')
           xenophon = next(m for m in doc['ministers'] if m['minister_id'] == 'xenophon')
@@ -132,7 +151,15 @@ jobs:
               pass
           else:
               raise SystemExit('standard hash tampering was not rejected')
+          bad = copy.deepcopy(doc)
+          bad['stars']['tracked_inventory_sha256'] = '0' * 64
+          try:
+              validate_manifest(bad, estate=estate)
+          except ConstitutionalEnvironmentError:
+              pass
+          else:
+              raise SystemExit('Stars inventory tampering was not rejected')
           PY
       - name: Re-run current Horus, synthesis and Secretary safeguards
         working-directory: estate/Sanctum
-        run: python -m pytest -q tests/test_minister_horus.py tests/test_adversarial_horus.py tests/test_source_absence.py tests/test_canonical_horus_runtime.py tests/test_proposition_matrix.py tests/test_ministerial_silence.py tests/test_secretary_audit.py tests/test_universal_dispatch.py
+        run: python -m pytest -q tests/test_minister_horus.py tests/test_adversarial_horus.py tests/test_source_absence.py tests/test_canonical_horus_runtime.py tests/test_proposition_matrix.py tests/test_ministerial_silence.py tests/test_secretary_audit.py tests/test_universal_dispatch.py tests/test_stars_repository.py

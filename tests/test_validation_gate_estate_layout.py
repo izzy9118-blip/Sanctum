@@ -6,6 +6,8 @@ def test_validation_gate_materializes_required_estate_neighbors():
     assert 'path: estate/Sanctum' in workflow
     assert 'repository: izzy9118-blip/Horus' in workflow
     assert 'path: estate/Horus' in workflow
+    assert 'repository: izzy9118-blip/Stars' in workflow
+    assert 'path: estate/Stars' in workflow
     assert 'repository: izzy9118-blip/Talleyrand' in workflow
     assert 'path: estate/Talleyrand' in workflow
     assert 'cat > estate/config.yaml' in workflow

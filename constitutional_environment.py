@@ -11,6 +11,8 @@ from pathlib import Path
 from typing import Callable, TypeVar
 
 import harness
+from stars_repository import build_binding as build_stars_binding
+from stars_repository import validate_binding as validate_stars_binding
 
 STANDARD_ID = "CONSTITUTIONAL-ENVIRONMENT-001"
 CERTIFICATION = "NONE_SELF_CERTIFICATION_PROHIBITED"
@@ -127,9 +129,10 @@ def _minister_runtime_bindings(sanctum: Path, estate: Path, registry: dict) -> l
 
 
 def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
-    sanctum, horus = estate / "Sanctum", estate / "Horus"
+    sanctum, horus, stars = estate / "Sanctum", estate / "Horus", estate / "Stars"
     _require(sanctum.is_dir(), "Sanctum repository missing from estate")
     _require(horus.is_dir(), "Horus repository missing from estate")
+    _require(stars.is_dir(), "Stars repository missing from estate")
     _require(isinstance(inquiry_id, str) and inquiry_id.strip(), "inquiry_id is required")
 
     registry_path = sanctum / "registry/ministers.yaml"
@@ -146,6 +149,7 @@ def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
         "assembly_spec": _binding(sanctum, "standards/assembly-spec.yaml"),
         "registry": _binding(sanctum, "registry/ministers.yaml"),
         "adapter_registry": _binding(sanctum, ADAPTER_REGISTRY),
+        "stars_repository_boundary": _binding(sanctum, "stars_repository.py"),
         "final_judgment_contract": _binding(sanctum, "contracts/final-judgment-package.schema.v1.1.0.json"),
         "proposition_matrix_standard": _binding(sanctum, "standards/proposition-matrix.yaml"),
         "ministerial_silence_standard": _binding(sanctum, "standards/ministerial-silence.yaml"),
@@ -161,6 +165,7 @@ def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
             "assembly_spec": sanctum_files["assembly_spec"],
             "registry": {**sanctum_files["registry"], "version": str(registry.get("version"))},
             "adapter_registry": {**sanctum_files["adapter_registry"], "version": str(adapter_registry.get("version"))},
+            "stars_repository_boundary": sanctum_files["stars_repository_boundary"],
             "final_judgment_contract": sanctum_files["final_judgment_contract"],
             "proposition_matrix_standard": sanctum_files["proposition_matrix_standard"],
             "ministerial_silence_standard": sanctum_files["ministerial_silence_standard"],
@@ -178,6 +183,7 @@ def build_manifest(*, estate: Path, inquiry_id: str) -> dict:
             "canonical_runtime": _binding(horus, horus_registry["canonical_runtime"]),
             "acquisition_protocol": horus_registry["acquisition_protocol"],
         },
+        "stars": build_stars_binding(estate=estate),
         "ministers": minister_bindings,
         "runtime": {
             "python_version": platform.python_version(),
@@ -211,7 +217,7 @@ def validate_manifest(manifest: dict, *, estate: Path) -> dict:
     _require(str(hr.get("version")) == str(horus_registry.get("version")), "Horus registry version mismatch")
     _require(hr.get("sha256") == sha256_file(sanctum / HORUS_REGISTRY), "Horus registry hash mismatch")
 
-    for key in ["assembly_spec", "registry", "adapter_registry", "final_judgment_contract", "proposition_matrix_standard", "ministerial_silence_standard", "source_absence_standard"]:
+    for key in ["assembly_spec", "registry", "adapter_registry", "stars_repository_boundary", "final_judgment_contract", "proposition_matrix_standard", "ministerial_silence_standard", "source_absence_standard"]:
         binding = manifest["sanctum"][key]
         _require(binding["sha256"] == sha256_file(sanctum / binding["path"]), f"Sanctum binding changed: {key}")
 
@@ -230,6 +236,8 @@ def validate_manifest(manifest: dict, *, estate: Path) -> dict:
         binding = horus_doc.get(key, {})
         _require(binding.get("path") == expected_path, f"Horus {key} path mismatch")
         _require(binding.get("sha256") == sha256_file(horus / expected_path), f"Horus {key} binding changed")
+
+    validate_stars_binding(manifest.get("stars", {}), estate=estate)
 
     registry = harness.yaml_load((sanctum / "registry/ministers.yaml").read_text(encoding="utf-8"))
     _require(str(manifest["sanctum"]["registry"].get("version")) == str(registry.get("version")), "registry version mismatch")
