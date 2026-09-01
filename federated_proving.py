@@ -148,7 +148,7 @@ def _fixture_output(stage: str, minister: dict[str, Any], inquiry: dict[str, Any
                 "requirement": "Return qualifying documentary ground if available; otherwise preserve the exact source-state failure.",
                 "rationale": "The proving inquiry must demonstrate that missing acquisition remains explicit rather than being reasoned across.",
                 "acceptable_tiers": ["T1", "T2", "T3", "T4", "T5"],
-                "original_language_required": False,
+                "original_language_required": True,
             }],
             "specific_document_requests": [],
             "principal_scope": principal_scope,

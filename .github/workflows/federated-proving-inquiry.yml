@@ -36,7 +36,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: izzy9118-blip/Horus
-          ref: ec82d22f1cb6d7d944b8347f8c7516b1fd38affc
+          ref: 38718c226116ee59f7d6cb9a75f3b90c4943ecf2
           path: estate/Horus
           fetch-depth: 0
 

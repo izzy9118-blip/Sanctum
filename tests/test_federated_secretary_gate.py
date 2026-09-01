@@ -45,3 +45,19 @@ def test_federated_model_boundary_refuses_wrong_stage_receipt():
             prepared={"repository_commit": "0" * 40}, exchanges=[],
             pass_token=checklist, stage_receipt={},
         )
+
+
+def test_fixture_investigative_query_preserves_original_language_t1_floor():
+    inquiry = _inquiry()
+    query = federated_proving._fixture_output(
+        "investigative_query",
+        {"minister_id": "xenophon"},
+        inquiry,
+        {"repository_commit": "0" * 40},
+        [],
+    )
+    assert any(
+        requirement["original_language_required"] is True
+        and "T1" in requirement["acceptable_tiers"]
+        for requirement in query["source_requirements"]
+    )
